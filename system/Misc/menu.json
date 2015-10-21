@@ -1,0 +1,23 @@
+{
+	"name" : "Main menu",
+	"insert" : false,
+	"sort" : true,
+	"columns" : {
+		"id" : {"readonly" : true, "name" : "ID", "display" : "edit"},
+		"name" : {"name" : "Name", "display" : "view"},
+		"name_clean" : {"readonly" : true, "name" : "Name (URL)", "display" : "view", "type" : "slug"},
+		"dropdown" : {"readonly" : true, "name" : "Dropdown", "display" : "view", "join" : {
+			"repairs" : {
+				"columns" : {
+					"id" : {"delimiter" : "x"},
+					"name" : {"delimiter" : "y"},
+					"icon" : {"delimiter" : "z"}
+				},
+				"values" : {
+					"0" : "No",
+					"1" : "Yes"
+				}
+			}
+		}}
+	}
+}
