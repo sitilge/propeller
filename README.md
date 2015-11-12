@@ -1,3 +1,3 @@
-# Abimo
+# Puce
 
-Featherlight PHP micro framework.
+CRUD administration site built with Abimo.
