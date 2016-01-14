@@ -1,8 +1,19 @@
 <?php
 
-define('APP_PATH', dirname(__DIR__).DIRECTORY_SEPARATOR.'system');
-define('SYS_PATH', dirname(dirname(__DIR__)).DIRECTORY_SEPARATOR.'abimo'.DIRECTORY_SEPARATOR.'src');
+require __DIR__.'/../vendor/autoload.php';
 
-require SYS_PATH.DIRECTORY_SEPARATOR.'Bootstrap.php';
+$factory = new \Abimo\Factory();
 
-new \Abimo\Bootstrap();
+//factory config and set the path for config files
+$config = $factory
+    ->config()
+    ->path(__DIR__.'/../app/Config');
+
+//factory throwable and register handlers
+$factory
+    ->throwable($config)
+    ->configure()
+    ->register();
+
+//initialize router and dispatch
+new \App\Misc\Router();

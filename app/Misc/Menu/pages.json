@@ -1,0 +1,34 @@
+{
+  "name": "Pages",
+  "insert": true,
+  "columns": {
+    "id": {
+      "readonly": true,
+      "name": "ID",
+      "display": "edit"
+    },
+    "name": {
+      "name": "Name",
+      "display": "view"
+    },
+    "name_clean": {
+      "readonly": true,
+      "name": "Name (URL)",
+      "display": "view",
+      "type": "slug"
+    },
+    "header": {
+      "name": "Header",
+      "display": "view"
+    },
+    "content": {
+      "name": "Content",
+      "display": "edit",
+      "type": "editor"
+    },
+    "footer": {
+      "name": "Footer",
+      "display": "edit"
+    }
+  }
+}

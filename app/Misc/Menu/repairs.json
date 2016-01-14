@@ -1,0 +1,85 @@
+{
+  "name": "Repairs",
+  "insert": true,
+  "order": {
+    "column": "sequence",
+    "direction": "ASC"
+  },
+  "columns": {
+    "id": {
+      "readonly": true,
+      "name": "ID",
+      "display": "edit"
+    },
+    "name": {
+      "name": "Name",
+      "display": "view"
+    },
+    "name_clean": {
+      "readonly": true,
+      "name": "Name (URL)",
+      "display": "view",
+      "type": "slug"
+    },
+    "image": {
+      "name": "Image",
+      "display": "edit",
+      "type": "image"
+    },
+    "icon": {
+      "name": "Icon",
+      "display": "edit"
+    },
+    "icon_instant": {
+      "name": "Icon instant",
+      "display": "edit",
+      "values": {
+        "0": "No",
+        "1": "Yes"
+      }
+    },
+    "title_1": {
+      "readonly": false,
+      "name": "Title 1",
+      "display": "edit"
+    },
+    "title_2": {
+      "readonly": false,
+      "name": "Title 2",
+      "display": "edit"
+    },
+    "subtitle": {
+      "readonly": false,
+      "name": "Subtitle",
+      "display": "edit"
+    },
+    "content_1": {
+      "readonly": false,
+      "name": "Content 1",
+      "display": "edit",
+      "type": "editor"
+    },
+    "content_2": {
+      "readonly": false,
+      "name": "Content 2",
+      "display": "edit",
+      "type": "editor"
+    },
+    "content_3": {
+      "readonly": false,
+      "name": "Content 3",
+      "display": "edit",
+      "type": "editor"
+    },
+    "content_4": {
+      "readonly": false,
+      "name": "Content 4",
+      "display": "edit",
+      "type": "editor"
+    },
+    "youtube_id": {
+      "name": "Youtube ID",
+      "display": "edit"
+    }
+  }
+}

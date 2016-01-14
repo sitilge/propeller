@@ -1,0 +1,50 @@
+{
+  "name": "Slider home",
+  "insert": true,
+  "order": {
+    "column": "sequence",
+    "direction": "ASC"
+  },
+  "columns": {
+    "id": {
+      "readonly": true,
+      "name": "ID",
+      "display": "edit"
+    },
+    "header": {
+      "name": "Header",
+      "display": "view"
+    },
+    "content": {
+      "name": "Content",
+      "display": "edit",
+      "type": "editor"
+    },
+    "footer": {
+      "name": "Footer",
+      "display": "edit"
+    },
+    "url": {
+      "name": "URL",
+      "display": "view"
+    },
+    "repair_id": {
+      "name": "Icon",
+      "display": "view"
+    },
+    "image": {
+      "name": "Image",
+      "display": "view",
+      "type": "image"
+    },
+    "position": {
+      "name": "Position",
+      "display": "view",
+      "values": {
+        "0": "Left",
+        "1": "Center",
+        "2": "Right"
+      }
+    }
+  }
+}

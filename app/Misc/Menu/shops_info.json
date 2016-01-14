@@ -1,0 +1,49 @@
+{
+  "name": "Shops info",
+  "insert": true,
+  "order": {
+    "column": "sequence",
+    "direction": "ASC"
+  },
+  "columns": {
+    "id": {
+      "readonly": true,
+      "name": "ID",
+      "display": "edit"
+    },
+    "shop_id": {
+      "readonly": false,
+      "name": "Shop",
+      "display": "view",
+      "join": {
+        "shops": {
+          "columns": {
+            "id": {
+              "delimiter": ""
+            },
+            "name": {
+              "delimiter": ""
+            }
+          }
+        }
+      }
+    },
+    "section": {
+      "readonly": false,
+      "name": "Section",
+      "display": "view",
+      "values": {
+        "0": "Working days",
+        "1": "Weekend days"
+      }
+    },
+    "day": {
+      "name": "Day",
+      "display": "edit"
+    },
+    "hours": {
+      "name": "Hours",
+      "display": "edit"
+    }
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "name": "Redirects",
+  "insert": true,
+  "columns": {
+    "id": {
+      "readonly": true,
+      "name": "ID",
+      "display": "view"
+    },
+    "url_from": {
+      "name": "From URL",
+      "display": "view"
+    },
+    "url_to": {
+      "name": "To URL",
+      "display": "view"
+    }
+  }
+}
