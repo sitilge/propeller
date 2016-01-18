@@ -6,13 +6,17 @@
 <form action="" method="post" enctype="multipart/form-data">
     <?php foreach ($data[$table]['columns'] as $columnName => $column) : ?>
         <div class="form-group">
-            <label for="<?php echo $columnName; ?>"><?php echo $column['name']; ?></label>
+            <label for="<?php echo $columnName; ?>"><?php echo (isset($column['name']) ? $column['name'] : $columnName); ?></label>
             <?php if (!empty($data[$table]['rowsJoin'][$columnName])) : ?>
-                <select id="<?php echo $columnName; ?>" class="form-control" name="<?php echo $action; ?>[<?php echo $columnName; ?>]" <?php echo (!empty($column['readonly']) ? 'disabled' : ''); ?>>
+                <select id="<?php echo $columnName; ?>" class="form-control" name="<?php echo $action; ?>[<?php echo $columnName; ?>]" >
                     <?php foreach ($data[$table]['rowsJoin'][$columnName] as $rowJoinId => $rowJoinValue) : ?>
-                        <option value="<?php echo $rowJoinId; ?>" <?php echo (isset($data[$table]['rows'][$id][$columnName]) && $rowJoinId == $data[$table]['rows'][$id][$columnName]) ? 'selected' : ''; ?>>
-                            <?php echo $rowJoinValue; ?>
-                        </option>
+                        <?php if (isset($data[$table]['rows'][$id][$columnName]) && $rowJoinId == $data[$table]['rows'][$id][$columnName]) : ?>
+                            <option value="<?php echo $rowJoinId; ?>" selected><?php echo $rowJoinValue; ?></option>
+                        <?php elseif (!empty($column['readonly'])) : ?>
+                            <option value="<?php echo $rowJoinId; ?>" disabled><?php echo $rowJoinValue; ?></option>
+                        <?php else : ?>
+                            <option value="<?php echo $rowJoinId; ?>"><?php echo $rowJoinValue; ?></option>
+                        <?php endif; ?>
                     <?php endforeach; ?>
                 </select>
             <?php elseif (!empty($column['type'])) : ?>
@@ -32,7 +36,9 @@
                     </div>
                 <?php elseif ($column['type'] === 'slug') : ?>
                     <input id="<?php echo $columnName; ?>" class="form-control" name="<?php echo $action; ?>[<?php echo $columnName; ?>]" value="<?php echo (isset($data[$table]['rows'][$id][$columnName]) ? $data[$table]['rows'][$id][$columnName] : ''); ?>" onkeyup="slugify(this);" />
-                <?php endif; ?>    
+                <?php else : ?>
+                    <input id="<?php echo $columnName; ?>" class="form-control" name="<?php echo $action; ?>[<?php echo $columnName; ?>]" value="<?php echo (isset($data[$table]['rows'][$id][$columnName]) ? $data[$table]['rows'][$id][$columnName] : ''); ?>" <?php echo (!empty($column['readonly']) ? 'readonly' : ''); ?>/>
+                <?php endif; ?>
             <?php else : ?>
                 <input id="<?php echo $columnName; ?>" class="form-control" name="<?php echo $action; ?>[<?php echo $columnName; ?>]" value="<?php echo (isset($data[$table]['rows'][$id][$columnName]) ? $data[$table]['rows'][$id][$columnName] : ''); ?>" <?php echo (!empty($column['readonly']) ? 'readonly' : ''); ?>/>
             <?php endif; ?>

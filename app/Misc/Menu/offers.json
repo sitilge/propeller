@@ -12,21 +12,15 @@
       "display": "view"
     },
     "repair_id": {
-      "readonly": false,
+      "readonly": true,
       "name": "Icon",
       "display": "edit",
       "join": {
         "repairs": {
           "columns": {
-            "id": {
-              "delimiter": ""
-            },
-            "name": {
-              "delimiter": ""
-            },
-            "icon": {
-              "delimiter": ""
-            }
+            "id": {},
+            "name": {},
+            "icon": {}
           }
         }
       }

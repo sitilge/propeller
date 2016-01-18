@@ -1,4 +1,3 @@
-#os
 [Tt]humbs.db
 .DS_Store
 .AppleDouble
@@ -15,3 +14,6 @@ Network\ Trash\ Folder
 Temporary\ Items
 .apdisk
 .project
+.idea
+/vendor
+/.sass-cache

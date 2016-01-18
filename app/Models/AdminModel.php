@@ -39,6 +39,17 @@ class AdminModel
             $table = basename($file, ".json");
 
             $this->data[$table] = json_decode($string, true);
+
+            //TODO - special config, there should always be the id column
+            if (empty($this->data[$table]['columns']['id'])) {
+                $id = [
+                    'name' => 'ID',
+                    'readonly' => 'true',
+                    'display' => 'edit'
+                ];
+
+                $this->data[$table]['columns'] = ['id' => $id] + $this->data[$table]['columns'];
+            }
         }
 
         return $this;
@@ -50,7 +61,7 @@ class AdminModel
 
         foreach ($this->data as $table => $config) {
             $menu[$table] = [
-                'name' => $config['name']
+                'name' => !empty($config['name']) ? $config['name'] : $table
             ];
         }
 

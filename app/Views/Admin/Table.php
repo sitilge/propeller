@@ -5,7 +5,7 @@
 <link rel="stylesheet" href="/css/sweetalert.css">
 
 <h1 class="page-header">
-    <span><?php echo $data[$table]['name']; ?></span>
+    <span><?php echo !empty($data[$table]['name']) ? $data[$table]['name'] : $table; ?></span>
     <?php if (!empty($data[$table]['insert'])) : ?>
         <a href="<?php echo $router->admin($table, 'add'); ?>" class="btn btn-success pull-right">Add new</a>
     <?php endif; ?>
@@ -45,7 +45,7 @@
                         <?php endif; ?>
                     <?php endforeach; ?>           
                     <td class="text-right">
-                        <a class="remove-row-button glyphicon glyphicon-pencil" href="<?php echo $router->admin($table, 'edit', $row['id']); ?>"></a>
+                        <a class="edit-row-button glyphicon glyphicon-pencil" href="<?php echo $router->admin($table, 'edit', $row['id']); ?>"></a>
                         <a class="remove-row-button glyphicon glyphicon-remove" link="<?php echo $router->admin($table, 'remove', $row['id']); ?>"></a>
                     </td>
                 </tr>

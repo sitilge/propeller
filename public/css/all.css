@@ -5,9 +5,6 @@ body {
   border-bottom: 1px solid #eeeeee;
   padding-bottom: 10px; }
 
-.navbar-fixed-top {
-  border: 0 none; }
-
 .sidebar {
   display: none; }
 
@@ -118,7 +115,7 @@ table tbody tr {
   display: block; }
 
 .col-md-1 {
-  padding: 0px; }
+  padding: 0; }
 
 .row.images {
   padding-left: 15px; }
@@ -139,7 +136,7 @@ table tbody tr {
   min-height: 100px; }
 
 #gallery .modal-body {
-  padding: 0px; }
+  padding: 0; }
 #gallery .modal-footer, #gallery .modal-header {
   border: none; }
 #gallery .modal-header .close {

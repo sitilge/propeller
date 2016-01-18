@@ -24,10 +24,19 @@ class Router
 
         switch ($route[0]) {
             case FastRoute\Dispatcher::NOT_FOUND:
+                $response = $factory->response();
+                $response
+                    ->header('404', true, 404)
+                    ->send();
+
                 throw new \ErrorException("Route $method $uri not found.");
                 break;
             case FastRoute\Dispatcher::METHOD_NOT_ALLOWED:
-                //TODO - set 405 Method Not Allowed
+                $response = $factory->response();
+                $response
+                    ->header('405', true, 405)
+                    ->send();
+
                 throw new \ErrorException("Method $method not allowed.");
                 break;
             case FastRoute\Dispatcher::FOUND:
