@@ -347,7 +347,7 @@ class AdminModel
             $query .= ' END WHERE `id` IN ('.implode(',', array_values($_POST['order'])).')';
 
             $statement = $this->db->handle->prepare($query);
-            $statement->execute($values);
+            exit($statement->execute($values));
         }
 	}
     

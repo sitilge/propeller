@@ -16,4 +16,5 @@ Temporary\ Items
 .project
 .idea
 /vendor
+composer.lock
 /.sass-cache

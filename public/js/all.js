@@ -1,103 +1,97 @@
 $(function () {
 	//remove rows
-    $('.remove-row-button').on('click', function() {
-    	var link = $(this).attr('link');
-    	var elem = $(this);
+    $('.remove-row-button').on('click', function(ele) {
 		swal({
-            title: "Are you sure?",
-            text: "The row will be deleted permanently.",
-            type: "error",
-            confirmButtonClass: "btn-danger",
-            confirmButtonText: "Delete",
+            title: 'Are you sure?',
+            text: 'The row will be deleted permanently.',
+            type: 'error',
+            confirmButtonClass: 'btn-danger',
+            confirmButtonText: 'Delete',
             showCancelButton: true,
-            cancelButtonText: "Cancel",
+            cancelButtonText: 'Cancel',
             closeOnConfirm: true
 		},
 		function(){
 		  	$.ajax({
-				type: "POST",
-				url: link,
+				type: 'POST',
+				url: ele.target.dataset.url,
 				data: {
-	                id: elem.parent().parent().attr('data-id')
+	                id: $(this).parent().parent().attr('data-id')
 	            },
 	            success: function(response) {
 	                if (response == 1) {
-	                    elem.parent().parent().remove();
+                        $(this).target.parent().parent().remove();
 	                }
 	            }
 			});
 		});
 	});
 
-    //search
-	if (!$('.searchable').length) {
-		return;
-	}
+    //edit rows
+    $('.edit-row').click(function(ele) {
+        window.location.href = ele.target.dataset.url;
+    });
 
-	$('#search').hideseek({
-		highlight: false,
-		nodata: 'No results found',
-		list: '.searchable',
-		element: 'tr'
-	});
+    //search rows
+	var searchable = $('.searchable');
 
-	//sort
-	var sortable = $('.sortable');
-
-	if (!sortable.length) {
-		return;
-	}
-
-	//disabling onclick redirect behavior on sortable handle
-	$('.sortable-handle').on('click', function() {
-		return false;
-	});
-
-	Sortable.create(sortable.get(0), {
-		handle: '.sortable-handle',
-		animation: 150,
-		onEnd: function () {
-			var order = [];
-
-			$('.sortable > tr').each(function(){
-				var id = $(this).data('id');
-				order.push(id);
-			});
-
-			sortUpdate(order);
-		}
-	});
-
-	function sortUpdate(order){
-		$.ajax({
-			type: "POST",
-			url: document.location.href,
-			data: {
-				order: order
-			}
+	if (searchable.length) {
+		$('#search').hideseek({
+			highlight: false,
+			nodata: 'No results found',
+			list: '.searchable',
+			element: 'tr'
 		});
 	}
 
-	//textedit
-	var summernote = $('.summernote');
+	//sort rows
+	var sortable = $('.sortable');
 
-	if (!summernote.length) {
-		return;
+	if (sortable.length) {
+		Sortable.create(sortable.get(0), {
+			handle: '.sortable-handle',
+			animation: 150,
+			onEnd: function () {
+				var order = [];
+
+				$('.sortable > tr').each(function(){
+					var id = $(this).data('id');
+					order.push(id);
+				});
+
+				sortUpdate(order);
+			}
+		});
+
+		function sortUpdate(order){
+			$.ajax({
+				type: 'POST',
+				url: document.location.href,
+				data: {
+					order: order
+				}
+			});
+		}
 	}
 
-    summernote.summernote({
-        height: 200,
-        callbacks: {
-            onChange: function() {
-                var code = $(this).summernote('code');
-                var textarea = $('#summernote-' + $(this).attr('id'));
-                textarea.val(code);
-            }
-        }
-    });
+	//edit text
+	var summernote = $('.summernote');
+
+	if (summernote.length) {
+		summernote.summernote({
+			height: 200,
+			callbacks: {
+				onChange: function() {
+					var code = $(this).summernote('code');
+					var textarea = $('#summernote-' + $(this).attr('id'));
+					textarea.val(code);
+				}
+			}
+		});
+	}
 });
 
-//slugify
+//slugify input
 function slugify(ele) {
     var delay = (function(){
         var timer = 0;

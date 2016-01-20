@@ -37,16 +37,18 @@
                     <?php endif; ?>
                     <?php foreach ($data[$table]['columns'] as $columnName => $column) : ?>
                         <?php if (empty($column['display']) || (!empty($column['display'])) && $column['display'] != 'edit') : ?>
-                            <?php if (!empty($data[$table]['rowsJoin'][$columnName])) : ?>
-                                <td><?php echo (!empty($data[$table]['rowsJoin'][$columnName][$row[$columnName]]) ? $data[$table]['rowsJoin'][$columnName][$row[$columnName]] : $row[$columnName]); ?></td>
-                            <?php else : ?>
-                                <td><?php echo $row[$columnName]; ?></td>
-                            <?php endif; ?>
+                            <td class="edit-row" data-url="<?php echo $router->admin($table, 'edit', $row['id']); ?>">
+                                <?php if (!empty($data[$table]['rowsJoin'][$columnName])) : ?>
+                                    <?php echo (!empty($data[$table]['rowsJoin'][$columnName][$row[$columnName]]) ? $data[$table]['rowsJoin'][$columnName][$row[$columnName]] : $row[$columnName]); ?></td>
+                                <?php else : ?>
+                                    <?php echo $row[$columnName]; ?>
+                                <?php endif; ?>
+                            </td>
                         <?php endif; ?>
                     <?php endforeach; ?>           
                     <td class="text-right">
                         <a class="edit-row-button glyphicon glyphicon-pencil" href="<?php echo $router->admin($table, 'edit', $row['id']); ?>"></a>
-                        <a class="remove-row-button glyphicon glyphicon-remove" link="<?php echo $router->admin($table, 'remove', $row['id']); ?>"></a>
+                        <a class="remove-row-button glyphicon glyphicon-remove" data-url="<?php echo $router->admin($table, 'remove', $row['id']); ?>"></a>
                     </td>
                 </tr>
             <?php endforeach; ?>
