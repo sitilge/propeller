@@ -1,12 +1,15 @@
 <!DOCTYPE html>
-<html>
+<html prefix="og: http://ogp.me/ns#" lang="en">
     <head>
         <title>Puce</title>
         <meta charset="utf-8">
-        <meta name="author" content="">
-        <meta name="keywords" content="">
-        <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0">
-        <meta name="description" content="">
+        <meta content="IE=edge" http-equiv="X-UA-Compatible">
+        <meta content="width=device-width, initial-scale=1" name="viewport">
+        <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+        <meta content="Puce" property="og:title">
+        <meta content="" property="og:image">
+        <meta content="" property="og:description">
+        <meta content="" property="og:url">
         
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
         <link rel="stylesheet" href="/css/all.css">

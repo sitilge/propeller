@@ -1,5 +1,7 @@
 {
+  "key": "id",
   "name": "Menu",
+  "level": "6",
   "insert": false,
   "order": {
     "column": "name_clean",

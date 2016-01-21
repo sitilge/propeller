@@ -4,13 +4,20 @@ namespace App\Models;
 
 use Abimo\Factory;
 
+function dd($input)
+{
+    echo "<pre>";
+    print_r($input);
+    exit;
+}
+
 class AdminModel
 {
     public $config = [];
 
     public $data = [];
 
-    public $configPath = __DIR__.'/../Misc/Menu';
+    public $tablesConfigPath = __DIR__.'/../Misc/Admin/Tables';
 
     public $publicPath = __DIR__.'/../../public';
 
@@ -31,38 +38,112 @@ class AdminModel
 
     public function getConfig()
     {
-        $scan = array_diff(scandir($this->configPath), ['..', '.']);
-
-        foreach ($scan as $file) {
-            $string = file_get_contents($this->configPath.DIRECTORY_SEPARATOR.$file);
-            
-            $table = basename($file, ".json");
-
-            $this->data[$table] = json_decode($string, true);
-
-            //TODO - special config, there should always be the id column
-            if (empty($this->data[$table]['columns']['id'])) {
-                $id = [
-                    'name' => 'ID',
-                    'readonly' => 'true',
-                    'display' => 'edit'
-                ];
-
-                $this->data[$table]['columns'] = ['id' => $id] + $this->data[$table]['columns'];
-            }
-        }
+        $this->data = $this->getJson($this->tablesConfigPath);
 
         return $this;
+    }
+
+    public function getJson($path)
+    {
+        $directory = new \DirectoryIterator($path);
+
+        foreach ($directory as $file) {
+            if (!$file->isFile()) {
+                continue;
+            }
+
+            $string = file_get_contents($path.'/'.$file);
+
+            if (!$json = json_decode($string, true)) {
+                throw new \ErrorException('Unable to decode '.$file);
+            }
+
+            $table = basename($file, '.json');
+
+            $data[$table] = $json;
+        }
+
+        return $data;
+    }
+
+    public function getAuth()
+    {
+        if (empty($_SESSION['admin'])) {
+            if (empty($_POST)) {
+                echo $this->factory->template()
+                    ->file(__DIR__.'/../Views/Admin/Auth')
+                    ->render();
+
+                exit;
+            }
+
+            $data = $this->getJson(__DIR__.'/../Misc/Admin');
+
+            $table = array_keys($data)[0];
+
+            $email = $_POST['email'];
+            $password = $_POST['password'];
+
+            $query = '
+                SELECT
+                    '.$this->db->backtick($data[$table]['key']).' AS id,
+                    '.$this->db->backtick($data[$table]['columns']['name']).' AS name,
+                    '.$this->db->backtick($data[$table]['columns']['email']).' AS email,
+                    '.$this->db->backtick($data[$table]['columns']['password']).' AS password,
+                    '.$this->db->backtick($data[$table]['columns']['level']).' AS level
+                FROM
+                    '.$this->db->backtick($table).'
+                WHERE
+                    '.$this->db->backtick($data[$table]['columns']['email']).' = :email
+                    AND
+                    '.$this->db->backtick($data[$table]['columns']['password']).' = :password
+                LIMIT 1
+            ';
+
+            $statement = $this->db->handle->prepare($query);
+            $statement->bindValue(':email', $email);
+            $statement->bindValue(':password', $password);
+
+            $statement->execute();
+
+            if (empty($user = $statement->fetch())) {
+                throw new \ErrorException('No user '.$email.' and password combination found.');
+            }
+
+            $_SESSION['admin'] = $user;
+
+            $response = $this->factory->response();
+
+            $router = new UrlModel();
+
+            $location = 'Location: '.$router->admin();
+
+            $response
+                ->header($location)
+                ->send();
+
+            exit;
+        }
     }
     
     public function getMenu()
     {
+//        echo "<pre>";
+//        print_r($this->data);
+//        dd($_SESSION);
         $menu = [];
 
         foreach ($this->data as $table => $config) {
-            $menu[$table] = [
-                'name' => !empty($config['name']) ? $config['name'] : $table
-            ];
+            if (
+                empty($_SESSION['admin']) ||
+                empty($this->data[$table]['level']) ||
+                (!empty($this->data[$table]['level']) &&
+                $this->data[$table]['level'] <= $_SESSION['admin']['level'])
+            ) {
+                $menu[$table] = [
+                    'name' => !empty($config['name']) ? $config['name'] : $table
+                ];
+            }
         }
 
         return $menu;
@@ -223,17 +304,16 @@ class AdminModel
     {
         $structure = [];
 
-        $publicPath = __DIR__.'/../../public';
-
-        $imageDir = 'img';
-
-        $iterator = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($publicPath.'/'.$imageDir, \RecursiveDirectoryIterator::SKIP_DOTS));
+        $iterator = new \RecursiveIteratorIterator(
+            new \RecursiveDirectoryIterator($this->publicPath.'/'.$this->imageDir, \RecursiveDirectoryIterator::SKIP_DOTS)
+        );
 
         foreach ($iterator as $file) {
             $pathname = $file->getPathname();
             $dir = basename($file->getPath());
+
             //structure by modification time and filename
-            $structure[$dir][$file->getMtime().$file->getFilename()] = str_replace($publicPath, '', $pathname);
+            $structure[$dir][$file->getMtime().$file->getFilename()] = str_replace($this->publicPath, '', $pathname);
 
             krsort($structure[$dir]);
         }
@@ -242,7 +322,7 @@ class AdminModel
             ->file(__DIR__.'/../Views/Admin/Plugins/Image')
             ->set('structure', $structure)
             ->set('data', $this->data)
-            ->set('imageDir', $imageDir)
+            ->set('imageDir', $this->imageDir)
             ->set('column', $column)
             ->set('table', $this->controller->table)
             ->set('action', $this->controller->action)
@@ -330,27 +410,6 @@ class AdminModel
         return $this->db->handle->lastInsertId();
 	}
 
-    public function setOrder()
-	{
-        if (!empty($_POST['order'])) {
-            $query = '
-                UPDATE '.$this->db->backtick($this->controller->table).'
-                SET '.$this->db->backtick($this->data[$this->controller->table]['order']['column']).' = CASE `id`'
-                ;
-
-            foreach ($_POST['order'] as $order => $id) {
-                $values[':id'.$id] = $id;
-                $values[':order'.$order] = $order;
-                $query .= ' WHEN :id'.$id.' THEN :order'.$order;
-            }
-
-            $query .= ' END WHERE `id` IN ('.implode(',', array_values($_POST['order'])).')';
-
-            $statement = $this->db->handle->prepare($query);
-            exit($statement->execute($values));
-        }
-	}
-    
     public function deleteRow()
 	{
 		$query = '
@@ -366,4 +425,25 @@ class AdminModel
 
 		exit($statement->execute());
 	}
+
+    public function setOrder()
+    {
+        if (!empty($_POST['order'])) {
+            $query = '
+                UPDATE '.$this->db->backtick($this->controller->table).'
+                SET '.$this->db->backtick($this->data[$this->controller->table]['order']['column']).' = CASE `id`'
+            ;
+
+            foreach ($_POST['order'] as $order => $id) {
+                $values[':id'.$id] = $id;
+                $values[':order'.$order] = $order;
+                $query .= ' WHEN :id'.$id.' THEN :order'.$order;
+            }
+
+            $query .= ' END WHERE `id` IN ('.implode(',', array_values($_POST['order'])).')';
+
+            $statement = $this->db->handle->prepare($query);
+            exit($statement->execute($values));
+        }
+    }
 }
