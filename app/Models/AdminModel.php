@@ -73,7 +73,7 @@ class AdminModel
         $iterator = new \DirectoryIterator($path);
 
         foreach ($iterator as $file) {
-            if (!$file->isFile()) {
+            if ('.' === substr($file->getFilename(), 0, 1)) {
                 continue;
             }
 
