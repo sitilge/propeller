@@ -1,20 +1,18 @@
-<?php if (!empty($structure)) : ?>
-    <div class="row images">
-        <span class='size-large col-md-1'>
-            <div id="preview-<?php echo $column;?>" class="image size-large"
-                style="<?php echo (isset($data[$table]['rows'][$id][$column])&&!empty($data[$table]['rows'][$id][$column]) ? "background-image:url('".$data[$table]['rows'][$id][$column]."')" : "background-image:url('https://placeholdit.imgix.net/~text?txtsize=29&bg=eeeeee&txtclr=000000&txt=Image&w=196&h=196&txttrack=0')"); ?>;"
-            ></div>
+<div class="row images">
+    <span class='size-large col-md-1'>
+        <div id="preview-<?php echo $column;?>" class="image size-large"
+            style="<?php echo (isset($data[$table]['rows'][$id][$column]) && !empty($data[$table]['rows'][$id][$column]) ? "background-image:url('".$data[$table]['rows'][$id][$column]."')" : "background-image:url('https://placeholdit.imgix.net/~text?txtsize=29&bg=eeeeee&txtclr=000000&txt=Image&w=196&h=196&txttrack=0')"); ?>;"
+        ></div>
+    </span>
+    <div id="image-buttons" class="col-md-1">
+        <span id="upload-button" class='size  btn-file ' title="Upload a new image"><span class="glyphicon glyphicon-upload"></span> <input type="file" name="image" preview="preview-<?php echo $column;?>"></span>
+        <span class="size " id="gallery-button" data-toggle="modal" data-target="#gallery" title="Choose an image from gallery">
+            <span class="glyphicon glyphicon-th-large"></span>
         </span>
-        <div id="image-buttons" class="col-md-1">
-            <span id="upload-button" class='size  btn-file ' title="Upload a new image"><span class="glyphicon glyphicon-upload"></span> <input type="file" name="image" previewId="preview-<?php echo $column;?>"></span>
-            <span class="size " id="gallery-button" data-toggle="modal" data-target="#gallery" title="Choose an image from gallery">
-                <span class="glyphicon glyphicon-th-large"></span>
-            </span>
-            <span id="remove-button" class="size " onclick="removeImage($(this))" title="Remove the current image" previewId="preview-<?php echo $column;?>"><span class="glyphicon glyphicon-remove-sign"></span></span>
-            <span id="delete-button" class="size " onclick="deleteImage()" title="Delete the current image"><span class="glyphicon glyphicon-trash"></span></span>
-        </div>
+        <span id="remove-button" class="size " onclick="removeImage($(this))" title="Remove the current image" preview="preview-<?php echo $column;?>"><span class="glyphicon glyphicon-remove-sign"></span></span>
+        <span id="delete-button" class="size " onclick="deleteImage()" title="Delete the current image"><span class="glyphicon glyphicon-trash"></span></span>
     </div>
-<?php endif; ?>
+</div>
 
 <div id="gallery" class="modal fade">
     <div class="modal-dialog">

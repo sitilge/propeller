@@ -30,17 +30,6 @@
                     </button>
                     <a href="<?php echo $router->admin(); ?>" class="navbar-brand">Puce</a>
                 </div>
-                <div class="navbar-collapse collapse" id="navbar">
-                    <ul class="nav navbar-nav navbar-right">
-                        <li>
-                            <a href="<?php echo $router->logout(); ?>">
-                                <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>
-                                <span class="sr-only">Logout</span>
-                                Logout
-                            </a>
-                        </li>
-                    </ul>
-                </div>
             </div>
         </nav>
         <div class="container-fluid">

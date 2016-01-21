@@ -1,20 +1,20 @@
-var previewId = "";
+var preview = "";
 
 function previewImage(input){
     if (input.files && input.files[0]) {
         var reader = new FileReader();
 
         reader.onload = function (e) {
-            var previewId = $(input).attr('previewId');
-            var previewIdEle = $('#'+previewId);
-            previewIdEle.css('background-image',"url('"+ e.target.result+"')");
-            previewIdEle.css('width',"100%");
-            previewIdEle.css('height',"100%");
-            previewIdEle.css('background-size',"cover");
-            previewIdEle.css('background-position',"center");
+            var preview = $(input).attr('preview');
+            var previewEle = $('#'+preview);
+            previewEle.css('background-image',"url('"+ e.target.result+"')");
+            previewEle.css('width',"100%");
+            previewEle.css('height',"100%");
+            previewEle.css('background-size',"cover");
+            previewEle.css('background-position',"center");
 
             var imageExportPath = dir + input.value;
-            $('#'+previewId.split('-')[1]).val(imageExportPath);
+            $('#'+preview.split('-')[1]).val(imageExportPath);
         };
 
         reader.readAsDataURL(input.files[0]);
@@ -24,23 +24,23 @@ function previewImage(input){
 function uploadImage(button){
     var fullimageLink = button.attr('file');
     var imageLink = '/img/'+fullimageLink.split('/img/')[1];
-    var previewIdEle = $('#'+previewId);
-    previewIdEle.css('background-image',"url("+ imageLink+")");
-    previewIdEle.css('width',"100%");
-    previewIdEle.css('height',"100%");
-    previewIdEle.css('background-size',"cover");
-    previewIdEle.css('background-position',"center");
+    var previewEle = $('#'+preview);
+    previewEle.css('background-image',"url("+ imageLink+")");
+    previewEle.css('width',"100%");
+    previewEle.css('height',"100%");
+    previewEle.css('background-size',"cover");
+    previewEle.css('background-position',"center");
 
     var fileName = imageLink.split('/');
     fileName = fileName[fileName.length-1];
 
     var imageExportPath = dir+fileName;
 
-    $('#'+previewId.split('-')[1]).val(imageExportPath);
+    $('#'+preview.split('-')[1]).val(imageExportPath);
     $('#gallery').modal('hide');
 }
 $('#gallery-button').on('click',function(){
-    previewId = $(this).parent().parent().children(':first-child').find('.image').attr('id');
+    preview = $(this).parent().parent().children(':first-child').find('.image').attr('id');
 });
 
 $(document).on('change', '.btn-file :file', function() {
@@ -64,9 +64,9 @@ $(document).ready( function() {
 });
 
 function removeImage(input){
-    var previewId = $(input).attr('previewId');
-    $('#'+previewId).css('background-image', 'url("https://placeholdit.imgix.net/~text?txtsize=29&bg=eeeeee&txtclr=000000&txt=Image&w=196&h=196&txttrack=0")');
-    $('#'+previewId.split('-')[1]).val('');
+    var preview = $(input).attr('preview');
+    $('#'+preview).css('background-image', 'url("https://placeholdit.imgix.net/~text?txtsize=29&bg=eeeeee&txtclr=000000&txt=Image&w=196&h=196&txttrack=0")');
+    $('#'+preview.split('-')[1]).val('');
 }
 
 function deleteImage(){

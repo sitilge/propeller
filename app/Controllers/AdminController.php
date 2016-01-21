@@ -17,8 +17,9 @@ class AdminController
     {
         $this->factory = new Factory();
 
-        $session = $this->factory->session();
-        $session->start();
+        $this->model = new \App\Models\AdminModel($this);
+
+        $this->factory->session()->start();
     }
 
     public function main($table = null, $action = null, $id = null)
@@ -27,53 +28,15 @@ class AdminController
         $this->action = $action;
         $this->id = $id;
 
-        $adminModel = new \App\Models\AdminModel($this);
-        $adminModel->getConfig();
-        $adminModel->getAuth();
-
-        if (null === $table) {
-            $content = '';
-        } else {
-            if (!empty($_POST)) {
-                if (null === $action) {
-                    $adminModel->setOrder();
-                } else {
-                    $adminModel->setData();
-                }
-            }
-
-            $adminModel->getData();
-            $adminModel->getPlugins();
-
-            $content = $adminModel->getContent();
-        }
+        $content = $this->model->getContent();
+        $menu = $this->model->getMenu();
 
         echo $this->factory->template()
             ->file(__DIR__.'/../Views/Admin/Template')
             ->set('router', new UrlModel())
-            ->set('menu', $adminModel->getMenu())
-            ->set('segment', $this->factory->request()->segment(null, 2))
+            ->set('menu', $menu)
             ->set('content', $content)
+            ->set('segment', $this->factory->request()->segment(null, 2))
             ->render();
-    }
-
-    public function logout()
-    {
-        $adminModel = new \App\Models\AdminModel($this);
-        $adminModel->logout();
-
-        session_destroy();
-
-        $response = $this->factory->response();
-
-        $router = new UrlModel();
-
-        $location = 'Location: '.$router->admin();
-
-        $response
-            ->header($location)
-            ->send();
-
-        exit;
     }
 }

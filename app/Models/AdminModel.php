@@ -4,20 +4,13 @@ namespace App\Models;
 
 use Abimo\Factory;
 
-function dd($input)
-{
-    echo "<pre>";
-    print_r($input);
-    exit;
-}
-
 class AdminModel
 {
     public $config = [];
 
     public $data = [];
 
-    public $tablesConfigPath = __DIR__.'/../Misc/Admin/Tables';
+    public $tablesPath = __DIR__.'/../Misc/Admin';
 
     public $publicPath = __DIR__.'/../../public';
 
@@ -36,18 +29,50 @@ class AdminModel
         $this->controller = $controller;
     }
 
-    public function getConfig()
+    public function getContent()
     {
-        $this->data = $this->getJson($this->tablesConfigPath);
+        $this->manageData();
 
-        return $this;
+        if (null === $this->controller->table) {
+            return '';
+        }
+
+        $content = $this->factory->template()
+            ->set('router', new UrlModel())
+            ->set('data', $this->data)
+            ->set('table', $this->controller->table)
+            ->set('action', $this->controller->action)
+            ->set('id', $this->controller->id);
+
+        if (null === $this->controller->action) {
+            $content->file(__DIR__.'/../Views/Admin/Table');
+        } else {
+            $content->file(__DIR__.'/../Views/Admin/Row');
+        }
+
+        return $content->render();
+    }
+
+    public function manageData()
+    {
+        $this->data = $this->getJson($this->tablesPath);
+
+        if (!empty($_POST)) {
+            if (!empty($_POST['order'])) {
+                $this->setOrder();
+            } else {
+                $this->setData();
+            }
+        }
+
+        $this->getData();
     }
 
     public function getJson($path)
     {
-        $directory = new \DirectoryIterator($path);
+        $iterator = new \DirectoryIterator($path);
 
-        foreach ($directory as $file) {
+        foreach ($iterator as $file) {
             if (!$file->isFile()) {
                 continue;
             }
@@ -66,112 +91,25 @@ class AdminModel
         return $data;
     }
 
-    public function getAuth()
-    {
-        if (empty($_SESSION['admin'])) {
-            if (empty($_POST)) {
-                echo $this->factory->template()
-                    ->file(__DIR__.'/../Views/Admin/Auth')
-                    ->render();
-
-                exit;
-            }
-
-            $data = $this->getJson(__DIR__.'/../Misc/Admin');
-
-            $table = array_keys($data)[0];
-
-            $email = $_POST['email'];
-            $password = $_POST['password'];
-
-            $query = '
-                SELECT
-                    '.$this->db->backtick($data[$table]['key']).' AS id,
-                    '.$this->db->backtick($data[$table]['columns']['name']).' AS name,
-                    '.$this->db->backtick($data[$table]['columns']['email']).' AS email,
-                    '.$this->db->backtick($data[$table]['columns']['password']).' AS password,
-                    '.$this->db->backtick($data[$table]['columns']['level']).' AS level
-                FROM
-                    '.$this->db->backtick($table).'
-                WHERE
-                    '.$this->db->backtick($data[$table]['columns']['email']).' = :email
-                    AND
-                    '.$this->db->backtick($data[$table]['columns']['password']).' = :password
-                LIMIT 1
-            ';
-
-            $statement = $this->db->handle->prepare($query);
-            $statement->bindValue(':email', $email);
-            $statement->bindValue(':password', $password);
-
-            $statement->execute();
-
-            if (empty($user = $statement->fetch())) {
-                throw new \ErrorException('No user '.$email.' and password combination found.');
-            }
-
-            $_SESSION['admin'] = $user;
-
-            $response = $this->factory->response();
-
-            $router = new UrlModel();
-
-            $location = 'Location: '.$router->admin();
-
-            $response
-                ->header($location)
-                ->send();
-
-            exit;
-        }
-    }
-    
     public function getMenu()
     {
-//        echo "<pre>";
-//        print_r($this->data);
-//        dd($_SESSION);
         $menu = [];
 
         foreach ($this->data as $table => $config) {
-            if (
-                empty($_SESSION['admin']) ||
-                empty($this->data[$table]['level']) ||
-                (!empty($this->data[$table]['level']) &&
-                $this->data[$table]['level'] <= $_SESSION['admin']['level'])
-            ) {
-                $menu[$table] = [
-                    'name' => !empty($config['name']) ? $config['name'] : $table
-                ];
-            }
+            $menu[$table] = [
+                'name' => !empty($config['name']) ? $config['name'] : $table
+            ];
         }
 
         return $menu;
     }
-    
-    public function getContent()
-    {
-        $content = $this->factory->template()
-            ->set('router', new UrlModel())
-            ->set('data', $this->data)
-            ->set('table', $this->controller->table)
-            ->set('action', $this->controller->action)
-            ->set('id', $this->controller->id)
-            ;
-
-        if (empty($this->controller->action)) {
-            $content = $content
-                ->file(__DIR__.'/../Views/Admin/Table');
-        } else {
-            $content = $content
-                ->file(__DIR__.'/../Views/Admin/Row');
-        }
-
-        return $content->render();
-    }
 
     public function getData()
     {
+        if (empty($this->controller->table)) {
+            return $this->data;
+        }
+
         //loop the columns, the structure for main columns and join columns
         //are equal intentionally to maintain readability
 
@@ -284,98 +222,100 @@ class AdminModel
                 $this->data[$this->controller->table]['rows'][$row['id']] = $row;
             }
         }
+
+        $this->managePlugins();
+
+        return $this->data;
     }
 
-    public function getPlugins()
+    public function managePlugins()
     {
-        foreach ($this->data[$this->controller->table]['columns'] as $columnName => $column) {
-            if (!empty($column['type'])) {
-                switch ($column['type']) {
-                    case 'image':
-                        $this->data[$this->controller->table]['plugins'][$columnName] = $this->pluginImage($columnName);
+        $this->pluginImage();
+    }
 
-                        break;
+    public function pluginImage()
+    {
+        if (!empty($_FILES)) {
+            if (isset($_FILES['image']['error']) && $_FILES['image']['error'] === 0) {
+                if (!is_dir($this->publicPath.'/'.$this->imageDir.'/'.$this->controller->table)) {
+                    mkdir($this->publicPath.'/'.$this->imageDir.'/'.$this->controller->table);
+                }
+
+                $storage = new \Upload\Storage\FileSystem($this->publicPath.'/'.$this->imageDir.'/'.$this->controller->table, true);
+
+                $file = new \Upload\File('image', $storage);
+
+                $file
+                    ->addValidations([
+                        new \Upload\Validation\Mimetype([
+                            'image/png',
+                            'image/jpg',
+                            'image/jpeg',
+                            'image/gif',
+                            'image/tif',
+                        ]),
+                        new \Upload\Validation\Size('5M')
+                    ]);
+
+                $file->upload();
+            }
+        } else {
+            $structure = [];
+
+            $directory = new \RecursiveDirectoryIterator($this->publicPath.'/'.$this->imageDir, \RecursiveDirectoryIterator::SKIP_DOTS);
+            foreach ($directory as $file ) {
+                if ('.' === substr($file->getFilename(), 0, 1)) {
+                    continue;
+                }
+
+                $pathname = $file->getPathname();
+                $dir = basename($file->getPath());
+
+                //structure by modification time and filename
+                $structure[$dir][$file->getMtime().$file->getFilename()] = str_replace($this->publicPath, '', $pathname);
+
+                krsort($structure[$dir]);
+            }
+
+            $content = $this->factory->template()
+                ->file(__DIR__.'/../Views/Admin/Plugins/Image')
+                ->set('structure', $structure)
+                ->set('data', $this->data)
+                ->set('imageDir', $this->imageDir)
+                ->set('table', $this->controller->table)
+                ->set('action', $this->controller->action)
+                ->set('id', $this->controller->id);
+
+            foreach ($this->data[$this->controller->table]['columns'] as $columnName => $column) {
+                if (isset($column['type']) && $column['type'] == 'image') {
+                    $this->data[$this->controller->table]['plugins'][$columnName] = $content
+                        ->set('column', $columnName)
+                        ->render();
                 }
             }
         }
-    }
-
-    public function pluginImage($column)
-    {
-        $structure = [];
-
-        $iterator = new \RecursiveIteratorIterator(
-            new \RecursiveDirectoryIterator($this->publicPath.'/'.$this->imageDir, \RecursiveDirectoryIterator::SKIP_DOTS)
-        );
-
-        foreach ($iterator as $file) {
-            $pathname = $file->getPathname();
-            $dir = basename($file->getPath());
-
-            //structure by modification time and filename
-            $structure[$dir][$file->getMtime().$file->getFilename()] = str_replace($this->publicPath, '', $pathname);
-
-            krsort($structure[$dir]);
-        }
-
-        $content = $this->factory->template()
-            ->file(__DIR__.'/../Views/Admin/Plugins/Image')
-            ->set('structure', $structure)
-            ->set('data', $this->data)
-            ->set('imageDir', $this->imageDir)
-            ->set('column', $column)
-            ->set('table', $this->controller->table)
-            ->set('action', $this->controller->action)
-            ->set('id', $this->controller->id)
-            ->render();
-
-        return $content;
     }
     
     public function setData()
     {
         if ($this->controller->action === 'add' || $this->controller->action === 'edit') {
-            $id = $this->createUpdateRow();
+            $this->managePlugins();
 
-            if ($this->controller->action === 'add') {
-                $response = $this->factory->response();
-                $router = new UrlModel();
+            $response = $this->factory->response();
+            $router = new UrlModel();
 
-                $location = 'Location: '.$router->admin($this->controller->table);
+            $response
+                ->header('Location: '.$router->admin($this->controller->table))
+                ->send();
 
-                $response
-                    ->header($location)
-                    ->send();
-
-                exit;
-            }
+            exit($this->createUpdateRow());
         } elseif ($this->controller->action === 'remove') {
-            $this->deleteRow();
+            exit($this->deleteRow());
         }
     }
     
     public function createUpdateRow()
-	{
-        if (isset($_FILES['image']['error']) && $_FILES['image']['error'] === 0) {
-            $storage = new \Upload\Storage\FileSystem($this->publicPath.'/'.$this->imageDir.'/'.$this->controller->table, true);
-
-            $file = new \Upload\File('image', $storage);
-
-            $file
-                ->addValidations([
-                    new \Upload\Validation\Mimetype([
-                        'image/png',
-                        'image/jpg',
-                        'image/jpeg',
-                        'image/gif',
-                        'image/tif',
-                    ]),
-                    new \Upload\Validation\Size('5M')
-            ]);
-
-            $file->upload();
-        }
-
+    {
         $columns = [];
         $values = [];
         $valuesInsert = [];
@@ -408,23 +348,23 @@ class AdminModel
         $statement->execute($values);
 
         return $this->db->handle->lastInsertId();
-	}
+    }
 
     public function deleteRow()
-	{
-		$query = '
+    {
+        $query = '
             DELETE FROM
                 '.$this->db->backtick($this->controller->table).'
             WHERE
                 `id` = :row_id
             '
             ;
-		
-		$statement = $this->db->handle->prepare($query);
-		$statement->bindValue(':row_id', $this->controller->id);
 
-		exit($statement->execute());
-	}
+        $statement = $this->db->handle->prepare($query);
+        $statement->bindValue(':row_id', $this->controller->id);
+
+        exit($statement->execute());
+    }
 
     public function setOrder()
     {

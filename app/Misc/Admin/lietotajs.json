@@ -1,9 +1,0 @@
-{
-  "key": "id",
-  "columns": {
-    "name": "vards",
-    "email": "pasts",
-    "password": "parole",
-    "level": "level"
-  }
-}

@@ -34,11 +34,6 @@ class UrlModel
         ]);
     }
 
-    public function logout()
-    {
-        return '/logout';
-    }
-
     private function prepare($pattern, $arguments)
     {
         foreach ($arguments as &$argument) {
