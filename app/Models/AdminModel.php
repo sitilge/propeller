@@ -61,6 +61,7 @@ class AdminModel
             if (!empty($_POST['order'])) {
                 $this->setOrder();
             } else {
+//                echo 213;exit;
                 $this->setData();
             }
         }
@@ -89,6 +90,8 @@ class AdminModel
 
             $data[$table] = $json;
         }
+
+        ksort($data);
 
         return $data;
     }
@@ -341,7 +344,7 @@ class AdminModel
         $query = '
             INSERT
                 INTO '.$tableQuery.' ('.$columnsQuery.')
-            VALUES	('.$valuesInsertQuery.')
+            VALUES ('.$valuesInsertQuery.')
             ON DUPLICATE KEY UPDATE
                 '.$valuesUpdateQuery
             ;

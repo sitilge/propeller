@@ -9,6 +9,7 @@
             <label for="<?php echo $columnName; ?>"><?php echo (isset($column['name']) ? $column['name'] : $columnName); ?></label>
             <?php if (!empty($data[$table]['rowsJoin'][$columnName])) : ?>
                 <select id="<?php echo $columnName; ?>" class="form-control" name="<?php echo $action; ?>[<?php echo $columnName; ?>]" >
+                    <option value=""></option>
                     <?php foreach ($data[$table]['rowsJoin'][$columnName] as $rowJoinId => $rowJoinValue) : ?>
                         <?php if (isset($data[$table]['rows'][$id][$columnName]) && $rowJoinId == $data[$table]['rows'][$id][$columnName]) : ?>
                             <option value="<?php echo $rowJoinId; ?>" selected><?php echo $rowJoinValue; ?></option>
@@ -30,9 +31,8 @@
                     <textarea id="summernote-<?php echo $columnName; ?>" name="<?php echo $action; ?>[<?php echo $columnName; ?>]" hidden><?php echo (isset($data[$table]['rows'][$id][$columnName]) ? $data[$table]['rows'][$id][$columnName] : ''); ?></textarea>
                 <?php elseif ($column['type'] === 'price') : ?>
                     <div class="input-group">
-                        <div class="input-group-addon"><span class="glyphicon glyphicon-usd" aria-hidden="true"></span></div>
+                        <div class="input-group-addon"><span class="glyphicon glyphicon-eur" aria-hidden="true"></span></div>
                         <input id="<?php echo $columnName; ?>" class="form-control" name="<?php echo $action; ?>[<?php echo $columnName; ?>]" value="<?php echo (isset($data[$table]['rows'][$id][$columnName]) ? $data[$table]['rows'][$id][$columnName] : ''); ?>" <?php echo (!empty($column['readonly']) ? 'readonly' : ''); ?>/>
-                        <div class="input-group-addon">.00</div>
                     </div>
                 <?php elseif ($column['type'] === 'slug') : ?>
                     <input id="<?php echo $columnName; ?>" class="form-control" name="<?php echo $action; ?>[<?php echo $columnName; ?>]" value="<?php echo (isset($data[$table]['rows'][$id][$columnName]) ? $data[$table]['rows'][$id][$columnName] : ''); ?>" onkeyup="slugify(this);" />
