@@ -28,13 +28,14 @@ class AdminController
 
         $content = $this->model->getContent();
         $menu = $this->model->getMenu();
+        $segment = $this->factory->request()->segment(null, 1);
 
         echo $this->factory->template()
             ->file(__DIR__.'/../Views/Admin/Template')
             ->set('router', new UrlModel())
             ->set('menu', $menu)
             ->set('content', $content)
-            ->set('segment', $this->factory->request()->segment(null, 2))
+            ->set('segment', $segment)
             ->render();
     }
 }
