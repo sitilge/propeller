@@ -18,8 +18,6 @@ class AdminController
         $this->factory = new Factory();
 
         $this->model = new \App\Models\AdminModel($this);
-
-        $this->factory->session()->start();
     }
 
     public function main($table = null, $action = null, $id = null)

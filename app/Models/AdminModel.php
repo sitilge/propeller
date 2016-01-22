@@ -70,6 +70,8 @@ class AdminModel
 
     public function getJson($path)
     {
+        $data = [];
+
         $iterator = new \DirectoryIterator($path);
 
         foreach ($iterator as $file) {
