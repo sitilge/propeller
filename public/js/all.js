@@ -1,6 +1,9 @@
 $(function () {
 	//remove rows
     $('.remove-row-button').on('click', function(ele) {
+        var ele = $(ele.target);
+        var row = ele.parent().parent();
+
 		swal({
             title: 'Are you sure?',
             text: 'The row will be deleted permanently.',
@@ -14,13 +17,15 @@ $(function () {
 		function(){
 		  	$.ajax({
 				type: 'POST',
-				url: ele.target.dataset.url,
+				contentType: "application/x-www-form-urlencoded; charset=utf-8",
+				url:  ele.data('url'),
 				data: {
-	                id: $(this).parent().parent().attr('data-id')
+	                id: row.data('id')
 	            },
+                //dataType: 'json',
 	            success: function(response) {
 	                if (response == 1) {
-                        $(this).target.parent().parent().remove();
+                        row.remove();
 	                }
 	            }
 			});
@@ -29,7 +34,9 @@ $(function () {
 
     //edit rows
     $('.edit-row').click(function(ele) {
-        window.location.href = ele.target.dataset.url;
+        var ele = $(ele.target);
+
+        window.location.href = ele.data('url');
     });
 
     //search rows
@@ -66,6 +73,7 @@ $(function () {
 		function sortUpdate(order){
 			$.ajax({
 				type: 'POST',
+                contentType: "application/x-www-form-urlencoded; charset=utf-8",
 				url: document.location.href,
 				data: {
 					order: order

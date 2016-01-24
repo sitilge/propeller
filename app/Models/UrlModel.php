@@ -6,13 +6,25 @@ use Abimo\Factory;
 
 class UrlModel
 {
-    public $factory;
+    /**
+     * @var Factory
+     */
+    private $factory;
 
+    /**
+     * UrlModel constructor.
+     */
     public function __construct()
     {
         $this->factory = new Factory();
     }
 
+    /**
+     * @param null $table
+     * @param null $action
+     * @param null $id
+     * @return string
+     */
     public function admin($table = null, $action = null, $id = null)
     {
         $pattern = [];
@@ -34,6 +46,11 @@ class UrlModel
         ]);
     }
 
+    /**
+     * @param $pattern
+     * @param $arguments
+     * @return string
+     */
     private function prepare($pattern, $arguments)
     {
         foreach ($arguments as &$argument) {

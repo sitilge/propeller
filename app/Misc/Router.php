@@ -7,6 +7,9 @@ use \FastRoute;
 
 class Router
 {
+    /**
+     * Router constructor.
+     */
     public function __construct()
     {
         $dispatcher = FastRoute\simpleDispatcher(function(FastRoute\RouteCollector $collector) {

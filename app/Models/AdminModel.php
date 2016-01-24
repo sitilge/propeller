@@ -2,33 +2,52 @@
 
 namespace App\Models;
 
-use Abimo\Factory;
+use App\Controllers\AdminController;
 
 class AdminModel
 {
-    public $config = [];
+    /**
+     * @var \Abimo\Factory
+     */
+    private $factory;
 
-    public $data = [];
+    /**
+     * @var \Abimo\Config
+     */
+    private $config;
 
-    public $tablesPath = __DIR__.'/../Misc/Admin';
+    /**
+     * @var \Abimo\Database
+     */
+    private $db;
 
-    public $publicPath = __DIR__.'/../../public';
+    /**
+     * @var AdminController
+     */
+    private $controller;
 
-    public $imageDir = 'img';
+    /**
+     * @var array
+     */
+    private $data = [];
 
-    public $db;
-
-    public $controller;
-
-    public function __construct($controller)
+    /**
+     * AdminModel constructor.
+     *
+     * @param AdminController $controller
+     */
+    public function __construct(AdminController $controller)
     {
-        $this->factory = new Factory();
-
+        $this->factory = new \Abimo\Factory();
+        $this->config = $this->factory->config();
         $this->db = $this->factory->database();
 
         $this->controller = $controller;
     }
 
+    /**
+     * @return string
+     */
     public function getContent()
     {
         $this->manageData();
@@ -53,15 +72,20 @@ class AdminModel
         return $content->render();
     }
 
-    public function manageData()
+    /**
+     * @throws \ErrorException
+     * @return void
+     */
+    private function manageData()
     {
-        $this->data = $this->getJson($this->tablesPath);
+        $pathJson = rtrim($this->config->get('admin', 'pathJson'), '/');
+
+        $this->data = $this->getJson($pathJson);
 
         if (!empty($_POST)) {
             if (!empty($_POST['order'])) {
                 $this->setOrder();
             } else {
-//                echo 213;exit;
                 $this->setData();
             }
         }
@@ -69,7 +93,12 @@ class AdminModel
         $this->getData();
     }
 
-    public function getJson($path)
+    /**
+     * @param $path
+     * @throws \ErrorException
+     * @return array
+     */
+    private function getJson($path)
     {
         $data = [];
 
@@ -96,6 +125,9 @@ class AdminModel
         return $data;
     }
 
+    /**
+     * @return array
+     */
     public function getMenu()
     {
         $menu = [];
@@ -109,7 +141,10 @@ class AdminModel
         return $menu;
     }
 
-    public function getData()
+    /**
+     * @return array
+     */
+    private function getData()
     {
         if (empty($this->controller->table)) {
             return $this->data;
@@ -233,20 +268,29 @@ class AdminModel
         return $this->data;
     }
 
-    public function managePlugins()
+    /**
+     * @return void
+     */
+    private function managePlugins()
     {
         $this->pluginImage();
     }
 
-    public function pluginImage()
+    /**
+     * @return void
+     */
+    private function pluginImage()
     {
+        $publicPath = __DIR__.'/../../public';
+        $imageDir = rtrim($this->config->get('admin', 'dirImage'), '/');
+
         if (!empty($_FILES)) {
             if (isset($_FILES['image']['error']) && $_FILES['image']['error'] === 0) {
-                if (!is_dir($this->publicPath.'/'.$this->imageDir.'/'.$this->controller->table)) {
-                    mkdir($this->publicPath.'/'.$this->imageDir.'/'.$this->controller->table);
+                if (!is_dir($publicPath.'/'.$imageDir.'/'.$this->controller->table)) {
+                    mkdir($publicPath.'/'.$imageDir.'/'.$this->controller->table);
                 }
 
-                $storage = new \Upload\Storage\FileSystem($this->publicPath.'/'.$this->imageDir.'/'.$this->controller->table, true);
+                $storage = new \Upload\Storage\FileSystem($publicPath.'/'.$imageDir.'/'.$this->controller->table, true);
 
                 $file = new \Upload\File('image', $storage);
 
@@ -267,7 +311,8 @@ class AdminModel
         } else {
             $structure = [];
 
-            $directory = new \RecursiveDirectoryIterator($this->publicPath.'/'.$this->imageDir, \RecursiveDirectoryIterator::SKIP_DOTS);
+            $directory = new \RecursiveDirectoryIterator($publicPath.'/'.$imageDir, \RecursiveDirectoryIterator::SKIP_DOTS);
+
             foreach ($directory as $file ) {
                 if ('.' === substr($file->getFilename(), 0, 1)) {
                     continue;
@@ -277,7 +322,7 @@ class AdminModel
                 $dir = basename($file->getPath());
 
                 //structure by modification time and filename
-                $structure[$dir][$file->getMtime().$file->getFilename()] = str_replace($this->publicPath, '', $pathname);
+                $structure[$dir][$file->getMtime().$file->getFilename()] = str_replace($publicPath, '', $pathname);
 
                 krsort($structure[$dir]);
             }
@@ -286,7 +331,7 @@ class AdminModel
                 ->file(__DIR__.'/../Views/Admin/Plugins/Image')
                 ->set('structure', $structure)
                 ->set('data', $this->data)
-                ->set('imageDir', $this->imageDir)
+                ->set('imageDir', $imageDir)
                 ->set('table', $this->controller->table)
                 ->set('action', $this->controller->action)
                 ->set('id', $this->controller->id);
@@ -300,8 +345,11 @@ class AdminModel
             }
         }
     }
-    
-    public function setData()
+
+    /**
+     * @return void
+     */
+    private function setData()
     {
         if ($this->controller->action === 'add' || $this->controller->action === 'edit') {
             $this->managePlugins();
@@ -315,11 +363,15 @@ class AdminModel
 
             exit($this->createUpdateRow());
         } elseif ($this->controller->action === 'remove') {
+
             exit($this->deleteRow());
         }
     }
-    
-    public function createUpdateRow()
+
+    /**
+     * @return string
+     */
+    private function createUpdateRow()
     {
         $columns = [];
         $values = [];
@@ -327,35 +379,43 @@ class AdminModel
         $valuesUpdate = [];
 
         foreach ($this->data[$this->controller->table]['columns'] as $columnName => $column) {
-            $values[':'.$columnName.'Insert'] = $_POST[$this->controller->action][$columnName];
-            $values[':'.$columnName.'Update'] = $_POST[$this->controller->action][$columnName];
+            if (!empty($column['disabled'])) {
+                continue;
+            }
+
+            $values[':'.$columnName] = $_POST[$this->controller->action][$columnName];
 
             $columns[] = $this->db->backtick($columnName);
 
-            $valuesInsert[] = ':'.$columnName.'Insert';
-            $valuesUpdate[] = $columnName.'=:'.$columnName.'Update';
+            $valuesInsert[] = ':'.$columnName;
+            $valuesUpdate[] = $columnName.'=:'.$columnName;
         }
-            
+
         $tableQuery = $this->db->backtick($this->controller->table);
         $columnsQuery = implode(',', $columns);
+
         $valuesInsertQuery = implode(',', $valuesInsert);
         $valuesUpdateQuery = implode(',', $valuesUpdate);
 
-        $query = '
-            INSERT
-                INTO '.$tableQuery.' ('.$columnsQuery.')
-            VALUES ('.$valuesInsertQuery.')
-            ON DUPLICATE KEY UPDATE
-                '.$valuesUpdateQuery
-            ;
+        if (empty($this->controller->id)) {
+            $query = 'INSERT INTO '.$tableQuery.' ('.$columnsQuery.') VALUES ('.$valuesInsertQuery.');';
+            $statement = $this->db->handle->prepare($query);
+            $statement->execute($values);
 
+            return $this->db->handle->lastInsertId();
+        }
+
+        $query = 'UPDATE '.$tableQuery.' SET '.$valuesUpdateQuery.' WHERE id = 1';
         $statement = $this->db->handle->prepare($query);
         $statement->execute($values);
 
-        return $this->db->handle->lastInsertId();
+        return $this->controller->id;
     }
 
-    public function deleteRow()
+    /**
+     * @return void
+     */
+    private function deleteRow()
     {
         $query = '
             DELETE FROM
@@ -371,7 +431,10 @@ class AdminModel
         exit($statement->execute());
     }
 
-    public function setOrder()
+    /**
+     * @return void
+     */
+    private function setOrder()
     {
         if (!empty($_POST['order'])) {
             $query = '

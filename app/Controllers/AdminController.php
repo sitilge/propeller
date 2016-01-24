@@ -7,12 +7,24 @@ use App\Models\UrlModel;
 
 class AdminController
 {
+    /**
+     * @var string
+     */
     public $table;
 
+    /**
+     * @var string
+     */
     public $action;
 
+    /**
+     * @var string
+     */
     public $id;
 
+    /**
+     * AdminController constructor.
+     */
     public function __construct()
     {
         $this->factory = new Factory();
@@ -20,6 +32,11 @@ class AdminController
         $this->model = new \App\Models\AdminModel($this);
     }
 
+    /**
+     * @param null $table
+     * @param null $action
+     * @param null $id
+     */
     public function main($table = null, $action = null, $id = null)
     {
         $this->table = $table;

@@ -1,0 +1,66 @@
+{
+  "name": "Shops",
+  "insert": true,
+  "order": {
+    "column": "sequence",
+    "direction": "ASC"
+  },
+  "columns": {
+    "id": {
+      "disabled": true,
+      "name": "ID",
+      "display": "edit"
+    },
+    "name": {
+      "name": "Name",
+      "display": "view"
+    },
+    "name_clean": {
+      "disabled": true,
+      "name": "Name (URL)",
+      "display": "view",
+      "type": "slug"
+    },
+    "marker_color": {
+      "name": "Marker color",
+      "display": "edit"
+    },
+    "url": {
+      "name": "URL",
+      "display": "edit"
+    },
+    "city": {
+      "name": "City",
+      "display": "edit"
+    },
+    "address": {
+      "name": "Address",
+      "display": "edit"
+    },
+    "post_code": {
+      "name": "Post code",
+      "display": "edit"
+    },
+    "phone": {
+      "name": "Phone",
+      "display": "edit"
+    },
+    "email": {
+      "name": "Icon",
+      "display": "edit"
+    },
+    "manager_id": {
+      "name": "Manager ID",
+      "display": "edit"
+    },
+    "content": {
+      "name": "Content 1",
+      "display": "edit",
+      "type": "text"
+    },
+    "google_id": {
+      "name": "Google ID",
+      "display": "edit"
+    }
+  }
+}

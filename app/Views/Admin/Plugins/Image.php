@@ -1,7 +1,7 @@
 <div class="row images">
     <span class='size-large col-md-1'>
         <div id="preview-<?php echo $column;?>" class="image size-large"
-            style="<?php echo (isset($data[$table]['rows'][$id][$column]) && !empty($data[$table]['rows'][$id][$column]) ? "background-image:url('".$data[$table]['rows'][$id][$column]."')" : "background-image:url('https://placeholdit.imgix.net/~text?txtsize=29&bg=eeeeee&txtclr=000000&txt=Image&w=196&h=196&txttrack=0')"); ?>;"
+            style="<?php echo (isset($data[$table]['rows'][$id][$column]) && !empty($data[$table]['rows'][$id][$column]) ? "background-image:url('".$data[$table]['rows'][$id][$column]."')" : "background-image:url('/img/system/image-empty.png')"); ?>;"
         ></div>
     </span>
     <div id="image-buttons" class="col-md-1">
