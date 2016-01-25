@@ -1,4 +1,5 @@
 {
+  "key": "id",
   "name": "Shops",
   "insert": true,
   "order": {
@@ -6,61 +7,33 @@
     "direction": "ASC"
   },
   "columns": {
-    "id": {
-      "disabled": true,
-      "name": "ID",
-      "display": "edit"
-    },
     "name": {
       "name": "Name",
       "display": "view"
     },
-    "name_clean": {
-      "disabled": true,
-      "name": "Name (URL)",
+    "slug": {
+      "disabled": false,
+      "name": "Slug",
       "display": "view",
       "type": "slug"
     },
-    "marker_color": {
-      "name": "Marker color",
-      "display": "edit"
-    },
-    "url": {
-      "name": "URL",
-      "display": "edit"
-    },
-    "city": {
-      "name": "City",
-      "display": "edit"
-    },
-    "address": {
-      "name": "Address",
-      "display": "edit"
-    },
-    "post_code": {
-      "name": "Post code",
-      "display": "edit"
-    },
-    "phone": {
-      "name": "Phone",
-      "display": "edit"
-    },
-    "email": {
-      "name": "Icon",
-      "display": "edit"
-    },
-    "manager_id": {
-      "name": "Manager ID",
-      "display": "edit"
-    },
-    "content": {
-      "name": "Content 1",
+    "description": {
+      "name": "Description",
       "display": "edit",
       "type": "text"
     },
-    "google_id": {
-      "name": "Google ID",
-      "display": "edit"
+    "icon_id": {
+      "name": "Icon",
+      "display": "View",
+      "join": {
+        "icons": {
+          "key": "id",
+          "columns": {
+            "id": {},
+            "name": {}
+          }
+        }
+      }
     }
   }
 }

@@ -118,6 +118,20 @@ class AdminModel
             $table = basename($file, '.json');
 
             $data[$table] = $json;
+
+            //TODO - there must always be the key present
+            $key = $data[$table]['key'];
+
+            //TODO - if the key is provided, build the default
+            if (empty($data[$table]['columns'][$key])) {
+                $data[$table]['columns'] = [
+                        $key => [
+                            'name' => 'ID',
+                            'display' => false,
+                            'disabled' => true
+                        ]
+                    ] + $data[$table]['columns'];
+            }
         }
 
         ksort($data);
@@ -130,24 +144,22 @@ class AdminModel
      */
     public function getMenu()
     {
-        $menu = [];
-
-        foreach ($this->data as $table => $config) {
-            $menu[$table] = [
-                'name' => !empty($config['name']) ? $config['name'] : $table
-            ];
-        }
-
-        return $menu;
+        return $this->data;
     }
 
     /**
      * @return array
+     * @throws \ErrorException
      */
     private function getData()
     {
         if (empty($this->controller->table)) {
             return $this->data;
+        }
+
+        if (empty($this->data[$this->controller->table]['columns'])) {
+            throw new \ErrorException('No columns provided in '.$this->controller->table.'.json.');
+
         }
 
         //loop the columns, the structure for main columns and join columns
@@ -218,9 +230,9 @@ class AdminModel
 
                     if ($statement->execute()) {
                         while ($row = $statement->fetch()) {
-                            //special join logic
-                            $id = $row['id'];
-                            unset($row['id']);
+                            //TODO - Do we need this? Modify to always include the join key!
+                            $id = $row[$join['key']];
+                            unset($row[$join['key']]);
 
                             $this->data[$this->controller->table]['rowsJoin'][$columnName][$id] = implode(', ', $row);
                         }
@@ -258,8 +270,10 @@ class AdminModel
         $statement = $this->db->handle->prepare($query);
 
         if ($statement->execute()) {
+            $key = $this->data[$this->controller->table]['key'];
+
             while ($row = $statement->fetch()) {
-                $this->data[$this->controller->table]['rows'][$row['id']] = $row;
+                $this->data[$this->controller->table]['rows'][$row[$key]] = $row;
             }
         }
 
@@ -311,7 +325,7 @@ class AdminModel
         } else {
             $structure = [];
 
-            $directory = new \RecursiveDirectoryIterator($publicPath.'/'.$imageDir, \RecursiveDirectoryIterator::SKIP_DOTS);
+            $directory = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($publicPath.'/'.$imageDir, \RecursiveDirectoryIterator::SKIP_DOTS));
 
             foreach ($directory as $file ) {
                 if ('.' === substr($file->getFilename(), 0, 1)) {
@@ -351,21 +365,27 @@ class AdminModel
      */
     private function setData()
     {
+        $data = null;
+
         if ($this->controller->action === 'add' || $this->controller->action === 'edit') {
             $this->managePlugins();
 
+            $data = $this->createUpdateRow();
+        } elseif ($this->controller->action === 'remove') {
+            $data = $this->deleteRow();
+        }
+
+        //TODO - if requested with non-ajax then redirect
+        if (empty($_SERVER['HTTP_X_REQUESTED_WITH'])) {
             $response = $this->factory->response();
             $router = new UrlModel();
 
             $response
                 ->header('Location: '.$router->admin($this->controller->table))
                 ->send();
-
-            exit($this->createUpdateRow());
-        } elseif ($this->controller->action === 'remove') {
-
-            exit($this->deleteRow());
         }
+
+        exit($data);
     }
 
     /**
@@ -399,13 +419,21 @@ class AdminModel
 
         if (empty($this->controller->id)) {
             $query = 'INSERT INTO '.$tableQuery.' ('.$columnsQuery.') VALUES ('.$valuesInsertQuery.');';
+
             $statement = $this->db->handle->prepare($query);
             $statement->execute($values);
 
             return $this->db->handle->lastInsertId();
         }
 
-        $query = 'UPDATE '.$tableQuery.' SET '.$valuesUpdateQuery.' WHERE id = 1';
+        $key = $this->data[$this->controller->table]['key'];
+        $values[':'.$key] = $this->controller->id;
+
+        $query = '
+            UPDATE '.$tableQuery.'
+            SET '.$valuesUpdateQuery.'
+            WHERE '.$this->db->backtick($key).' = :'.$key;
+
         $statement = $this->db->handle->prepare($query);
         $statement->execute($values);
 
@@ -417,16 +445,17 @@ class AdminModel
      */
     private function deleteRow()
     {
+        $key = $this->data[$this->controller->table]['key'];
+
         $query = '
             DELETE FROM
                 '.$this->db->backtick($this->controller->table).'
             WHERE
-                `id` = :row_id
-            '
+                '.$this->db->backtick($key).' = :'.$key
             ;
 
         $statement = $this->db->handle->prepare($query);
-        $statement->bindValue(':row_id', $this->controller->id);
+        $statement->bindValue(':'.$key, $this->controller->id);
 
         exit($statement->execute());
     }
@@ -437,18 +466,20 @@ class AdminModel
     private function setOrder()
     {
         if (!empty($_POST['order'])) {
+            $key = $this->data[$this->controller->table]['key'];
+
             $query = '
                 UPDATE '.$this->db->backtick($this->controller->table).'
-                SET '.$this->db->backtick($this->data[$this->controller->table]['order']['column']).' = CASE `id`'
+                SET '.$this->db->backtick($this->data[$this->controller->table]['order']['column']).' = CASE '.$this->db->backtick($key)
             ;
 
             foreach ($_POST['order'] as $order => $id) {
-                $values[':id'.$id] = $id;
+                $values[':'.$key.$id] = $id;
                 $values[':order'.$order] = $order;
-                $query .= ' WHEN :id'.$id.' THEN :order'.$order;
+                $query .= ' WHEN :'.$key.$id.' THEN :order'.$order;
             }
 
-            $query .= ' END WHERE `id` IN ('.implode(',', array_values($_POST['order'])).')';
+            $query .= ' END WHERE '.$this->db->backtick($key).' IN ('.implode(',', array_values($_POST['order'])).')';
 
             $statement = $this->db->handle->prepare($query);
             exit($statement->execute($values));

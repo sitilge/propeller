@@ -1,13 +1,18 @@
-<link rel="stylesheet" href="/css/font-awesome.css" />
-<link rel="stylesheet" href="/css/summernote.min.css">
-
-<script src="/js/summernote.min.js"></script>
-
+<h1 class="page-header">
+    <span><?php echo !empty($data[$table]['name']) ? $data[$table]['name'] : $table; ?></span>
+    <?php if (!empty($data[$table]['insert']) && $action === 'edit') : ?>
+        <div class="pull-right">
+            <a class="remove-row-button btn btn-danger" data-url="<?php echo $router->admin($table, 'remove', $id); ?>">Delete</a>
+            <a href="<?php echo $router->admin($table, 'add'); ?>" class="btn btn-success">Create</a>
+        </div>
+    <?php endif; ?>
+</h1>
 <form action="" method="post" enctype="multipart/form-data">
     <?php foreach ($data[$table]['columns'] as $columnName => $column) : ?>
         <?php $value = isset($data[$table]['rows'][$id][$columnName]) ? $data[$table]['rows'][$id][$columnName] : null; ?>
-        <?php $disabled = !empty($column['disabled']) ? 'disabled' : ''; ?>
-        <div class="form-group">
+        <?php $disabled = !empty($column['disabled']) ? 'disabled' : null; ?>
+        <?php $display = empty($column['display']) ? 'hidden' : null; ?>
+        <div class="form-group <?php echo $display; ?>">
             <label for="<?php echo $columnName; ?>"><?php echo (isset($column['name']) ? $column['name'] : $columnName); ?></label>
             <?php if (!empty($data[$table]['rowsJoin'][$columnName])) : ?>
                 <select id="<?php echo $columnName; ?>" class="form-control" name="<?php echo $action; ?>[<?php echo $columnName; ?>]" >

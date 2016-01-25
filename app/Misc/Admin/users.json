@@ -1,0 +1,21 @@
+{
+  "key": "id",
+  "name": "Users",
+  "insert": true,
+  "columns": {
+    "name": {
+      "name": "Name",
+      "display": "view"
+    },
+    "surname": {
+      "name": "Surname",
+      "display": "view",
+      "length": 10
+    },
+    "photo": {
+      "name": "Photo",
+      "display": "view",
+      "type": "image"
+    }
+  }
+}

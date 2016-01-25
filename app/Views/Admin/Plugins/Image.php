@@ -1,3 +1,5 @@
+<script>var dir = "<?php echo '/'.$imageDir.'/'.$table.'/'; ?>";</script>
+
 <div class="row images">
     <span class='size-large col-md-1'>
         <div id="preview-<?php echo $column;?>" class="image size-large"
@@ -36,8 +38,3 @@
         </div>
     </div>
 </div>
-
-<script>
-    var dir = "<?php echo '/'.$imageDir.'/'.$table.'/'; ?>";
-</script>
-<script src="/js/image.js"></script>

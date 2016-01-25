@@ -3,24 +3,29 @@
   "name": "Menu",
   "insert": true,
   "order": {
-    "column": "name_clean",
+    "column": "sequence",
     "direction": "ASC"
   },
   "columns": {
     "id": {
       "disabled": true,
-      "name": "ID",
+      "name": "Menu item ID",
       "display": "edit"
     },
     "name": {
       "name": "Name",
       "display": "view"
     },
-    "name_clean": {
+    "slug": {
       "disabled": false,
       "name": "Slug",
       "display": "view",
       "type": "slug"
+    },
+    "sequence": {
+      "disabled": false,
+      "name": "Sequence",
+      "display": false
     },
     "display": {
       "disabled": false,
