@@ -15,6 +15,7 @@ Temporary\ Items
 .apdisk
 .project
 .idea
-/vendor
+
 composer.lock
-/.sass-cache
+/vendor
+/node_modules

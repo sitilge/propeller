@@ -1,4 +1,4 @@
-//front page
+//template
 body {
 	padding-top: 50px;
 }
@@ -91,10 +91,10 @@ table {
         text-align: center;
     }
 }
-.glyphicon{
+.glyphicon {
     cursor:pointer;
 }
-.size2 {
+.size-image {
     width: 95px;
     height: 95px;
     margin:2px;
@@ -110,6 +110,7 @@ table {
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center;
+    cursor: pointer;
 }
 .btn-file {
     position: relative;
@@ -136,38 +137,54 @@ table {
     display: block;
 }
 .col-md-1 {
-    padding:0;
+    padding: 0;
 }
 .row.images {
-    padding-left:15px;
+    padding-left: 15px;
 }
 #upload-button {
-    color:#337AB7;
+    color: #5cb85c;
+
+    &:hover {
+        color: #449D44;
+    }
 }
 #remove-button {
-    color:#F0AD4E;
+    color: #f0ad4e;
+
+    &:hover {
+        color: #EC971F;
+    }
 }
 #delete-button {
-    color:#D9534F;
+    color: #d9534f;
+
+    &:hover {
+        color: #C9302C;
+    }
 }
 #gallery-button {
-    color:#5CB85C;
+    color: #337ab7;
+
+    &:hover {
+        color: #286090;
+    }
 }
 .image-container {
     min-height: 100px;
 }
 #gallery {
     .modal-body {
-        padding:0;
+        padding: 0;
     }
     .modal-footer, .modal-header {
-        border:none;
+        border: none;
     }
     .modal-header {
         .close{
-            position:absolute;
-            right:5px;
-            top:5px;
+            position: absolute;
+            right: 5px;
+            top: 5px;
         }
     }
 }

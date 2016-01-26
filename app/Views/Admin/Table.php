@@ -1,12 +1,14 @@
 <h1 class="page-header">
     <span><?php echo !empty($data[$table]['name']) ? $data[$table]['name'] : $table; ?></span>
     <?php if (!empty($data[$table]['insert'])) : ?>
-        <a href="<?php echo $router->admin($table, 'add'); ?>" class="btn btn-success pull-right">Create</a>
+        <div class="pull-right">
+            <a class="add-row-button btn btn-success" href="<?php echo $router->admin($table, 'add'); ?>">Create</a>
+        </div>
     <?php endif; ?>
 </h1>
 <?php if (!empty($data[$table]['rows'])) : ?>
     <div class="form-group">
-        <input type="text" id="search" class="form-control" name="search" placeholder="Search..." data-list=".searchable" autocomplete="off" />
+        <input id="search" class="form-control" name="search" placeholder="Search..." data-list=".searchable" autocomplete="off" />
     </div>
     <table class="table table-striped">
         <thead>
@@ -32,16 +34,16 @@
                         <?php if (!empty($column['display']) && $column['display'] !== 'edit') : ?>
                             <td class="edit-row" data-url="<?php echo $router->admin($table, 'edit', $row[$data[$table]['key']]); ?>">
                                 <?php if (!empty($data[$table]['rowsJoin'][$columnName])) : ?>
-                                    <?php echo (!empty($data[$table]['rowsJoin'][$columnName][$row[$columnName]]) ? $data[$table]['rowsJoin'][$columnName][$row[$columnName]] : $row[$columnName]); ?></td>
+                                    <?php echo (!empty($data[$table]['rowsJoin'][$columnName][$row[$columnName]]) ? $data[$table]['rowsJoin'][$columnName][$row[$columnName]] : $row[$columnName]); ?>
                                 <?php else : ?>
                                     <?php echo $row[$columnName]; ?>
                                 <?php endif; ?>
                             </td>
                         <?php endif; ?>
-                    <?php endforeach; ?>           
+                    <?php endforeach; ?>
                     <td class="text-right">
                         <a class="edit-row-button glyphicon glyphicon-pencil" href="<?php echo $router->admin($table, 'edit', $row[$data[$table]['key']]); ?>"></a>
-                        <a class="remove-row-button glyphicon glyphicon-remove" data-url="<?php echo $router->admin($table, 'remove', $row[$data[$table]['key']]); ?>"></a>
+                        <a class="remove-row-button glyphicon glyphicon-remove" data-url="<?php echo $router->admin($table, 'remove', $row[$data[$table]['key']]); ?>" data-id="<?php echo $row[$data[$table]['key']]; ?>"></a>
                     </td>
                 </tr>
             <?php endforeach; ?>

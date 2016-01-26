@@ -2,8 +2,8 @@
     <span><?php echo !empty($data[$table]['name']) ? $data[$table]['name'] : $table; ?></span>
     <?php if (!empty($data[$table]['insert']) && $action === 'edit') : ?>
         <div class="pull-right">
-            <a class="remove-row-button btn btn-danger" data-url="<?php echo $router->admin($table, 'remove', $id); ?>">Delete</a>
-            <a href="<?php echo $router->admin($table, 'add'); ?>" class="btn btn-success">Create</a>
+            <a class="remove-row-button btn btn-danger" data-url="<?php echo $router->admin($table, 'remove', $id); ?>" data-id="<?php echo $id; ?>">Delete</a>
+            <a class="add-row-button btn btn-success" href="<?php echo $router->admin($table, 'add'); ?>" >Create</a>
         </div>
     <?php endif; ?>
 </h1>
@@ -15,7 +15,7 @@
         <div class="form-group <?php echo $display; ?>">
             <label for="<?php echo $columnName; ?>"><?php echo (isset($column['name']) ? $column['name'] : $columnName); ?></label>
             <?php if (!empty($data[$table]['rowsJoin'][$columnName])) : ?>
-                <select id="<?php echo $columnName; ?>" class="form-control" name="<?php echo $action; ?>[<?php echo $columnName; ?>]" >
+                <select id="<?php echo $columnName; ?>" class="form-control" name="<?php echo $action; ?>[<?php echo $columnName; ?>]">
                     <option value="" <?php echo $disabled; ?>></option>
                     <?php foreach ($data[$table]['rowsJoin'][$columnName] as $rowJoinId => $rowJoinValue) : ?>
                         <?php if (isset($value) && $rowJoinId == $value) : ?>
@@ -40,7 +40,7 @@
                         <input id="<?php echo $columnName; ?>" class="form-control" name="<?php echo $action; ?>[<?php echo $columnName; ?>]" value="<?php echo $value; ?>" <?php echo $disabled; ?>/>
                     </div>
                 <?php elseif ($column['type'] === 'slug') : ?>
-                    <input id="<?php echo $columnName; ?>" class="form-control" name="<?php echo $action; ?>[<?php echo $columnName; ?>]" value="<?php echo $value; ?>" <?php echo $disabled; ?> onkeyup="slugify(this);" />
+                    <input id="<?php echo $columnName; ?>" class="form-control slugify" name="<?php echo $action; ?>[<?php echo $columnName; ?>]" value="<?php echo $value; ?>" <?php echo $disabled; ?>/>
                 <?php else : ?>
                     <input id="<?php echo $columnName; ?>" class="form-control" name="<?php echo $action; ?>[<?php echo $columnName; ?>]" value="<?php echo $value; ?>" <?php echo $disabled; ?>/>
                 <?php endif; ?>
@@ -49,5 +49,5 @@
             <?php endif; ?>
         </div>
     <?php endforeach; ?>
-    <button class="btn btn-success">Submit</button>
+    <button class="btn btn-primary">Update</button>
 </form>

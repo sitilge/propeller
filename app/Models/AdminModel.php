@@ -78,9 +78,9 @@ class AdminModel
      */
     private function manageData()
     {
-        $pathJson = rtrim($this->config->get('admin', 'pathJson'), '/');
+        $jsonPath = rtrim($this->config->get('admin', 'jsonPath'), '/');
 
-        $this->data = $this->getJson($pathJson);
+        $this->data = $this->getJson($jsonPath);
 
         if (!empty($_POST)) {
             if (!empty($_POST['order'])) {
@@ -295,16 +295,21 @@ class AdminModel
      */
     private function pluginImage()
     {
+        if (empty($this->controller->action)) {
+            return;
+        }
+
         $publicPath = __DIR__.'/../../public';
-        $imageDir = rtrim($this->config->get('admin', 'dirImage'), '/');
+        $imageDomain = trim($this->config->get('admin', 'imageDomain'), '/');
+        $imagePath = trim($this->config->get('admin', 'imagePath'), '/');
 
         if (!empty($_FILES)) {
             if (isset($_FILES['image']['error']) && $_FILES['image']['error'] === 0) {
-                if (!is_dir($publicPath.'/'.$imageDir.'/'.$this->controller->table)) {
-                    mkdir($publicPath.'/'.$imageDir.'/'.$this->controller->table);
+                if (!is_dir($publicPath.'/'.$imagePath.'/'.$this->controller->table)) {
+                    mkdir($publicPath.'/'.$imagePath.'/'.$this->controller->table);
                 }
 
-                $storage = new \Upload\Storage\FileSystem($publicPath.'/'.$imageDir.'/'.$this->controller->table, true);
+                $storage = new \Upload\Storage\FileSystem($publicPath.'/'.$imagePath.'/'.$this->controller->table, true);
 
                 $file = new \Upload\File('image', $storage);
 
@@ -322,42 +327,47 @@ class AdminModel
 
                 $file->upload();
             }
-        } else {
-            $structure = [];
 
-            $directory = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($publicPath.'/'.$imageDir, \RecursiveDirectoryIterator::SKIP_DOTS));
+            return;
+        }
 
-            foreach ($directory as $file ) {
-                if ('.' === substr($file->getFilename(), 0, 1)) {
-                    continue;
-                }
+        $structure = [];
 
-                $pathname = $file->getPathname();
-                $dir = basename($file->getPath());
+        $directory = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($publicPath.'/'.$imagePath, \RecursiveDirectoryIterator::SKIP_DOTS));
 
-                //structure by modification time and filename
-                $structure[$dir][$file->getMtime().$file->getFilename()] = str_replace($publicPath, '', $pathname);
-
-                krsort($structure[$dir]);
+        foreach ($directory as $file ) {
+            if ('.' === substr($file->getFilename(), 0, 1)) {
+                continue;
             }
 
-            $content = $this->factory->template()
-                ->file(__DIR__.'/../Views/Admin/Plugins/Image')
-                ->set('structure', $structure)
-                ->set('data', $this->data)
-                ->set('imageDir', $imageDir)
-                ->set('table', $this->controller->table)
-                ->set('action', $this->controller->action)
-                ->set('id', $this->controller->id);
+            $pathname = $file->getPathname();
+            $dir = basename($file->getPath());
 
-            foreach ($this->data[$this->controller->table]['columns'] as $columnName => $column) {
-                if (isset($column['type']) && $column['type'] == 'image') {
-                    $this->data[$this->controller->table]['plugins'][$columnName] = $content
-                        ->set('column', $columnName)
-                        ->render();
-                }
+            //structure by modification time and filename
+            $structure[$dir][$file->getMtime().$file->getFilename()] = str_replace($publicPath, '', $pathname);
+
+            krsort($structure[$dir]);
+        }
+
+        $content = $this->factory->template()
+            ->file(__DIR__.'/../Views/Admin/Plugins/Image')
+            ->set('structure', $structure)
+            ->set('data', $this->data)
+            ->set('imageDomain', $imageDomain)
+            ->set('imagePath', $imagePath)
+            ->set('table', $this->controller->table)
+            ->set('action', $this->controller->action)
+            ->set('id', $this->controller->id);
+
+        foreach ($this->data[$this->controller->table]['columns'] as $columnName => $column) {
+            if (isset($column['type']) && $column['type'] == 'image') {
+                $this->data[$this->controller->table]['plugins'][$columnName] = $content
+                    ->set('column', $columnName)
+                    ->render();
             }
         }
+
+        return;
     }
 
     /**
@@ -389,7 +399,7 @@ class AdminModel
     }
 
     /**
-     * @return string
+     * @return integer
      */
     private function createUpdateRow()
     {
@@ -421,9 +431,7 @@ class AdminModel
             $query = 'INSERT INTO '.$tableQuery.' ('.$columnsQuery.') VALUES ('.$valuesInsertQuery.');';
 
             $statement = $this->db->handle->prepare($query);
-            $statement->execute($values);
-
-            return $this->db->handle->lastInsertId();
+            return $statement->execute($values);
         }
 
         $key = $this->data[$this->controller->table]['key'];
@@ -435,13 +443,12 @@ class AdminModel
             WHERE '.$this->db->backtick($key).' = :'.$key;
 
         $statement = $this->db->handle->prepare($query);
-        $statement->execute($values);
 
-        return $this->controller->id;
+        return $statement->execute($values);
     }
 
     /**
-     * @return void
+     * @return boolean
      */
     private function deleteRow()
     {
@@ -457,7 +464,7 @@ class AdminModel
         $statement = $this->db->handle->prepare($query);
         $statement->bindValue(':'.$key, $this->controller->id);
 
-        exit($statement->execute());
+        return $statement->execute();
     }
 
     /**
@@ -466,6 +473,8 @@ class AdminModel
     private function setOrder()
     {
         if (!empty($_POST['order'])) {
+            $values = [];
+
             $key = $this->data[$this->controller->table]['key'];
 
             $query = '

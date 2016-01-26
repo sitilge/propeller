@@ -8,23 +8,10 @@
         <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
         <meta content="curdle" property="og:title">
         <meta content="" property="og:image">
-        <meta content="" property="og:description">
-        <meta content="" property="og:url">
-
-        <link rel="stylesheet" href="/css/bootstrap.min.css">
+        <meta content="A simple database administration tool for simple CRUD operations." property="og:description">
+        <meta content="https://github.com/sitilge/curdle" property="og:url">
         <link rel="stylesheet" href="/css/all.css">
-        <link rel="stylesheet" href="/css/sweetalert.css">
-        <link rel="stylesheet" href="/css/font-awesome.css" />
-        <link rel="stylesheet" href="/css/summernote.min.css">
-
-        <script src="/js/jquery.min.js"></script>
-        <script src="/js/bootstrap.min.js"></script>
         <script src="/js/all.js"></script>
-        <script src="/js/sortable.js"></script>
-        <script src="/js/hideseek.js"></script>
-        <script src="/js/sweetalert.js"></script>
-        <script src="/js/summernote.min.js"></script>
-        <script src="/js/image.js"></script>
     </head>
     <body>
         <nav class="navbar navbar-default navbar-fixed-top">
