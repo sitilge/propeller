@@ -20,7 +20,11 @@ body {
     padding: 20px;
     position: fixed;
     top: 50px;
-    z-index: 1000; } }
+    z-index: 1000; }
+  #navbar {
+    display: none; }
+    #navbar .nav {
+      display: none; } }
 
 .nav-sidebar {
   margin-bottom: 20px;

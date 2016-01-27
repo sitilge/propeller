@@ -25,6 +25,13 @@
                     </button>
                     <a href="<?php echo $router->admin(); ?>" class="navbar-brand">curdle</a>
                 </div>
+                <div id="navbar" class="navbar-collapse collapse">
+                    <ul class="nav navbar-nav">
+                        <?php foreach ($menu as $table => $item) : ?>
+                            <li class="<?php echo ($segment === $table ? "active" : ""); ?>"><a href="<?php echo $router->admin($table); ?>"><?php echo !empty($item['name']) ? $item['name'] : $table; ?></a></li>
+                        <?php endforeach; ?>
+                    </ul>
+                </div>
             </div>
         </nav>
         <div class="container-fluid">

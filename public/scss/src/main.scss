@@ -23,6 +23,13 @@ body {
 		top: 50px;
         z-index: 1000;
 	}
+    #navbar {
+        .nav {
+            display: none;
+        }
+
+        display: none;
+    }
 }
 .nav-sidebar {
 	margin-bottom: 20px;
