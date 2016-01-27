@@ -4,6 +4,10 @@
 
 curdle is a simple database administration tool for simple [CRUD] operations using almost any relational database you prefer.
 
+## Demo
+
+See a live demo here: http://curdle.sitilge.id.lv
+
 ## Features
 
 - Adapt an existing or new database with ease
