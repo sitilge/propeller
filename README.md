@@ -69,7 +69,7 @@ The respective ```.json``` files for the project are located under ```app/Misc/A
 
 ## Contributing
 
-It is more than welcome to contribute to the project - feel free to send pull requests. Also, I try to keep the issue section updated but don't feel limited only by that. I would happily agree all critics/opinions/praises to ```sitilge@gmail.com```.
+It is more than welcome to contribute to the project - feel free to send pull requests. Also, I try to keep the issue section updated but don't feel limited only by that. I would happily accept all critics/opinions/praises to ```sitilge@gmail.com```.
 
 [CRUD]: <https://en.wikipedia.org/wiki/Create,_read,_update_and_delete>
 [composer]: <https://getcomposer.org/download/>
