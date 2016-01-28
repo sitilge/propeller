@@ -19,33 +19,33 @@
                     <option value="" <?php echo $disabled; ?>></option>
                     <?php foreach ($data[$table]['rowsJoin'][$columnName] as $rowJoinId => $rowJoinValue) : ?>
                         <?php if (isset($value) && $rowJoinId == $value) : ?>
-                            <option value="<?php echo $rowJoinId; ?>" <?php echo $disabled; ?> selected><?php echo $rowJoinValue; ?></option>
+                            <option value="<?php echo $rowJoinId; ?>" <?php echo $disabled; ?> selected><?php echo htmlentities($rowJoinValue, ENT_QUOTES); ?></option>
                         <?php else : ?>
-                            <option value="<?php echo $rowJoinId; ?>" <?php echo $disabled; ?>><?php echo $rowJoinValue; ?></option>
+                            <option value="<?php echo $rowJoinId; ?>" <?php echo $disabled; ?>><?php echo htmlentities($rowJoinValue, ENT_QUOTES); ?></option>
                         <?php endif; ?>
                     <?php endforeach; ?>
                 </select>
             <?php elseif (!empty($column['type'])) : ?>
                 <?php if ($column['type'] === 'image') : ?>
-                    <input class="form-control" id="<?php echo $columnName; ?>" name="<?php echo $action; ?>[<?php echo $columnName; ?>]" value="<?php echo $value; ?>" <?php echo $disabled; ?> type="hidden"/>
+                    <input class="form-control" id="<?php echo $columnName; ?>" name="<?php echo $action; ?>[<?php echo $columnName; ?>]" value="<?php echo htmlentities($value, ENT_QUOTES); ?>" <?php echo $disabled; ?> type="hidden"/>
                     <?php echo $data[$table]['plugins'][$columnName]; ?>
                 <?php elseif ($column['type'] === 'length') : ?>
-                    <textarea id="<?php echo $columnName; ?>" name="<?php echo $action; ?>[<?php echo $columnName; ?>]" class="form-control excerpt" maxlength="255"><?php echo $value; ?></textarea>
+                    <textarea id="<?php echo $columnName; ?>" name="<?php echo $action; ?>[<?php echo $columnName; ?>]" class="form-control excerpt" maxlength="255"><?php echo htmlentities($value, ENT_QUOTES); ?></textarea>
                 <?php elseif ($column['type'] === 'text') : ?>
-                    <div id="<?php echo $columnName; ?>" class="summernote"><?php echo $value; ?></div>
-                    <textarea id="summernote-<?php echo $columnName; ?>" name="<?php echo $action; ?>[<?php echo $columnName; ?>]" hidden><?php echo $value; ?></textarea>
+                    <div id="<?php echo $columnName; ?>" class="summernote"><?php echo htmlentities($value, ENT_QUOTES); ?></div>
+                    <textarea id="summernote-<?php echo $columnName; ?>" name="<?php echo $action; ?>[<?php echo $columnName; ?>]" hidden><?php echo htmlentities($value, ENT_QUOTES);; ?></textarea>
                 <?php elseif ($column['type'] === 'price') : ?>
                     <div class="input-group">
                         <div class="input-group-addon"><span class="glyphicon glyphicon-eur" aria-hidden="true"></span></div>
-                        <input id="<?php echo $columnName; ?>" class="form-control" name="<?php echo $action; ?>[<?php echo $columnName; ?>]" value="<?php echo $value; ?>" <?php echo $disabled; ?>/>
+                        <input id="<?php echo $columnName; ?>" class="form-control" name="<?php echo $action; ?>[<?php echo $columnName; ?>]" value="<?php echo htmlentities($value, ENT_QUOTES); ?>" <?php echo $disabled; ?>/>
                     </div>
                 <?php elseif ($column['type'] === 'slug') : ?>
-                    <input id="<?php echo $columnName; ?>" class="form-control slugify" name="<?php echo $action; ?>[<?php echo $columnName; ?>]" value="<?php echo $value; ?>" <?php echo $disabled; ?>/>
+                    <input id="<?php echo $columnName; ?>" class="form-control slugify" name="<?php echo $action; ?>[<?php echo $columnName; ?>]" value="<?php echo htmlentities($value, ENT_QUOTES); ?>" <?php echo $disabled; ?>/>
                 <?php else : ?>
-                    <input id="<?php echo $columnName; ?>" class="form-control" name="<?php echo $action; ?>[<?php echo $columnName; ?>]" value="<?php echo $value; ?>" <?php echo $disabled; ?>/>
+                    <input id="<?php echo $columnName; ?>" class="form-control" name="<?php echo $action; ?>[<?php echo $columnName; ?>]" value="<?php echo htmlentities($value, ENT_QUOTES); ?>" <?php echo $disabled; ?>/>
                 <?php endif; ?>
             <?php else : ?>
-                <input id="<?php echo $columnName; ?>" class="form-control" name="<?php echo $action; ?>[<?php echo $columnName; ?>]" value="<?php echo $value; ?>" <?php echo $disabled; ?>/>
+                <input id="<?php echo $columnName; ?>" class="form-control" name="<?php echo $action; ?>[<?php echo $columnName; ?>]" value="<?php echo htmlentities($value, ENT_QUOTES); ?>" <?php echo $disabled; ?>/>
             <?php endif; ?>
         </div>
     <?php endforeach; ?>
