@@ -31,7 +31,7 @@
             <div class="modal-body image-container">
                 <?php foreach ($structure as $dir => $files) : ?>
                     <?php foreach ($files as $file) : ?>
-                        <div class="size-image image col-md-1" style="background-image: url('<?php echo $file; ?>')" file="<?php echo $file; ?>" onclick="uploadImage($(this))"></div>
+                        <div class="size-image image col-md-1" style="background-image: url('<?php echo $file; ?>')" file="<?php echo htmlentities($file, ENT_QUOTES); ?>" onclick="uploadImage($(this))"></div>
                     <?php endforeach; ?>
                 <?php endforeach; ?>
                 <div class="clearfix"></div>
