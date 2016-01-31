@@ -5,7 +5,7 @@ namespace App\Controllers;
 use Abimo\Factory;
 use App\Models\UrlModel;
 
-class AdminController
+class FrontController
 {
     /**
      * @var string
@@ -23,13 +23,18 @@ class AdminController
     public $id;
 
     /**
+     * @var TemplateController
+     */
+    public $templateController;
+
+    /**
      * AdminController constructor.
      */
     public function __construct()
     {
-        $this->factory = new Factory();
+//        $this->templateController = ;
 
-        $this->model = new \App\Models\AdminModel($this);
+        $this->factory = new \Abimo\Factory();
     }
 
     /**
@@ -39,12 +44,14 @@ class AdminController
      */
     public function main($table = null, $action = null, $id = null)
     {
-        $this->table = $table;
-        $this->action = $action;
-        $this->id = $id;
+//        $this->table = $table;
+//        $this->action = $action;
+//        $this->id = $id;
 
-        $content = $this->model->getContent();
-        $menu = $this->model->getMenu();
+        $templateController = new \App\Controllers\TemplateController($this->table, $this->action, $this->id);
+
+        $content = $templateController->getContent();
+        $menu = $templateController->getMenu();
         $segment = $this->factory->request()->segment(null, 1);
 
         echo $this->factory->template()
@@ -55,4 +62,6 @@ class AdminController
             ->set('segment', $segment)
             ->render();
     }
+
+
 }

@@ -2,9 +2,9 @@
 
 namespace App\Models;
 
-use App\Controllers\AdminController;
+use App\Controllers\MainController;
 
-class AdminModel
+class BusinessModel
 {
     /**
      * @var \Abimo\Factory
@@ -22,7 +22,7 @@ class AdminModel
     private $db;
 
     /**
-     * @var AdminController
+     * @var MainController
      */
     private $controller;
 
@@ -32,51 +32,32 @@ class AdminModel
     private $data = [];
 
     /**
+     * @var PersistenceModel
+     */
+    private $persistenceModel;
+
+    /**
      * AdminModel constructor.
      *
-     * @param AdminController $controller
+     * @param MainController $controller
      */
-    public function __construct(AdminController $controller)
+    public function __construct(MainController $controller)
     {
         $this->factory = new \Abimo\Factory();
         $this->config = $this->factory->config();
         $this->db = $this->factory->database();
 
         $this->controller = $controller;
-    }
 
-    /**
-     * @return string
-     */
-    public function getContent()
-    {
-        $this->manageData();
-
-        if (null === $this->controller->table) {
-            return '';
-        }
-
-        $content = $this->factory->template()
-            ->set('router', new UrlModel())
-            ->set('data', $this->data)
-            ->set('table', $this->controller->table)
-            ->set('action', $this->controller->action)
-            ->set('id', $this->controller->id);
-
-        if (null === $this->controller->action) {
-            $content->file(__DIR__.'/../Views/Admin/Table');
-        } else {
-            $content->file(__DIR__.'/../Views/Admin/Row');
-        }
-
-        return $content->render();
+        $this->persistenceModel = new PersistenceModel();
+        $this->templateModel = new TemplateModel();
     }
 
     /**
      * @throws \ErrorException
      * @return void
      */
-    private function manageData()
+    public function manageData()
     {
         $jsonPath = rtrim($this->config->get('admin', 'jsonPath'), '/');
 
@@ -137,14 +118,6 @@ class AdminModel
         ksort($data);
 
         return $data;
-    }
-
-    /**
-     * @return array
-     */
-    public function getMenu()
-    {
-        return $this->data;
     }
 
     /**
