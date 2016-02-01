@@ -58,9 +58,7 @@ class BusinessModel
      */
     public function manageData()
     {
-        $jsonPath = rtrim($this->config->get('admin', 'jsonPath'), '/');
-
-        $this->getJson($jsonPath);
+        $this->getJson();
 
         if (!empty($_POST)) {
             if (!empty($_POST['order'])) {
@@ -98,12 +96,13 @@ class BusinessModel
     }
 
     /**
-     * @param $path
      * @throws \ErrorException
      * @return array
      */
-    private function getJson($path)
+    public function getJson()
     {
+        $path = rtrim($this->config->get('admin', 'jsonPath'), '/');
+
         $iterator = new \DirectoryIterator($path);
 
         foreach ($iterator as $file) {

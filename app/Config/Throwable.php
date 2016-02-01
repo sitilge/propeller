@@ -5,5 +5,8 @@ return [
 	'reporting' => E_ALL, //throwable reporting; array(E_ALL, ...)
 	'log' => true, //throwable error logging; array(true, false)
 	'path' => __DIR__.'/../Logs/Error.log', //throwable error log path; string
-	'callable' => function(){echo "Whoops, some error.";} //throwable callable; callable
+	'callable' => function(){
+		$throwableController = new \App\Controllers\ThrowableController();
+        $throwableController->main();
+	} //throwable callable; callable
 ];
