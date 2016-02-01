@@ -6,7 +6,7 @@ $(function () {
 
         swal({
             title: 'Are you sure?',
-            text: 'The row will be deleted permanently.',
+            text: 'The row will be removed permanently.',
             type: 'error',
             confirmButtonClass: 'btn-danger',
             confirmButtonText: 'Delete',

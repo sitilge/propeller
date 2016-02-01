@@ -2,12 +2,17 @@
 
 namespace App\Models;
 
-use App\Controllers\MainController;
+use Abimo\Factory;
+use App\Controllers\FrontController;
+use Upload\File;
+use Upload\Storage\FileSystem;
+use Upload\Validation\Mimetype;
+use Upload\Validation\Size;
 
 class BusinessModel
 {
     /**
-     * @var \Abimo\Factory
+     * @var Factory
      */
     private $factory;
 
@@ -17,19 +22,14 @@ class BusinessModel
     private $config;
 
     /**
-     * @var \Abimo\Database
+     * @var FrontController
      */
-    private $db;
-
-    /**
-     * @var MainController
-     */
-    private $controller;
+    private $frontController;
 
     /**
      * @var array
      */
-    private $data = [];
+    public $data = [];
 
     /**
      * @var PersistenceModel
@@ -39,18 +39,17 @@ class BusinessModel
     /**
      * AdminModel constructor.
      *
-     * @param MainController $controller
+     * @param FrontController $frontController
      */
-    public function __construct(MainController $controller)
+    public function __construct(FrontController $frontController)
     {
-        $this->factory = new \Abimo\Factory();
+        $this->frontController = $frontController;
+
+        $this->factory = new Factory();
+
         $this->config = $this->factory->config();
-        $this->db = $this->factory->database();
 
-        $this->controller = $controller;
-
-        $this->persistenceModel = new PersistenceModel();
-        $this->templateModel = new TemplateModel();
+        $this->persistenceModel = new PersistenceModel($this->frontController, $this);
     }
 
     /**
@@ -61,17 +60,41 @@ class BusinessModel
     {
         $jsonPath = rtrim($this->config->get('admin', 'jsonPath'), '/');
 
-        $this->data = $this->getJson($jsonPath);
+        $this->getJson($jsonPath);
 
         if (!empty($_POST)) {
             if (!empty($_POST['order'])) {
-                $this->setOrder();
+                $this->persistenceModel->updateOrder();
             } else {
-                $this->setData();
+                $data = null;
+
+                if ($this->frontController->action === 'create') {
+                    $this->managePlugins();
+
+                    $data = $this->persistenceModel->createRow();
+                } elseif ($this->frontController->action === 'update') {
+                    $this->managePlugins();
+
+                    $data = $this->persistenceModel->updateRow();
+                } elseif ($this->frontController->action === 'remove') {
+                    $data = $this->persistenceModel->deleteRow();
+                }
+
+                //TODO - if requested with non-ajax then redirect
+                if (empty($_SERVER['HTTP_X_REQUESTED_WITH'])) {
+                    $response = $this->factory->response();
+                    $url = new UrlModel();
+
+                    $response
+                        ->header('Location: '.$url->admin($this->frontController->table))
+                        ->send();
+                }
+
+                exit($data);
             }
         }
 
-        $this->getData();
+        $this->persistenceModel->getData();
     }
 
     /**
@@ -81,8 +104,6 @@ class BusinessModel
      */
     private function getJson($path)
     {
-        $data = [];
-
         $iterator = new \DirectoryIterator($path);
 
         foreach ($iterator as $file) {
@@ -108,7 +129,7 @@ class BusinessModel
                 $data[$table]['columns'] = [
                         $key => [
                             'name' => 'ID',
-                            'display' => false,
+                            'view' => false,
                             'disabled' => true
                         ]
                     ] + $data[$table]['columns'];
@@ -117,148 +138,13 @@ class BusinessModel
 
         ksort($data);
 
-        return $data;
-    }
-
-    /**
-     * @return array
-     * @throws \ErrorException
-     */
-    private function getData()
-    {
-        if (empty($this->controller->table)) {
-            return $this->data;
-        }
-
-        if (empty($this->data[$this->controller->table]['columns'])) {
-            throw new \ErrorException('No columns provided in '.$this->controller->table.'.json.');
-
-        }
-
-        //loop the columns, the structure for main columns and join columns
-        //are equal intentionally to maintain readability
-
-        //regular query
-        $columnsQuery = '';
-        $tableQuery = '';
-        $orderQuery = '';
-
-        foreach ($this->data[$this->controller->table]['columns'] as $columnName => $column) {
-            $columnQueryName = $this->db->backtick($columnName);
-
-            $columnsArray[] = $columnQueryName;
-
-            if (!empty($column['order'])) {
-                $orderArray[$column['order']] = $columnQueryName;
-
-                if (!empty($column['order']['direction'])) {
-                    $orderArray[$column['order']] .= ' '.$column['order']['direction'];
-                }
-            }
-
-            //TODO - special join, override db if values already given
-            if (!empty($column['values'])) {
-                foreach ($column['values'] as $joinValueId => $joinValueValue) {
-                    $this->data[$this->controller->table]['rowsJoin'][$columnName][$joinValueId] = $joinValueValue;
-                }
-
-                continue;
-            }
-
-            if (!empty($column['join'])) {
-                foreach ($column['join'] as $joinTable => $join) {
-                    //regular join query
-                    $joinColumnsQuery = '';
-                    $joinTableQuery = '';
-                    $joinOrderQuery = '';
-
-                    foreach ($join['columns'] as $joinColumnName => $joinColumn) {
-                        $joinColumnQueryName = $this->db->backtick($joinColumnName);
-
-                        $joinColumnsArray[] = $joinColumnQueryName;
-
-                        if (!empty($joinColumn['order'])) {
-                            $joinOrderArray[$column['order']] = $joinColumnQueryName;
-
-                            if (!empty($joinColumn['order']['direction'])) {
-                                $joinOrderArray[$column['order']] .= ' '.$joinColumn['order']['direction'];
-                            }
-                        }
-                    }
-
-                    if (!empty($joinColumnsArray)) {
-                        $joinColumnsQuery = 'SELECT '.implode(',', $joinColumnsArray);
-
-                        $joinTableQuery = ' FROM '.$this->db->backtick($joinTable);
-                    }
-
-                    if (!empty($joinOrderArray)) {
-                        ksort($joinOrderArray);
-                        $joinOrderQuery = ' ORDER BY '.implode(',', $joinOrderArray);
-                    }
-
-                    $query = $joinColumnsQuery.$joinTableQuery.$joinOrderQuery;
-
-                    $statement = $this->db->handle->prepare($query);
-
-                    if ($statement->execute()) {
-                        while ($row = $statement->fetch()) {
-                            //TODO - Do we need this? Modify to always include the join key!
-                            $id = $row[$join['key']];
-                            unset($row[$join['key']]);
-
-                            $this->data[$this->controller->table]['rowsJoin'][$columnName][$id] = implode(', ', $row);
-                        }
-                    }
-                }
-            }
-        }
-
-        if (!empty($columnsArray)) {
-            $columnsQuery = 'SELECT '.implode(',', $columnsArray);
-
-            $tableQuery = ' FROM '.$this->db->backtick($this->controller->table);
-        }
-
-        if (!empty($orderArray)) {
-            ksort($orderArray);
-            $orderQuery = ' ORDER BY '.implode(',', $orderArray);
-        }
-
-        //TODO - special table order here
-        if (!empty($this->data[$this->controller->table]['order'])) {
-            if (empty($orderQuery)) {
-                $orderQuery .= ' ORDER BY '.$this->db->backtick($this->data[$this->controller->table]['order']['column']);
-            } else {
-                $orderQuery .= $this->db->backtick($this->data[$this->controller->table]['order']['column']);
-            }
-
-            if (!empty($this->data[$this->controller->table]['order']['direction'])) {
-                $orderQuery .= ' '.$this->data[$this->controller->table]['order']['direction'];
-            }
-        }
-
-        $query = $columnsQuery.$tableQuery.$orderQuery;
-
-        $statement = $this->db->handle->prepare($query);
-
-        if ($statement->execute()) {
-            $key = $this->data[$this->controller->table]['key'];
-
-            while ($row = $statement->fetch()) {
-                $this->data[$this->controller->table]['rows'][$row[$key]] = $row;
-            }
-        }
-
-        $this->managePlugins();
-
-        return $this->data;
+        return $this->data = $data;
     }
 
     /**
      * @return void
      */
-    private function managePlugins()
+    public function managePlugins()
     {
         $this->pluginImage();
     }
@@ -268,7 +154,8 @@ class BusinessModel
      */
     private function pluginImage()
     {
-        if (empty($this->controller->action)) {
+        //TODO - image plugin works only in the row view
+        if (empty($this->frontController->action)) {
             return;
         }
 
@@ -278,24 +165,24 @@ class BusinessModel
 
         if (!empty($_FILES)) {
             if (isset($_FILES['image']['error']) && $_FILES['image']['error'] === 0) {
-                if (!is_dir($publicPath.'/'.$imagePath.'/'.$this->controller->table)) {
-                    mkdir($publicPath.'/'.$imagePath.'/'.$this->controller->table);
+                if (!is_dir($publicPath.'/'.$imagePath.'/'.$this->frontController->table)) {
+                    mkdir($publicPath.'/'.$imagePath.'/'.$this->frontController->table);
                 }
 
-                $storage = new \Upload\Storage\FileSystem($publicPath.'/'.$imagePath.'/'.$this->controller->table, true);
+                $storage = new FileSystem($publicPath.'/'.$imagePath.'/'.$this->frontController->table, true);
 
-                $file = new \Upload\File('image', $storage);
+                $file = new File('image', $storage);
 
                 $file
                     ->addValidations([
-                        new \Upload\Validation\Mimetype([
+                        new Mimetype([
                             'image/png',
                             'image/jpg',
                             'image/jpeg',
                             'image/gif',
                             'image/tif',
                         ]),
-                        new \Upload\Validation\Size('5M')
+                        new Size('5M')
                     ]);
 
                 $file->upload();
@@ -328,143 +215,16 @@ class BusinessModel
             ->set('data', $this->data)
             ->set('imageDomain', $imageDomain)
             ->set('imagePath', $imagePath)
-            ->set('table', $this->controller->table)
-            ->set('action', $this->controller->action)
-            ->set('id', $this->controller->id);
+            ->set('table', $this->frontController->table)
+            ->set('action', $this->frontController->action)
+            ->set('id', $this->frontController->id);
 
-        foreach ($this->data[$this->controller->table]['columns'] as $columnName => $column) {
+        foreach ($this->data[$this->frontController->table]['columns'] as $columnName => $column) {
             if (isset($column['type']) && $column['type'] == 'image') {
-                $this->data[$this->controller->table]['plugins'][$columnName] = $content
+                $this->data[$this->frontController->table]['plugins'][$columnName] = $content
                     ->set('column', $columnName)
                     ->render();
             }
-        }
-
-        return;
-    }
-
-    /**
-     * @return void
-     */
-    private function setData()
-    {
-        $data = null;
-
-        if ($this->controller->action === 'add' || $this->controller->action === 'edit') {
-            $this->managePlugins();
-
-            $data = $this->createUpdateRow();
-        } elseif ($this->controller->action === 'remove') {
-            $data = $this->deleteRow();
-        }
-
-        //TODO - if requested with non-ajax then redirect
-        if (empty($_SERVER['HTTP_X_REQUESTED_WITH'])) {
-            $response = $this->factory->response();
-            $router = new UrlModel();
-
-            $response
-                ->header('Location: '.$router->admin($this->controller->table))
-                ->send();
-        }
-
-        exit($data);
-    }
-
-    /**
-     * @return integer
-     */
-    private function createUpdateRow()
-    {
-        $columns = [];
-        $values = [];
-        $valuesInsert = [];
-        $valuesUpdate = [];
-
-        foreach ($this->data[$this->controller->table]['columns'] as $columnName => $column) {
-            if (!empty($column['disabled'])) {
-                continue;
-            }
-
-            $values[':'.$columnName] = $_POST[$this->controller->action][$columnName];
-
-            $columns[] = $this->db->backtick($columnName);
-
-            $valuesInsert[] = ':'.$columnName;
-            $valuesUpdate[] = $columnName.'=:'.$columnName;
-        }
-
-        $tableQuery = $this->db->backtick($this->controller->table);
-        $columnsQuery = implode(',', $columns);
-
-        $valuesInsertQuery = implode(',', $valuesInsert);
-        $valuesUpdateQuery = implode(',', $valuesUpdate);
-
-        if (empty($this->controller->id)) {
-            $query = 'INSERT INTO '.$tableQuery.' ('.$columnsQuery.') VALUES ('.$valuesInsertQuery.');';
-
-            $statement = $this->db->handle->prepare($query);
-            return $statement->execute($values);
-        }
-
-        $key = $this->data[$this->controller->table]['key'];
-        $values[':'.$key] = $this->controller->id;
-
-        $query = '
-            UPDATE '.$tableQuery.'
-            SET '.$valuesUpdateQuery.'
-            WHERE '.$this->db->backtick($key).' = :'.$key;
-
-        $statement = $this->db->handle->prepare($query);
-
-        return $statement->execute($values);
-    }
-
-    /**
-     * @return boolean
-     */
-    private function deleteRow()
-    {
-        $key = $this->data[$this->controller->table]['key'];
-
-        $query = '
-            DELETE FROM
-                '.$this->db->backtick($this->controller->table).'
-            WHERE
-                '.$this->db->backtick($key).' = :'.$key
-            ;
-
-        $statement = $this->db->handle->prepare($query);
-        $statement->bindValue(':'.$key, $this->controller->id);
-
-        return $statement->execute();
-    }
-
-    /**
-     * @return void
-     */
-    private function setOrder()
-    {
-        if (!empty($_POST['order'])) {
-            $values = [];
-
-            $key = $this->data[$this->controller->table]['key'];
-
-            $query = '
-                UPDATE '.$this->db->backtick($this->controller->table).'
-                SET '.$this->db->backtick($this->data[$this->controller->table]['order']['column']).' = CASE '.$this->db->backtick($key)
-            ;
-
-            foreach ($_POST['order'] as $order => $id) {
-                $values[':'.$key.$id] = $id;
-                $values[':order'.$order] = $order;
-                $query .= ' WHEN :'.$key.$id.' THEN :order'.$order;
-            }
-
-            $query .= ' END WHERE '.$this->db->backtick($key).' IN ('.implode(',', array_values($_POST['order'])).')';
-
-            $statement = $this->db->handle->prepare($query);
-            exit($statement->execute($values));
         }
     }
 }

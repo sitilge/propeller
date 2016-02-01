@@ -23,12 +23,12 @@
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                     </button>
-                    <a href="<?php echo $router->admin(); ?>" class="navbar-brand">curdle</a>
+                    <a href="<?php echo $url->admin(); ?>" class="navbar-brand">curdle</a>
                 </div>
                 <div id="navbar" class="navbar-collapse collapse">
                     <ul class="nav navbar-nav">
                         <?php foreach ($menu as $table => $item) : ?>
-                            <li class="<?php echo ($segment === $table ? "active" : ""); ?>"><a href="<?php echo $router->admin($table); ?>"><?php echo !empty($item['name']) ? $item['name'] : $table; ?></a></li>
+                            <li class="<?php echo ($segment === $table ? "active" : ""); ?>"><a href="<?php echo $url->admin($table); ?>"><?php echo !empty($item['name']) ? $item['name'] : $table; ?></a></li>
                         <?php endforeach; ?>
                     </ul>
                 </div>
@@ -39,7 +39,7 @@
             <div class="col-sm-3 col-md-2 sidebar">
                 <ul class="nav nav-sidebar">
                     <?php foreach ($menu as $table => $item) : ?>
-                        <li class="<?php echo ($segment === $table ? "active" : ""); ?>"><a href="<?php echo $router->admin($table); ?>"><?php echo !empty($item['name']) ? $item['name'] : $table; ?></a></li>
+                        <li class="<?php echo ($segment === $table ? "active" : ""); ?>"><a href="<?php echo $url->admin($table); ?>"><?php echo !empty($item['name']) ? $item['name'] : $table; ?></a></li>
                     <?php endforeach; ?>
                 </ul>
             </div>

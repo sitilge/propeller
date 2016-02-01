@@ -1,7 +1,8 @@
 {
   "key": "id",
   "name": "Shops",
-  "insert": true,
+  "create": true,
+  "remove": true,
   "order": {
     "column": "sequence",
     "direction": "ASC"
@@ -9,22 +10,22 @@
   "columns": {
     "name": {
       "name": "Name",
-      "display": "view"
+      "view": "table"
     },
     "slug": {
       "disabled": false,
       "name": "Slug",
-      "display": "view",
+      "view": "table",
       "type": "slug"
     },
     "description": {
       "name": "Description",
-      "display": "edit",
+      "view": "row",
       "type": "text"
     },
     "icon_id": {
       "name": "Icon",
-      "display": "View",
+      "view": "table",
       "join": {
         "icons": {
           "key": "id",

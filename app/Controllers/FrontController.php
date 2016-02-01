@@ -2,8 +2,9 @@
 
 namespace App\Controllers;
 
-use Abimo\Factory;
+use \Abimo\Factory;
 use App\Models\UrlModel;
+use App\Models\BusinessModel;
 
 class FrontController
 {
@@ -23,18 +24,29 @@ class FrontController
     public $id;
 
     /**
-     * @var TemplateController
+     * @var array
      */
-    public $templateController;
+    public $data = [];
 
     /**
-     * AdminController constructor.
+     * @var Factory
+     */
+    public $factory;
+
+    /**
+     * @var UrlModel
+     */
+    public $urlModel;
+
+    /**
+     * FrontController constructor.
      */
     public function __construct()
     {
-//        $this->templateController = ;
+        $this->factory = new Factory();
+        $this->urlModel = new UrlModel();
 
-        $this->factory = new \Abimo\Factory();
+        $this->businessModel = new BusinessModel($this);
     }
 
     /**
@@ -44,24 +56,57 @@ class FrontController
      */
     public function main($table = null, $action = null, $id = null)
     {
-//        $this->table = $table;
-//        $this->action = $action;
-//        $this->id = $id;
+        $this->table = $table;
+        $this->action = $action;
+        $this->id = $id;
 
-        $templateController = new \App\Controllers\TemplateController($this->table, $this->action, $this->id);
-
-        $content = $templateController->getContent();
-        $menu = $templateController->getMenu();
+        $content = $this->getContent();
+        $menu = $this->getMenu();
         $segment = $this->factory->request()->segment(null, 1);
 
         echo $this->factory->template()
             ->file(__DIR__.'/../Views/Admin/Template')
-            ->set('router', new UrlModel())
+            ->set('url', new UrlModel())
             ->set('menu', $menu)
             ->set('content', $content)
             ->set('segment', $segment)
             ->render();
     }
 
+    /**
+     * @return string
+     */
+    public function getContent()
+    {
+        $this->businessModel->manageData();
 
+        if (null === $this->table) {
+            return $this->factory->template()
+                ->file(__DIR__.'/../Views/Admin/Welcome')
+                ->render();
+        }
+
+        $content = $this->factory->template()
+            ->set('url', $this->urlModel)
+            ->set('data', $this->businessModel->data)
+            ->set('table', $this->table)
+            ->set('action', $this->action)
+            ->set('id', $this->id);
+
+        if (null === $this->action) {
+            $content->file(__DIR__.'/../Views/Admin/Table');
+        } else {
+            $content->file(__DIR__.'/../Views/Admin/Row');
+        }
+
+        return $content->render();
+    }
+
+    /**
+     * @return array
+     */
+    public function getMenu()
+    {
+        return $this->businessModel->data;
+    }
 }

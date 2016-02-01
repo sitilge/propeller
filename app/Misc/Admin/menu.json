@@ -1,7 +1,8 @@
 {
   "key": "id",
   "name": "Menu",
-  "insert": true,
+  "create": true,
+  "remove": true,
   "order": {
     "column": "sequence",
     "direction": "ASC"
@@ -10,27 +11,22 @@
     "id": {
       "disabled": true,
       "name": "Menu item ID",
-      "display": "edit"
+      "view": "row"
     },
     "name": {
       "name": "Name",
-      "display": "view"
+      "view": "table"
     },
     "slug": {
       "disabled": false,
       "name": "Slug",
-      "display": "view",
+      "view": "table",
       "type": "slug"
-    },
-    "sequence": {
-      "disabled": false,
-      "name": "Sequence",
-      "display": false
     },
     "display": {
       "disabled": false,
       "name": "Display",
-      "display": "view",
+      "view": "table",
       "values": {
         "0": "No",
         "1": "Yes"

@@ -1,20 +1,20 @@
 {
   "key": "id",
   "name": "Users",
-  "insert": true,
+  "create": true,
   "columns": {
     "name": {
       "name": "Name",
-      "display": "view"
+      "view": "table"
     },
     "surname": {
       "name": "Surname",
-      "display": "view",
+      "view": "table",
       "length": 10
     },
     "photo": {
       "name": "Photo",
-      "display": "view",
+      "view": "table",
       "type": "image"
     }
   }
