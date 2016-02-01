@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use Abimo\Factory;
-use App\Controllers\FrontController;
 use Upload\File;
 use Upload\Storage\FileSystem;
 use Upload\Validation\Mimetype;
@@ -11,6 +10,21 @@ use Upload\Validation\Size;
 
 class BusinessModel
 {
+    /**
+     * @var string
+     */
+    public $table;
+
+    /**
+     * @var string
+     */
+    public $action;
+
+    /**
+     * @var string
+     */
+    public $id;
+
     /**
      * @var Factory
      */
@@ -22,34 +36,25 @@ class BusinessModel
     private $config;
 
     /**
-     * @var FrontController
-     */
-    private $frontController;
-
-    /**
      * @var array
      */
     public $data = [];
 
     /**
-     * @var PersistenceModel
+     * BusinessModel constructor.
+     * @param $table
+     * @param $action
+     * @param $id
      */
-    private $persistenceModel;
-
-    /**
-     * AdminModel constructor.
-     *
-     * @param FrontController $frontController
-     */
-    public function __construct(FrontController $frontController)
+    public function __construct($table = null, $action = null, $id = null)
     {
-        $this->frontController = $frontController;
+        $this->table = $table;
+        $this->action = $action;
+        $this->id = $id;
 
         $this->factory = new Factory();
 
         $this->config = $this->factory->config();
-
-        $this->persistenceModel = new PersistenceModel($this->frontController, $this);
     }
 
     /**
@@ -58,24 +63,26 @@ class BusinessModel
      */
     public function manageData()
     {
+        $persistenceModel = new PersistenceModel($this);
+
         $this->getJson();
 
         if (!empty($_POST)) {
             if (!empty($_POST['order'])) {
-                $this->persistenceModel->updateOrder();
+                $persistenceModel->updateOrder();
             } else {
                 $data = null;
 
-                if ($this->frontController->action === 'create') {
+                if ($this->action === 'create') {
                     $this->managePlugins();
 
-                    $data = $this->persistenceModel->createRow();
-                } elseif ($this->frontController->action === 'update') {
+                    $data = $persistenceModel->createRow();
+                } elseif ($this->action === 'update') {
                     $this->managePlugins();
 
-                    $data = $this->persistenceModel->updateRow();
-                } elseif ($this->frontController->action === 'remove') {
-                    $data = $this->persistenceModel->deleteRow();
+                    $data = $persistenceModel->updateRow();
+                } elseif ($this->action === 'remove') {
+                    $data = $persistenceModel->deleteRow();
                 }
 
                 //TODO - if requested with non-ajax then redirect
@@ -84,7 +91,7 @@ class BusinessModel
                     $url = new UrlModel();
 
                     $response
-                        ->header('Location: '.$url->admin($this->frontController->table))
+                        ->header('Location: '.$url->admin($this->table))
                         ->send();
                 }
 
@@ -92,7 +99,7 @@ class BusinessModel
             }
         }
 
-        $this->persistenceModel->getData();
+        $persistenceModel->getData();
     }
 
     /**
@@ -154,7 +161,7 @@ class BusinessModel
     private function pluginImage()
     {
         //TODO - image plugin works only in the row view
-        if (empty($this->frontController->action)) {
+        if (empty($this->action)) {
             return;
         }
 
@@ -164,11 +171,11 @@ class BusinessModel
 
         if (!empty($_FILES)) {
             if (isset($_FILES['image']['error']) && $_FILES['image']['error'] === 0) {
-                if (!is_dir($publicPath.'/'.$imagePath.'/'.$this->frontController->table)) {
-                    mkdir($publicPath.'/'.$imagePath.'/'.$this->frontController->table);
+                if (!is_dir($publicPath.'/'.$imagePath.'/'.$this->table)) {
+                    mkdir($publicPath.'/'.$imagePath.'/'.$this->table);
                 }
 
-                $storage = new FileSystem($publicPath.'/'.$imagePath.'/'.$this->frontController->table, true);
+                $storage = new FileSystem($publicPath.'/'.$imagePath.'/'.$this->table, true);
 
                 $file = new File('image', $storage);
 
@@ -214,13 +221,13 @@ class BusinessModel
             ->set('data', $this->data)
             ->set('imageDomain', $imageDomain)
             ->set('imagePath', $imagePath)
-            ->set('table', $this->frontController->table)
-            ->set('action', $this->frontController->action)
-            ->set('id', $this->frontController->id);
+            ->set('table', $this->table)
+            ->set('action', $this->action)
+            ->set('id', $this->id);
 
-        foreach ($this->data[$this->frontController->table]['columns'] as $columnName => $column) {
+        foreach ($this->data[$this->table]['columns'] as $columnName => $column) {
             if (isset($column['type']) && $column['type'] == 'image') {
-                $this->data[$this->frontController->table]['plugins'][$columnName] = $content
+                $this->data[$this->table]['plugins'][$columnName] = $content
                     ->set('column', $columnName)
                     ->render();
             }

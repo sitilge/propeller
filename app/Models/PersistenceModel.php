@@ -8,6 +8,21 @@ use App\Controllers\FrontController;
 class PersistenceModel
 {
     /**
+     * @var string
+     */
+    public $table;
+
+    /**
+     * @var string
+     */
+    public $action;
+
+    /**
+     * @var string
+     */
+    public $id;
+
+    /**
      * @var BusinessModel
      */
     public $businessModel;
@@ -34,13 +49,15 @@ class PersistenceModel
 
     /**
      * PersistenceModel constructor.
-     * @param FrontController $frontController
      * @param BusinessModel $businessModel
      */
-    public function __construct(FrontController $frontController, BusinessModel $businessModel)
+    public function __construct(BusinessModel $businessModel)
     {
-        $this->frontController = $frontController;
         $this->businessModel = $businessModel;
+
+        $this->table = $this->businessModel->table;
+        $this->action = $this->businessModel->action;
+        $this->id = $this->businessModel->id;
 
         $this->factory = new Factory();
 
@@ -54,12 +71,12 @@ class PersistenceModel
      */
     public function getData()
     {
-        if (empty($this->frontController->table)) {
+        if (empty($this->table)) {
             return $this->businessModel->data;
         }
 
-        if (empty($this->businessModel->data[$this->frontController->table]['columns'])) {
-            throw new \ErrorException('No columns provided in '.$this->frontController->table.'.json.');
+        if (empty($this->businessModel->data[$this->table]['columns'])) {
+            throw new \ErrorException('No columns provided in '.$this->table.'.json.');
         }
 
         //loop the columns, the structure for main columns and join columns
@@ -70,7 +87,7 @@ class PersistenceModel
         $tableQuery = '';
         $orderQuery = '';
 
-        foreach ($this->businessModel->data[$this->frontController->table]['columns'] as $columnName => $column) {
+        foreach ($this->businessModel->data[$this->table]['columns'] as $columnName => $column) {
             $columnQueryName = $this->db->backtick($columnName);
 
             $columnsArray[] = $columnQueryName;
@@ -86,7 +103,7 @@ class PersistenceModel
             //TODO - special join, override db if values already given
             if (!empty($column['values'])) {
                 foreach ($column['values'] as $joinValueId => $joinValueValue) {
-                    $this->businessModel->data[$this->frontController->table]['rowsJoin'][$columnName][$joinValueId] = $joinValueValue;
+                    $this->businessModel->data[$this->table]['rowsJoin'][$columnName][$joinValueId] = $joinValueValue;
                 }
 
                 continue;
@@ -134,7 +151,7 @@ class PersistenceModel
                             $id = $row[$join['key']];
                             unset($row[$join['key']]);
 
-                            $this->businessModel->data[$this->frontController->table]['rowsJoin'][$columnName][$id] = implode(', ', $row);
+                            $this->businessModel->data[$this->table]['rowsJoin'][$columnName][$id] = implode(', ', $row);
                         }
                     }
                 }
@@ -144,7 +161,7 @@ class PersistenceModel
         if (!empty($columnsArray)) {
             $columnsQuery = 'SELECT '.implode(',', $columnsArray);
 
-            $tableQuery = ' FROM '.$this->db->backtick($this->frontController->table);
+            $tableQuery = ' FROM '.$this->db->backtick($this->table);
         }
 
         if (!empty($orderArray)) {
@@ -153,15 +170,15 @@ class PersistenceModel
         }
 
         //TODO - special table order here
-        if (!empty($this->businessModel->data[$this->frontController->table]['order'])) {
+        if (!empty($this->businessModel->data[$this->table]['order'])) {
             if (empty($orderQuery)) {
-                $orderQuery .= ' ORDER BY '.$this->db->backtick($this->businessModel->data[$this->frontController->table]['order']['column']);
+                $orderQuery .= ' ORDER BY '.$this->db->backtick($this->businessModel->data[$this->table]['order']['column']);
             } else {
-                $orderQuery .= $this->db->backtick($this->businessModel->data[$this->frontController->table]['order']['column']);
+                $orderQuery .= $this->db->backtick($this->businessModel->data[$this->table]['order']['column']);
             }
 
-            if (!empty($this->businessModel->data[$this->frontController->table]['order']['direction'])) {
-                $orderQuery .= ' '.$this->businessModel->data[$this->frontController->table]['order']['direction'];
+            if (!empty($this->businessModel->data[$this->table]['order']['direction'])) {
+                $orderQuery .= ' '.$this->businessModel->data[$this->table]['order']['direction'];
             }
         }
 
@@ -170,10 +187,10 @@ class PersistenceModel
         $statement = $this->db->handle->prepare($query);
 
         if ($statement->execute()) {
-            $key = $this->businessModel->data[$this->frontController->table]['key'];
+            $key = $this->businessModel->data[$this->table]['key'];
 
             while ($row = $statement->fetch()) {
-                $this->businessModel->data[$this->frontController->table]['rows'][$row[$key]] = $row;
+                $this->businessModel->data[$this->table]['rows'][$row[$key]] = $row;
             }
         }
 
@@ -190,17 +207,17 @@ class PersistenceModel
         $columns = [];
         $values = [];
 
-        foreach ($this->businessModel->data[$this->frontController->table]['columns'] as $columnName => $column) {
+        foreach ($this->businessModel->data[$this->table]['columns'] as $columnName => $column) {
             if (!empty($column['disabled'])) {
                 continue;
             }
 
-            $values[':'.$columnName] = $_POST[$this->frontController->action][$columnName];
+            $values[':'.$columnName] = $_POST[$this->action][$columnName];
 
             $columns[] = $this->db->backtick($columnName);
         }
 
-        $tableQuery = $this->db->backtick($this->frontController->table);
+        $tableQuery = $this->db->backtick($this->table);
         $columnsQuery = implode(',', $columns);
 
         $valuesQuery = implode(',', array_keys($values));
@@ -217,23 +234,23 @@ class PersistenceModel
         $values = [];
         $valuesQuery = [];
 
-        foreach ($this->businessModel->data[$this->frontController->table]['columns'] as $columnName => $column) {
+        foreach ($this->businessModel->data[$this->table]['columns'] as $columnName => $column) {
             if (!empty($column['disabled'])) {
                 continue;
             }
 
-            $values[':'.$columnName] = $_POST[$this->frontController->action][$columnName];
+            $values[':'.$columnName] = $_POST[$this->action][$columnName];
 
             $columns[] = $this->db->backtick($columnName);
 
             $valuesQuery[] = $columnName.'=:'.$columnName;
         }
 
-        $tableQuery = $this->db->backtick($this->frontController->table);
+        $tableQuery = $this->db->backtick($this->table);
         $valuesQuery = implode(',', $valuesQuery);
 
-        $key = $this->businessModel->data[$this->frontController->table]['key'];
-        $values[':'.$key] = $this->frontController->id;
+        $key = $this->businessModel->data[$this->table]['key'];
+        $values[':'.$key] = $this->id;
 
         $query = '
             UPDATE '.$tableQuery.'
@@ -251,17 +268,17 @@ class PersistenceModel
      */
     public function deleteRow()
     {
-        $key = $this->businessModel->data[$this->frontController->table]['key'];
+        $key = $this->businessModel->data[$this->table]['key'];
 
         $query = '
             DELETE FROM
-                '.$this->db->backtick($this->frontController->table).'
+                '.$this->db->backtick($this->table).'
             WHERE
                 '.$this->db->backtick($key).' = :'.$key
         ;
 
         $statement = $this->db->handle->prepare($query);
-        $statement->bindValue(':'.$key, $this->frontController->id);
+        $statement->bindValue(':'.$key, $this->id);
 
         return $statement->execute();
     }
@@ -274,11 +291,11 @@ class PersistenceModel
         if (!empty($_POST['order'])) {
             $values = [];
 
-            $key = $this->businessModel->data[$this->frontController->table]['key'];
+            $key = $this->businessModel->data[$this->table]['key'];
 
             $query = '
-                UPDATE '.$this->db->backtick($this->frontController->table).'
-                SET '.$this->db->backtick($this->businessModel->data[$this->frontController->table]['order']['column']).' = CASE '.$this->db->backtick($key)
+                UPDATE '.$this->db->backtick($this->table).'
+                SET '.$this->db->backtick($this->businessModel->data[$this->table]['order']['column']).' = CASE '.$this->db->backtick($key)
             ;
 
             foreach ($_POST['order'] as $order => $id) {

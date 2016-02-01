@@ -39,14 +39,14 @@ class ThrowableController
     public $urlModel;
 
     /**
-     * FrontController constructor.
+     * ThrowableController constructor.
      */
     public function __construct()
     {
         $this->factory = new Factory();
         $this->urlModel = new UrlModel();
 
-        $this->businessModel = new BusinessModel(null);
+        $this->businessModel = new BusinessModel();
     }
 
     public function main()
