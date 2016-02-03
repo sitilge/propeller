@@ -39,19 +39,19 @@
   },
   <span class="hljs-string">"columns"</span>: {                  <span class="hljs-comment">//required, the columns array</span>
     <span class="hljs-string">"name"</span>: {                   <span class="hljs-comment">//required, the column name</span>
-    <span class="hljs-string">"disabled"</span>: <span class="hljs-literal">true</span>,         <span class="hljs-comment">//optional, disable the field, defaults to false</span>
-    <span class="hljs-string">"name"</span>: <span class="hljs-string">"Name"</span>,           <span class="hljs-comment">//optional, the column display name, defaults to column name</span>
-    <span class="hljs-string">"view"</span>: <span class="hljs-string">"row"</span>,            <span class="hljs-comment">//optional, display the column in table or row view, defaults to false</span>
-    <span class="hljs-string">"type"</span>: <span class="hljs-string">"slug"</span>,           <span class="hljs-comment">//optional, set the type to slug, text, image, length, or price, defaults to false</span>
-    <span class="hljs-string">"values"</span>: {               <span class="hljs-comment">//optional, make dropdown for the values, defaults to false</span>
+    <span class="hljs-string">"disabled"</span>: <span class="hljs-literal">true</span>,           <span class="hljs-comment">//optional, disable the field, defaults to false</span>
+    <span class="hljs-string">"name"</span>: <span class="hljs-string">"Name"</span>,             <span class="hljs-comment">//optional, the column display name, defaults to column name</span>
+    <span class="hljs-string">"view"</span>: <span class="hljs-string">"row"</span>,              <span class="hljs-comment">//optional, display the column in table or row view, defaults to false</span>
+    <span class="hljs-string">"type"</span>: <span class="hljs-string">"slug"</span>,             <span class="hljs-comment">//optional, set the type to slug, text, image, length, or price, defaults to false</span>
+    <span class="hljs-string">"values"</span>: {                 <span class="hljs-comment">//optional, make dropdown for the values, defaults to false</span>
       <span class="hljs-string">"0"</span>: <span class="hljs-string">"No"</span>,
       <span class="hljs-string">"1"</span>: <span class="hljs-string">"Yes"</span>
   },
-  <span class="hljs-string">"join"</span>: {                 <span class="hljs-comment">//optional, join with a table</span>
-    <span class="hljs-string">"icons"</span>: {              <span class="hljs-comment">//required, the join table name</span>
-    <span class="hljs-string">"key"</span>: <span class="hljs-string">"id"</span>,          <span class="hljs-comment">//required, the join table primary key</span>
-    <span class="hljs-string">"columns"</span>: {          <span class="hljs-comment">//required, the join columns array</span>
-      <span class="hljs-string">"id"</span>: {},           <span class="hljs-comment">//required, the join column name</span>
+  <span class="hljs-string">"join"</span>: {                     <span class="hljs-comment">//optional, join with a table</span>
+    <span class="hljs-string">"icons"</span>: {                  <span class="hljs-comment">//required, the join table name</span>
+    <span class="hljs-string">"key"</span>: <span class="hljs-string">"id"</span>,                <span class="hljs-comment">//required, the join table primary key</span>
+    <span class="hljs-string">"columns"</span>: {                <span class="hljs-comment">//required, the join columns array</span>
+      <span class="hljs-string">"id"</span>: {},                 <span class="hljs-comment">//required, the join column name</span>
       <span class="hljs-string">"name"</span>: {}
           }
         }

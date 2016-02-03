@@ -34,9 +34,9 @@
                         <?php if (!empty($column['view']) && $column['view'] === 'table') : ?>
                             <td class="edit-row" data-url="<?php echo $url->admin($table, 'update', $row[$data[$table]['key']]); ?>">
                                 <?php if (!empty($data[$table]['rowsJoin'][$columnName])) : ?>
-                                    <?php echo (!empty($data[$table]['rowsJoin'][$columnName][$row[$columnName]]) ? $data[$table]['rowsJoin'][$columnName][$row[$columnName]] : $row[$columnName]); ?>
+                                    <?php echo htmlentities(!empty($data[$table]['rowsJoin'][$columnName][$row[$columnName]]) ? $data[$table]['rowsJoin'][$columnName][$row[$columnName]] : $row[$columnName], ENT_QUOTES); ?>
                                 <?php else : ?>
-                                    <?php echo $row[$columnName]; ?>
+                                    <?php echo htmlentities($row[$columnName], ENT_QUOTES); ?>
                                 <?php endif; ?>
                             </td>
                         <?php endif; ?>

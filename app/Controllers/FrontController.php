@@ -11,22 +11,17 @@ class FrontController
     /**
      * @var string
      */
-    public $table;
+    private $table;
 
     /**
      * @var string
      */
-    public $action;
+    private $action;
 
     /**
      * @var string
      */
-    public $id;
-
-    /**
-     * @var array
-     */
-    public $data = [];
+    private $id;
 
     /**
      * @var Factory
@@ -48,6 +43,8 @@ class FrontController
     }
 
     /**
+     * The main method called from router.
+     *
      * @param null $table
      * @param null $action
      * @param null $id
@@ -74,6 +71,8 @@ class FrontController
     }
 
     /**
+     * Get the content.
+     *
      * @return string
      */
     private function getContent()
@@ -103,9 +102,11 @@ class FrontController
     }
 
     /**
+     * Get the data for menu.
+     *
      * @return array
      */
-    public function getMenu()
+    private function getMenu()
     {
         return $this->businessModel->data;
     }

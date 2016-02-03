@@ -20,6 +20,8 @@ class UrlModel
     }
 
     /**
+     * The admin URL generator.
+     *
      * @param null $table
      * @param null $action
      * @param null $id
@@ -47,6 +49,8 @@ class UrlModel
     }
 
     /**
+     * Prepare the pattern.
+     *
      * @param $pattern
      * @param $arguments
      * @return string

@@ -9,34 +9,14 @@ use App\Models\BusinessModel;
 class ThrowableController
 {
     /**
-     * @var string
-     */
-    public $table;
-
-    /**
-     * @var string
-     */
-    public $action;
-
-    /**
-     * @var string
-     */
-    public $id;
-
-    /**
-     * @var array
-     */
-    public $data = [];
-
-    /**
      * @var Factory
      */
-    public $factory;
+    private $factory;
 
     /**
      * @var UrlModel
      */
-    public $urlModel;
+    private $urlModel;
 
     /**
      * ThrowableController constructor.
@@ -49,6 +29,11 @@ class ThrowableController
         $this->businessModel = new BusinessModel();
     }
 
+    /**
+     * The main method called on error.
+     *
+     * @return void
+     */
     public function main()
     {
         $content = $this->getContent();
@@ -65,9 +50,11 @@ class ThrowableController
     }
 
     /**
+     * Get the content.
+     *
      * @return string
      */
-    public function getContent()
+    private function getContent()
     {
         $this->businessModel->getJson();
 
@@ -77,9 +64,11 @@ class ThrowableController
     }
 
     /**
+     * Get the data for menu.
+     *
      * @return array
      */
-    public function getMenu()
+    private function getMenu()
     {
         return $this->businessModel->data;
     }

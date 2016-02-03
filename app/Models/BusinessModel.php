@@ -42,6 +42,7 @@ class BusinessModel
 
     /**
      * BusinessModel constructor.
+     *
      * @param $table
      * @param $action
      * @param $id
@@ -58,6 +59,8 @@ class BusinessModel
     }
 
     /**
+     * CRUD based on the data.
+     *
      * @throws \ErrorException
      * @return void
      */
@@ -99,10 +102,12 @@ class BusinessModel
             }
         }
 
-        $persistenceModel->getData();
+        $persistenceModel->readRows();
     }
 
     /**
+     * Parse the .json files and prepare the structure.
+     *
      * @throws \ErrorException
      * @return array
      */
@@ -113,7 +118,10 @@ class BusinessModel
         $iterator = new \DirectoryIterator($path);
 
         foreach ($iterator as $file) {
-            if ('.' === substr($file->getFilename(), 0, 1)) {
+            $file = $file->getFilename();
+
+            //TODO - skip hidden files
+            if (substr($file, 0, 1) === '.') {
                 continue;
             }
 
@@ -130,7 +138,7 @@ class BusinessModel
             //TODO - there must always be the key present
             $key = $data[$table]['key'];
 
-            //TODO - if the key is provided, build the default
+            //TODO - if the key is not provided, build the default
             if (empty($data[$table]['columns'][$key])) {
                 $data[$table]['columns'] = [
                         $key => [
@@ -148,6 +156,8 @@ class BusinessModel
     }
 
     /**
+     * Manage the plugins.
+     *
      * @return void
      */
     public function managePlugins()
@@ -156,6 +166,8 @@ class BusinessModel
     }
 
     /**
+     * Build the image plugin.
+     *
      * @return void
      */
     private function pluginImage()

@@ -34,10 +34,10 @@
                     <input class="form-control" id="<?php echo $columnName; ?>" name="<?php echo $action; ?>[<?php echo $columnName; ?>]" value="<?php echo htmlentities($value, ENT_QUOTES); ?>" <?php echo $disabled; ?> type="hidden"/>
                     <?php echo $data[$table]['plugins'][$columnName]; ?>
                 <?php elseif ($column['type'] === 'length') : ?>
-                    <textarea id="<?php echo $columnName; ?>" name="<?php echo $action; ?>[<?php echo $columnName; ?>]" class="form-control excerpt" maxlength="255"><?php echo htmlentities($value, ENT_QUOTES); ?></textarea>
+                    <textarea id="<?php echo $columnName; ?>" name="<?php echo $action; ?>[<?php echo $columnName; ?>]" class="form-control excerpt" maxlength="255"><?php echo $value; ?></textarea>
                 <?php elseif ($column['type'] === 'text') : ?>
-                    <div id="<?php echo $columnName; ?>" class="summernote"><?php echo htmlentities($value, ENT_QUOTES); ?></div>
-                    <textarea id="summernote-<?php echo $columnName; ?>" name="<?php echo $action; ?>[<?php echo $columnName; ?>]" hidden><?php echo htmlentities($value, ENT_QUOTES); ?></textarea>
+                    <div id="<?php echo $columnName; ?>" class="summernote"><?php echo $value; ?></div>
+                    <textarea id="summernote-<?php echo $columnName; ?>" name="<?php echo $action; ?>[<?php echo $columnName; ?>]" hidden><?php echo $value; ?></textarea>
                 <?php elseif ($column['type'] === 'price') : ?>
                     <div class="input-group">
                         <div class="input-group-addon"><span class="glyphicon glyphicon-eur" aria-hidden="true"></span></div>

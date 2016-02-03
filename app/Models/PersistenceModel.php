@@ -3,52 +3,47 @@
 namespace App\Models;
 
 use Abimo\Factory;
-use App\Controllers\FrontController;
 
 class PersistenceModel
 {
     /**
      * @var string
      */
-    public $table;
+    private $table;
 
     /**
      * @var string
      */
-    public $action;
+    private $action;
 
     /**
      * @var string
      */
-    public $id;
+    private $id;
 
     /**
      * @var BusinessModel
      */
-    public $businessModel;
-
-    /**
-     * @var FrontController
-     */
-    public $frontController;
+    private $businessModel;
 
     /**
      * @var Factory
      */
-    public $factory;
+    private $factory;
 
     /**
      * @var \Abimo\Config;
      */
-    public $config;
+    private $config;
 
     /**
      * @var \Abimo\Database
      */
-    public $db;
+    private $db;
 
     /**
      * PersistenceModel constructor.
+     *
      * @param BusinessModel $businessModel
      */
     public function __construct(BusinessModel $businessModel)
@@ -66,10 +61,12 @@ class PersistenceModel
     }
 
     /**
+     * Read all rows.
+     *
      * @return array
      * @throws \ErrorException
      */
-    public function getData()
+    public function readRows()
     {
         if (empty($this->table)) {
             return $this->businessModel->data;
@@ -200,7 +197,9 @@ class PersistenceModel
     }
 
     /**
-     * @return integer
+     * Create the row.
+     *
+     * @return bool
      */
     public function createRow()
     {
@@ -225,9 +224,15 @@ class PersistenceModel
         $query = 'INSERT INTO '.$tableQuery.' ('.$columnsQuery.') VALUES ('.$valuesQuery.')';
 
         $statement = $this->db->handle->prepare($query);
+
         return $statement->execute($values);
     }
 
+    /**
+     * Update the row.
+     *
+     * @return bool
+     */
     public function updateRow()
     {
         $columns = [];
@@ -264,6 +269,8 @@ class PersistenceModel
     }
 
     /**
+     * Delete the row.
+     *
      * @return boolean
      */
     public function deleteRow()
@@ -284,6 +291,8 @@ class PersistenceModel
     }
 
     /**
+     * Update the order of column.
+     *
      * @return void
      */
     public function updateOrder()
@@ -307,6 +316,7 @@ class PersistenceModel
             $query .= ' END WHERE '.$this->db->backtick($key).' IN ('.implode(',', array_values($_POST['order'])).')';
 
             $statement = $this->db->handle->prepare($query);
+
             exit($statement->execute($values));
         }
     }
