@@ -79,3 +79,6 @@ It is more than welcome to contribute to the project - feel free to send pull re
 [CRUD]: <https://en.wikipedia.org/wiki/Create,_read,_update_and_delete>
 [composer]: <https://getcomposer.org/download/>
 [abimo]: <https://github.com/sitilge/abimo>
+
+[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/sitilge/curdle/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
+
