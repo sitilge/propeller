@@ -2,7 +2,7 @@
   "key": "id",
   "name": "Shops",
   "create": true,
-  "remove": true,
+  "delete": true,
   "order": {
     "column": "sequence",
     "direction": "ASC"

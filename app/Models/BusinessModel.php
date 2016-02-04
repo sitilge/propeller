@@ -7,6 +7,7 @@ use Upload\File;
 use Upload\Storage\FileSystem;
 use Upload\Validation\Mimetype;
 use Upload\Validation\Size;
+use ImageOptimizer\OptimizerFactory;
 
 class BusinessModel
 {
@@ -74,31 +75,36 @@ class BusinessModel
             if (!empty($_POST['order'])) {
                 $persistenceModel->updateOrder();
             } else {
-                $data = null;
+                $response = $this->factory->response();
+                $url = new UrlModel();
 
                 if ($this->action === 'create') {
                     $this->managePlugins();
 
-                    $data = $persistenceModel->createRow();
-                } elseif ($this->action === 'update') {
-                    $this->managePlugins();
-
-                    $data = $persistenceModel->updateRow();
-                } elseif ($this->action === 'remove') {
-                    $data = $persistenceModel->deleteRow();
-                }
-
-                //TODO - if requested with non-ajax then redirect
-                if (empty($_SERVER['HTTP_X_REQUESTED_WITH'])) {
-                    $response = $this->factory->response();
-                    $url = new UrlModel();
+                    $persistenceModel->createRow();
 
                     $response
                         ->header('Location: '.$url->admin($this->table))
                         ->send();
-                }
 
-                exit($data);
+                    exit;
+                } elseif ($this->action === 'update') {
+                    $this->managePlugins();
+
+                    $persistenceModel->updateRow();
+
+                    $response
+                        ->header('Location: '.$url->admin($this->table))
+                        ->send();
+
+                    exit;
+                } elseif ($this->action === 'delete') {
+                    $persistenceModel->deleteRow();
+
+                    if (!empty($this->id)) {
+                        exit(json_encode($url->admin($this->table)));
+                    }
+                }
             }
         }
 
@@ -204,6 +210,15 @@ class BusinessModel
                     ]);
 
                 $file->upload();
+
+//                TODO - optimize the image
+//                $optimizer = new OptimizerFactory([
+//                    'ignore_errors' => false
+//                ]);
+//
+//                $optimizer = $optimizer->get();
+//
+//                $optimizer->optimize($publicPath.'/'.$imagePath.'/'.$this->table.'/'.$file->getNameWithExtension());
             }
 
             return;

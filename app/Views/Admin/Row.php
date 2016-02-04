@@ -2,11 +2,11 @@
     <span><?php echo !empty($data[$table]['name']) ? $data[$table]['name'] : $table; ?></span>
     <?php if ($action === 'update') : ?>
         <div class="pull-right">
-            <?php if (!empty($data[$table]['remove'])) : ?>
-                <a class="remove-row-button btn btn-danger" data-url="<?php echo $url->admin($table, 'remove', $id); ?>" data-id="<?php echo $id; ?>">Delete</a>
+            <?php if (!empty($data[$table]['delete'])) : ?>
+                <a class="delete-row-button btn btn-danger" data-url="<?php echo $url->admin($table, 'delete', $id); ?>" data-id="<?php echo $id; ?>">Delete</a>
             <?php endif; ?>
             <?php if (!empty($data[$table]['create'])) : ?>
-                <a class="add-row-button btn btn-success" href="<?php echo $url->admin($table, 'create'); ?>" >Create</a>
+                <a class="create-row-button btn btn-success" href="<?php echo $url->admin($table, 'create'); ?>" >Create</a>
             <?php endif; ?>
         </div>
     <?php endif; ?>

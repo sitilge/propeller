@@ -1,6 +1,6 @@
 $(function () {
-    //remove rows
-    $('.remove-row-button').on('click', function(ele) {
+    //delete rows
+    $('.delete-row-button').on('click', function(ele) {
         var ele = $(ele.target);
         var row = ele.parent().parent();
 
@@ -23,16 +23,18 @@ $(function () {
                     id: ele.data('id')
                 },
                 success: function(response) {
-                if (response == 1 && row.is('tr')) {
+                    if (row.is('tr')) {
                         row.remove();
-	                }
-	            }
+                    } else {
+                        window.location.href = $.parseJSON(response);
+                    }
+                }
 			});
 		});
 	});
 
-    //edit rows
-    $('.edit-row').click(function(ele) {
+    //update rows
+    $('.update-row').click(function(ele) {
         var ele = $(ele.target);
 
         window.location.href = ele.data('url');
@@ -94,8 +96,12 @@ $(function () {
     }
 
     //slugify text
-    $('.slugify').on('keyup',function() {
+    $('.slugify').on('keyup', function() {
         slugify(this);
+    });
+
+    $('.slugify').on('blur', function() {
+        slugify(this, true);
     });
 
 	//image plguin
@@ -122,22 +128,35 @@ $(function () {
 });
 
 //slugify text
-function slugify(ele) {
-    var start = ele.selectionStart;
-    var end = ele.selectionEnd;
-
-    delay(function() {
-        var lengthBefore = ele.value.length;
+function slugify(ele, focus) {
+    if (focus){
         ele.value = ele.value.toString().toLowerCase()
             .replace(/\s+/g, '-')           // Replace spaces with -
             .replace(/[^\w\-]+/g, '')       // Remove all non-word chars
             .replace(/\-\-+/g, '-')         // Replace multiple - with single -
             .replace(/^-+/, '')             // Trim - from start of text
-            .replace(/-+$/, '');            // Trim - from end of text
-        var lengthAfter = ele.value.length;
-        var removed = lengthBefore-lengthAfter;
-        ele.setSelectionRange(start-removed, end-removed);
-    }, 500);
+            .replace(/-+$/, '');
+    }
+    else {
+        var start = ele.selectionStart;
+        var end = ele.selectionEnd;
+
+        delay(function() {
+            var lengthBefore = ele.value.length;
+
+            ele.value = ele.value.toString().toLowerCase()
+                .replace(/\s+/g, '-')           // Replace spaces with -
+                .replace(/[^\w\-]+/g, '')       // Remove all non-word chars
+                .replace(/\-\-+/g, '-')         // Replace multiple - with single -
+                .replace(/^-+/, '')             // Trim - from start of text
+                .replace(/-+$/, '');            // Trim - from end of text
+
+            var lengthAfter = ele.value.length;
+            var removed = lengthBefore-lengthAfter;
+
+            ele.setSelectionRange(start-removed, end-removed);
+        }, 2000);
+    }
 }
 
 var timer = 0;

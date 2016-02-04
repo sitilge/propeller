@@ -72,9 +72,24 @@ table {
     tbody {
         tr {
             cursor: pointer;
-
             &:hover {
                 background: #F9F9F9;
+            }
+            .update-row-button {
+                color: #337ab7;
+
+                &:hover {
+                    text-decoration: none;
+                    color: #286090;
+                }
+            }
+            .delete-row-button {
+                color: #d9534f;
+
+                &:hover {
+                    text-decoration: none;
+                    color: #C9302C;
+                }
             }
         }
     }
@@ -84,7 +99,7 @@ table {
 .size {
     width: 94px;
     height: 94px;
-    margin:2px;
+    margin: 2px;
     display: block;
     text-align: center;
     line-height: 113px;
@@ -99,7 +114,7 @@ table {
     }
 }
 .glyphicon {
-    cursor:pointer;
+    cursor: pointer;
 }
 .size-image {
     width: 95px;
