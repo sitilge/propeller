@@ -8,6 +8,7 @@ use Upload\Storage\FileSystem;
 use Upload\Validation\Mimetype;
 use Upload\Validation\Size;
 use ImageOptimizer\OptimizerFactory;
+use Webpatser\Sanitize\Sanitize;
 
 class BusinessModel
 {
@@ -197,7 +198,10 @@ class BusinessModel
 
                 $file = new File('image', $storage);
 
+                $filename = Sanitize::string($file->getName());
+
                 $file
+                    ->setName($filename)
                     ->addValidations([
                         new Mimetype([
                             'image/png',

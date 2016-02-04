@@ -31,7 +31,7 @@
                 </select>
             <?php elseif (!empty($column['type'])) : ?>
                 <?php if ($column['type'] === 'image') : ?>
-                    <input class="form-control" id="<?php echo $columnName; ?>" name="<?php echo $action; ?>[<?php echo $columnName; ?>]" value="<?php echo htmlentities($value, ENT_QUOTES); ?>" <?php echo $disabled; ?> type="hidden"/>
+                    <input class="form-control" id="<?php echo $columnName; ?>" name="<?php echo $action; ?>[<?php echo $columnName; ?>]" value="<?php echo htmlentities($value, ENT_QUOTES);; ?>" <?php echo $disabled; ?> type="hidden"/>
                     <?php echo $data[$table]['plugins'][$columnName]; ?>
                 <?php elseif ($column['type'] === 'length') : ?>
                     <textarea id="<?php echo $columnName; ?>" name="<?php echo $action; ?>[<?php echo $columnName; ?>]" class="form-control excerpt" maxlength="255"><?php echo $value; ?></textarea>
