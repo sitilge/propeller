@@ -5,33 +5,33 @@ $(function () {
         var row = ele.parent().parent();
 
         swal({
-            title: 'Are you sure?',
-            text: 'The row will be removed permanently.',
-            type: 'error',
-            confirmButtonClass: 'btn-danger',
-            confirmButtonText: 'Delete',
-            showCancelButton: true,
-            cancelButtonText: 'Cancel',
-            closeOnConfirm: true
-        },
-        function() {
-            $.ajax({
-                type: 'POST',
-                contentType: 'application/x-www-form-urlencoded; charset=utf-8',
-                url: ele.data('url'),
-                data: {
-                    id: ele.data('id')
-                },
-                success: function(response) {
-                    if (row.is('tr')) {
-                        row.remove();
-                    } else {
-                        window.location.href = $.parseJSON(response);
+                title: 'Are you sure?',
+                text: 'The row will be removed permanently.',
+                type: 'error',
+                confirmButtonClass: 'btn-danger',
+                confirmButtonText: 'Delete',
+                showCancelButton: true,
+                cancelButtonText: 'Cancel',
+                closeOnConfirm: true
+            },
+            function() {
+                $.ajax({
+                    type: 'POST',
+                    contentType: 'application/x-www-form-urlencoded; charset=utf-8',
+                    url: ele.data('url'),
+                    data: {
+                        id: ele.data('id')
+                    },
+                    success: function(response) {
+                        if (row.is('tr')) {
+                            row.remove();
+                        } else {
+                            window.location.href = $.parseJSON(response);
+                        }
                     }
-                }
-			});
-		});
-	});
+                });
+            });
+    });
 
     //update rows
     $('.update-row').click(function(ele) {
@@ -39,31 +39,31 @@ $(function () {
     });
 
     //search rows
-	var searchable = $('.searchable');
+    var searchable = $('.searchable');
 
-	if (searchable.length) {
-		$('#search').hideseek({
-			highlight: false,
-			nodata: 'No results found',
-			list: '.searchable',
-			element: 'tr'
-		});
-	}
+    if (searchable.length) {
+        $('#search').hideseek({
+            highlight: false,
+            nodata: 'No results found',
+            list: '.searchable',
+            element: 'tr'
+        });
+    }
 
-	//sort rows
-	var sortable = $('.sortable');
+    //sort rows
+    var sortable = $('.sortable');
 
-	if (sortable.length) {
-		Sortable.create(sortable.get(0), {
-			handle: '.sortable-handle',
-			animation: 150,
-			onEnd: function () {
-				var order = [];
+    if (sortable.length) {
+        Sortable.create(sortable.get(0), {
+            handle: '.sortable-handle',
+            animation: 150,
+            onEnd: function () {
+                var order = [];
 
-				$('.sortable > tr').each(function() {
-					var id = $(this).data('id');
-					order.push(id);
-				});
+                $('.sortable > tr').each(function() {
+                    var id = $(this).data('id');
+                    order.push(id);
+                });
 
                 $.ajax({
                     type: 'POST',
@@ -73,9 +73,9 @@ $(function () {
                         order: order
                     }
                 });
-			}
-		});
-	}
+            }
+        });
+    }
 
     //edit text
     var summernote = $('.summernote');
@@ -104,7 +104,7 @@ $(function () {
         slugify(this, true);
     });
 
-	//image plugin
+    //image plugin
     $('#gallery-button').on('click',function() {
         preview = $(this).parent().parent().children(':first-child').find('.image').attr('id');
     });
@@ -167,7 +167,7 @@ function delay(callback, ms) {
 
 //sanitize input
 function sanitize(ele) {
-     return ele.toString().toLowerCase()
+    return ele.toString().toLowerCase()
         .replace(/\s+/g, '-')           // Replace spaces with -
         .replace(/[^\w\-]+/g, '')       // Remove all non-word chars
         .replace(/\-\-+/g, '-')         // Replace multiple - with single -

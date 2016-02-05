@@ -144,11 +144,12 @@ class PersistenceModel
 
                     if ($statement->execute()) {
                         while ($row = $statement->fetch()) {
-                            //TODO - Do we need this? Modify to always include the join key!
-                            $id = $row[$join['key']];
+                            //TODO - store the key in another variable
+                            //TODO - then implode all the join columns
+                            $key = $row[$join['key']];
                             unset($row[$join['key']]);
 
-                            $this->businessModel->data[$this->table]['rowsJoin'][$columnName][$id] = implode(', ', $row);
+                            $this->businessModel->data[$this->table]['rowsJoin'][$columnName][$key] = implode(', ', $row);
                         }
                     }
                 }
