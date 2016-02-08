@@ -125,8 +125,9 @@ $(function () {
                 previewEle.css('background-size','cover');
                 previewEle.css('background-position','center');
 
-                var filename = sanitize(input.val().split('.').shift());
-                var extension = sanitize(input.val().split('.').pop());
+                var file = input.val().replace(/^C:\\fakepath\\/, '');
+                var filename = sanitize(file.split('.').shift());
+                var extension = sanitize(file.split('.').pop());
 
                 var imagePath = dir + filename + '.' + extension;
 

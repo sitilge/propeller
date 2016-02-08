@@ -40,7 +40,7 @@ gulp.task('js', function() {
 gulp.task('img', function(cb) {
     gulp.src(['public/img/**/*.png', 'public/img/**/*.jpg', 'public/img/**/*.jpeg', 'public/img/**/*.gif'])
         .pipe(imgOptimize({
-            optimizationLevel: 7,
+            optimizationLevel: 5,
             progressive: true,
             interlaced: true
         }))
