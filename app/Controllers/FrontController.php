@@ -29,6 +29,11 @@ class FrontController
     private $factory;
 
     /**
+     * @var BusinessModel
+     */
+    private $businessModel;
+
+    /**
      * @var UrlModel
      */
     private $urlModel;

@@ -83,6 +83,12 @@ $(function () {
     if (summernote.length) {
         summernote.summernote({
             height: 200,
+            toolbar:[
+                ['paragraph', ['style', 'ul', 'ol', 'paragraph', 'height']],
+                ['font', ['fontname', 'fontsize', 'color', 'bold', 'italic', 'underline', 'strikethrough', 'superscript', 'subscript', 'clear']],
+                ['insert', ['link', 'picture', 'video', 'table']],
+                ['misc', ['fullscreen', 'undo', 'redo']]
+            ],
             callbacks: {
                 onChange: function() {
                     var code = $(this).summernote('code');
@@ -94,13 +100,11 @@ $(function () {
     }
 
     //slugify text
-    var slugify = $('.slugify');
-
-    slugify.on('keyup', function() {
+    $('.slugify').on('keyup', function() {
         slugify(this);
     });
 
-    slugify.on('blur', function() {
+    $('.slugify').on('blur', function() {
         slugify(this, true);
     });
 

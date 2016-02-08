@@ -2,6 +2,7 @@
   "key": "id",
   "name": "Users",
   "create": true,
+  "update": true,
   "columns": {
     "name": {
       "name": "Name",
@@ -10,12 +11,14 @@
     "surname": {
       "name": "Surname",
       "view": "table",
-      "length": 10
+      "attributes": {
+        "maxlength": 20
+      }
     },
     "photo": {
       "name": "Photo",
       "view": "table",
-      "type": "image"
+      "plugin": "image"
     }
   }
 }

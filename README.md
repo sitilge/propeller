@@ -40,29 +40,31 @@ composer install
 The respective ```.json``` files for the project are located under ```app/Misc/Admin```. File names must match the table names; let us examine one of them the ```menu.json``` that corresponds to ```menu``` table in the database
 ```
 {
-  "key": "id",                  //required, the table primary key
-  "name": "Menu",               //optional, the table display name, defaults to table name
-  "create": true,               //optional, allow to create new row, defaults to false
-  "delete": true,               //optional, allow to delete row, defaults to false
-  "order": {                    //optional, change the order of rows in table view, defaults to false
-    "column": "sequence",       //required, the name of the column
-    "direction": "ASC"          //optional, the direction of order, defaults to ASC
+  "key": "id",              //required, the table primary key
+  "name": "Menu",           //optional, the table display name, defaults to table name
+  "create": true,           //optional, allow to create new row, defaults to false
+  "delete": true,           //optional, allow to delete row, defaults to false
+  "order": {                //optional, change the order of rows in table view, defaults to false
+    "column": "sequence",   //required, the name of the column
+    "direction": "ASC"      //optional, the direction of order, defaults to ASC
   },
-  "columns": {                  //required, the columns array
-    "name": {                   //required, the column name
-      "disabled": true,         //optional, disable the field, defaults to false
-      "name": "Name",           //optional, the column display name, defaults to column name
-      "view": "row",            //optional, display the column in table or row view, defaults to false
-      "type": "slug",           //optional, set the type to slug, text, image, length, or price, defaults to false
-      "values": {               //optional, make dropdown for the values, defaults to false
+  "columns": {              //required, the columns array
+    "name": {               //required, the column name
+      "name": "Name",       //optional, the column display name, defaults to column name
+      "view": "row",        //optional, display the column in table or row view, defaults to false
+      "attributes": {       //optional, the input/select field attributes, defaults to false
+        "disabled": "true"
+      },
+      "plugin": "slug",     //optional, set the plugin to slug, text or image defaults to false
+      "values": {           //optional, make dropdown for the values, defaults to false
         "0": "No",
         "1": "Yes"
       },
-      "join": {                 //optional, join with a table
-        "icons": {              //required, the join table name
-          "key": "id",          //required, the join table primary key
-          "columns": {          //required, the join columns array
-            "id": {},           //required, the join column name
+      "join": {             //optional, join with a table
+        "icons": {          //required, the join table name
+          "key": "id",      //required, the join table primary key
+          "columns": {      //required, the join columns array
+            "id": {},       //required, the join column name
             "name": {}
           }
         }
@@ -81,4 +83,3 @@ It is more than welcome to contribute to the project - feel free to send pull re
 [abimo]: <https://github.com/sitilge/abimo>
 
 [![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/sitilge/curdle/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
-

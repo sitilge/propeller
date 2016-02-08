@@ -2,6 +2,7 @@
   "key": "id",
   "name": "Menu",
   "create": true,
+  "update": true,
   "delete": true,
   "order": {
     "column": "sequence",
@@ -9,8 +10,10 @@
   },
   "columns": {
     "id": {
-      "disabled": true,
-      "name": "Menu item ID",
+      "name": "ID",
+      "attributes": {
+        "readonly": "true"
+      },
       "view": "row"
     },
     "name": {
@@ -18,13 +21,11 @@
       "view": "table"
     },
     "slug": {
-      "disabled": false,
       "name": "Slug",
       "view": "table",
-      "type": "slug"
+      "plugin": "slug"
     },
     "display": {
-      "disabled": false,
       "name": "Display",
       "view": "table",
       "values": {

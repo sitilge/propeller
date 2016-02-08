@@ -2,6 +2,7 @@
   "key": "id",
   "name": "Shops",
   "create": true,
+  "update": true,
   "delete": true,
   "order": {
     "column": "sequence",
@@ -13,15 +14,14 @@
       "view": "table"
     },
     "slug": {
-      "disabled": false,
       "name": "Slug",
       "view": "table",
-      "type": "slug"
+      "plugin": "slug"
     },
     "description": {
       "name": "Description",
       "view": "row",
-      "type": "text"
+      "plugin": "text"
     },
     "icon_id": {
       "name": "Icon",

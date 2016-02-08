@@ -72,6 +72,8 @@ class BusinessModel
 
         $this->getJson();
 
+        $this->managePermissions();
+
         if (!empty($_POST)) {
             if (!empty($_POST['order'])) {
                 $persistenceModel->updateOrder();
@@ -150,8 +152,7 @@ class BusinessModel
                 $data[$table]['columns'] = [
                         $key => [
                             'name' => 'ID',
-                            'view' => false,
-                            'disabled' => true
+                            'view' => false
                         ]
                     ] + $data[$table]['columns'];
             }
@@ -160,6 +161,34 @@ class BusinessModel
         ksort($data);
 
         return $this->data = $data;
+    }
+
+    /**
+     * Manage CRUD permissions.
+     *
+     * @throws \ErrorException
+     */
+    public function managePermissions()
+    {
+        if (!empty($this->action)) {
+            switch($this->action) {
+                case 'create':
+                    if (empty($this->data[$this->table]['create'])) {
+                        throw new \ErrorException('Permission denied to: '.$this->action);
+                    }
+                    break;
+                case 'update':
+                    if (empty($this->data[$this->table]['update'])) {
+                        throw new \ErrorException('Permission denied to: '.$this->action);
+                    }
+                    break;
+                case 'delete':
+                    if (empty($this->data[$this->table]['delete'])) {
+                        throw new \ErrorException('Permission denied to: '.$this->action);
+                    }
+                    break;
+            };
+        }
     }
 
     /**
@@ -257,7 +286,7 @@ class BusinessModel
             ->set('id', $this->id);
 
         foreach ($this->data[$this->table]['columns'] as $columnName => $column) {
-            if (isset($column['type']) && $column['type'] == 'image') {
+            if (isset($column['plugin']) && $column['plugin'] == 'image') {
                 $this->data[$this->table]['plugins'][$columnName] = $content
                     ->set('column', $columnName)
                     ->render();
