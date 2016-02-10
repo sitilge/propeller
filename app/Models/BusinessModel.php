@@ -213,21 +213,23 @@ class BusinessModel
             return;
         }
 
-        $publicPath = __DIR__.'/../../public';
+        $publicPath = rtrim($this->config->get('admin', 'publicPath'), '/');
         $imageDomain = trim($this->config->get('admin', 'imageDomain'), '/');
-        $imagePath = trim($this->config->get('admin', 'imagePath'), '/');
+        $imageDir = trim($this->config->get('admin', 'imageDir'), '/');
 
         if (!empty($_FILES)) {
             if (isset($_FILES['image']['error']) && $_FILES['image']['error'] === 0) {
-                if (!is_dir($publicPath.'/'.$imagePath.'/'.$this->table)) {
-                    mkdir($publicPath.'/'.$imagePath.'/'.$this->table);
+                if (!is_dir($publicPath.'/'.$imageDir.'/'.$this->table)) {
+                    mkdir($publicPath.'/'.$imageDir.'/'.$this->table);
                 }
 
-                $storage = new FileSystem($publicPath.'/'.$imagePath.'/'.$this->table, true);
+                $storage = new FileSystem($publicPath.'/'.$imageDir.'/'.$this->table, true);
 
                 $file = new File('image', $storage);
 
-                $filename = Sanitize::string($file->getName());
+//                TODO - sanitize the filename
+//                $filename = Sanitize::string($file->getName());
+                $filename = $file->getName();
 
                 $file
                     ->setName($filename)
@@ -259,7 +261,7 @@ class BusinessModel
 
         $structure = [];
 
-        $directory = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($publicPath.'/'.$imagePath, \RecursiveDirectoryIterator::SKIP_DOTS));
+        $directory = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($publicPath.'/'.$imageDir, \RecursiveDirectoryIterator::SKIP_DOTS));
 
         foreach ($directory as $file ) {
             if ('.' === substr($file->getFilename(), 0, 1)) {
@@ -280,7 +282,7 @@ class BusinessModel
             ->set('structure', $structure)
             ->set('data', $this->data)
             ->set('imageDomain', $imageDomain)
-            ->set('imagePath', $imagePath)
+            ->set('imageDir', $imageDir)
             ->set('table', $this->table)
             ->set('action', $this->action)
             ->set('id', $this->id);

@@ -1,4 +1,4 @@
-<script>var dir = "<?php echo $imageDomain.'/'.$imagePath.'/'.$table.'/'; ?>";</script>
+<script>var dir = "<?php echo $imageDomain.'/'.$imageDir.'/'.$table.'/'; ?>";</script>
 <div class="row images">
     <div class="size-large col-md-1">
         <div id="preview-<?php echo $column;?>" class="image size-large"

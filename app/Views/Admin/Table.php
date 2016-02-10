@@ -63,10 +63,3 @@
 <?php else : ?>
     <div class="alert alert-danger">No results found</div>
 <?php endif; ?>
-
-<style>
-    .glyphicon {
-
-    }
-
-</style>

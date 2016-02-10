@@ -2,6 +2,7 @@
 
 return [
     'jsonPath' => __DIR__.'/../Misc/Admin', //system path to json dir; string
-    'imageDomain' => '', //image domain (if empty, the current domain is used); string
-    'imagePath' => 'img/uploads' //image path relative to image domain; string
+    'publicPath' => __DIR__.'/../../public', //system path to public dir; string
+    'imageDomain' => 'http://curdle.sitilge.id.lv', //image domain; string
+    'imageDir' => 'img/uploads' //image dir; string
 ];
