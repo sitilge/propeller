@@ -2,23 +2,8 @@
 
 namespace App\Models;
 
-use Abimo\Factory;
-
 class UrlModel
 {
-    /**
-     * @var Factory
-     */
-    private $factory;
-
-    /**
-     * UrlModel constructor.
-     */
-    public function __construct()
-    {
-        $this->factory = new Factory();
-    }
-
     /**
      * The admin URL generator.
      *
