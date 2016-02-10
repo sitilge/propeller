@@ -152,7 +152,10 @@ class BusinessModel
                 $data[$table]['columns'] = [
                         $key => [
                             'name' => 'ID',
-                            'view' => false
+                            'view' => false,
+                            'attributes' => [
+                                'disabled' => 'true'
+                            ]
                         ]
                     ] + $data[$table]['columns'];
             }

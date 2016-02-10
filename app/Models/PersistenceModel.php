@@ -208,7 +208,7 @@ class PersistenceModel
         $values = [];
 
         foreach ($this->businessModel->data[$this->table]['columns'] as $columnName => $column) {
-            if (!empty($column['disabled'])) {
+            if (!empty($column['attributes']['disabled'])) {
                 continue;
             }
 
@@ -241,7 +241,7 @@ class PersistenceModel
         $valuesQuery = [];
 
         foreach ($this->businessModel->data[$this->table]['columns'] as $columnName => $column) {
-            if (!empty($column['disabled'])) {
+            if (!empty($column['attributes']['disabled'])) {
                 continue;
             }
 

@@ -2,22 +2,35 @@
   "key": "id",
   "name": "Users",
   "create": true,
+  "delete": false,
   "update": true,
   "columns": {
     "name": {
       "name": "Name",
-      "view": "table"
+      "view": "table",
+      "attributes": {
+        "required": "true"
+      }
     },
     "surname": {
       "name": "Surname",
       "view": "table",
       "attributes": {
+        "required": "true",
         "maxlength": 20
+      }
+    },
+    "email": {
+      "name": "Email",
+      "view": "table",
+      "attributes": {
+        "required": "true",
+        "type": "email"
       }
     },
     "photo": {
       "name": "Photo",
-      "view": "table",
+      "view": "row",
       "plugin": "image"
     }
   }
