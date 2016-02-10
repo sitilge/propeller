@@ -42,8 +42,9 @@ The respective ```.json``` files for the project are located under ```app/Misc/A
 {
   "key": "id",              //required, the table primary key
   "name": "Menu",           //optional, the table display name, defaults to table name
-  "create": true,           //optional, allow to create new row, defaults to false
-  "delete": true,           //optional, allow to delete row, defaults to false
+  "create": true,           //optional, allow to create a new row, defaults to false
+  "update": true,           //optional, allow to update the row, defaults to false
+  "delete": true,           //optional, allow to delete the row, defaults to false
   "order": {                //optional, change the order of rows in table view, defaults to false
     "column": "sequence",   //required, the name of the column
     "direction": "ASC"      //optional, the direction of order, defaults to ASC
@@ -53,10 +54,11 @@ The respective ```.json``` files for the project are located under ```app/Misc/A
       "name": "Name",       //optional, the column display name, defaults to column name
       "view": "row",        //optional, display the column in table or row view, defaults to false
       "attributes": {       //optional, the input/select field attributes, defaults to false
-        "disabled": "true"
+        "required": "true",
+        "maxlength": "20"
       },
-      "plugin": "slug",     //optional, set the plugin to slug, text or image defaults to false
-      "values": {           //optional, make dropdown for the values, defaults to false
+      "plugin": "slug",     //optional, set a plugin to slug, text or image, defaults to false
+      "values": {           //optional, create a dropdown for the values, defaults to false
         "0": "No",
         "1": "Yes"
       },
