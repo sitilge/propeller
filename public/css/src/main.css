@@ -50,11 +50,11 @@ body {
 .main .page-header {
   margin-top: 0; }
 
-.sortable-handle {
+.orderable-handle {
   color: #337ab7;
   cursor: move !important;
   cursor: -webkit-grabbing !important; }
-  .sortable-handle * {
+  .orderable-handle * {
     cursor: move !important;
     cursor: -webkit-grabbing !important; }
 
@@ -62,13 +62,21 @@ table tbody tr {
   cursor: pointer; }
   table tbody tr:hover {
     background: #F9F9F9; }
-  table tbody tr .update-row-button {
+  table tbody tr .order-row-button {
     color: #337ab7; }
+    table tbody tr .order-row-button:hover {
+      text-decoration: none;
+      color: #286090; }
+  table tbody tr .update-row-button {
+    color: #337ab7;
+    padding: 0 0 0 15px;
+    margin: 0 0 0 -15px; }
     table tbody tr .update-row-button:hover {
       text-decoration: none;
       color: #286090; }
   table tbody tr .delete-row-button {
-    color: #d9534f; }
+    color: #d9534f;
+    padding: 0 0 0 15px; }
     table tbody tr .delete-row-button:hover {
       text-decoration: none;
       color: #C9302C; }
@@ -88,6 +96,7 @@ table tbody tr {
     text-align: center; }
 
 .glyphicon {
+  font-size: 16px;
   cursor: pointer; }
 
 .size-image {

@@ -6,7 +6,7 @@ $(function () {
 
         swal({
                 title: 'Are you sure?',
-                text: 'The row will be removed permanently.',
+                text: 'The row will be deleted permanently.',
                 type: 'error',
                 confirmButtonClass: 'btn-danger',
                 confirmButtonText: 'Delete',
@@ -51,16 +51,16 @@ $(function () {
     }
 
     //sort rows
-    var sortable = $('.sortable');
+    var orderable = $('.orderable');
 
-    if (sortable.length) {
-        Sortable.create(sortable.get(0), {
-            handle: '.sortable-handle',
+    if (orderable.length) {
+        Sortable.create(orderable.get(0), {
+            handle: '.orderable-handle',
             animation: 150,
             onEnd: function () {
                 var order = [];
 
-                $('.sortable > tr').each(function() {
+                $('.orderable > tr').each(function() {
                     var id = $(this).data('id');
                     order.push(id);
                 });

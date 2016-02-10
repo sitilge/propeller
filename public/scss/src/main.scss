@@ -58,7 +58,7 @@ body {
 }
 
 //table
-.sortable-handle {
+.orderable-handle {
     color: #337ab7;
 	cursor: move!important;
 	cursor: -webkit-grabbing!important;
@@ -76,8 +76,20 @@ table {
             &:hover {
                 background: #F9F9F9;
             }
+
+            .order-row-button {
+                color: #337ab7;
+
+                &:hover {
+                    text-decoration: none;
+                    color: #286090;
+                }
+            }
+
             .update-row-button {
                 color: #337ab7;
+                padding: 0 0 0 15px;
+                margin: 0 0 0 -15px;
 
                 &:hover {
                     text-decoration: none;
@@ -86,6 +98,7 @@ table {
             }
             .delete-row-button {
                 color: #d9534f;
+                padding: 0 0 0 15px;
 
                 &:hover {
                     text-decoration: none;
@@ -105,7 +118,6 @@ table {
     text-align: center;
     line-height: 113px;
     float:left;
-    // background-color: red;
     border-radius: 50%;
     cursor: pointer;
 
@@ -115,6 +127,7 @@ table {
     }
 }
 .glyphicon {
+    font-size: 16px;
     cursor: pointer;
 }
 .size-image {
