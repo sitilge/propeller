@@ -1,12 +1,12 @@
 {
-  "name": "sitilge/abimo",
-  "description": "A lightweight HTTP PHP framework.",
+  "name": "sitilge/curdle",
+  "description": "A simple database administration tool for simple CRUD operations.",
   "keywords": ["framework", "abimo", "php", "http"],
   "license": "MIT",
-  "homepage": "http://sitilge.id.lv",
+  "homepage": "http://curdle.sitilge.id.lv",
   "support": {
-    "issues": "https://github.com/sitilge/abimo/issues",
-    "source": "https://github.com/sitilge/abimo"
+    "issues": "https://github.com/sitilge/curdle/issues",
+    "source": "https://github.com/sitilge/curdle"
   },
   "authors": [
     {
