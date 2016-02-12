@@ -17,13 +17,6 @@ See a live demo here: http://curdle.sitilge.id.lv
 - Join tables to get the best of multiple sources
 - Use the image gallery to manage your media files
 
-## Tech
-
-- small PHP footprint, < 700 LOC
-- implies PDO abstraction layer - MySQL, sqlite, etc.
-- built with [abimo] framework, composer packages
-- front-end stack - fully responsive, Bootstrap, SASS
-
 ## Installation
 
 Clone the project
@@ -56,11 +49,13 @@ The respective ```.json``` files for the project are located under ```app/Misc/A
       "attributes": {       //optional, the input/select field attributes, defaults to false
         "required": "true",
         "maxlength": "20"
+        ...
       },
       "plugin": "slug",     //optional, set a plugin to slug, text or image, defaults to false
       "values": {           //optional, create a dropdown for the values, defaults to false
         "0": "No",
         "1": "Yes"
+        ...
       },
       "join": {             //optional, join with a table
         "icons": {          //required, the join table name
