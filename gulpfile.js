@@ -31,6 +31,7 @@ gulp.task('js', function() {
     return gulp.src([
             'public/js/src/jquery.js',
             'public/js/src/bootstrap.js',
+            'public/js/src/moment-with-locales.js',
             'public/js/src/*.js'])
         .pipe(concat('all.js'))
         .pipe(uglify())

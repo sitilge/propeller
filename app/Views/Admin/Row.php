@@ -44,11 +44,61 @@
                     <textarea id="summernote-<?php echo $columnName; ?>" name="<?php echo $action; ?>[<?php echo $columnName; ?>]" hidden><?php echo $value; ?></textarea>
                 <?php elseif ($column['plugin'] === 'price') : ?>
                     <div class="input-group">
-                        <div class="input-group-addon"><span class="glyphicon glyphicon-eur" aria-hidden="true"></span></div>
                         <input id="<?php echo $columnName; ?>" class="form-control" name="<?php echo $action; ?>[<?php echo $columnName; ?>]" value="<?php echo htmlentities($value, ENT_QUOTES); ?>" <?php echo $attributes; ?>/>
+                        <span class="input-group-addon">
+                            <span class="glyphicon glyphicon-eur"></span>
+                        </span>
                     </div>
                 <?php elseif ($column['plugin'] === 'slug') : ?>
                     <input id="<?php echo $columnName; ?>" class="form-control slugify" name="<?php echo $action; ?>[<?php echo $columnName; ?>]" value="<?php echo htmlentities($value, ENT_QUOTES); ?>" <?php echo $attributes; ?>/>
+                <?php elseif ($column['plugin'] === 'date') : ?>
+                    <div class="input-group date">
+                        <input id="<?php echo $columnName; ?>" class="form-control" name="<?php echo $action; ?>[<?php echo $columnName; ?>]" value="<?php echo htmlentities($value, ENT_QUOTES); ?>" <?php echo $attributes; ?>/>
+                        <span class="input-group-addon">
+                            <span class="glyphicon glyphicon-calendar"></span>
+                        </span>
+                    </div>
+
+                    <!--TODO - move to external js-->
+                    <script type="text/javascript">
+                        $(function () {
+                            $('#<?php echo $columnName; ?>').datetimepicker({
+                                format: 'YYYY-MM-DD'
+                            });
+                        });
+                    </script>
+                <?php elseif ($column['plugin'] === 'time') : ?>
+                    <div class="input-group time">
+                        <input id="<?php echo $columnName; ?>" class="form-control" name="<?php echo $action; ?>[<?php echo $columnName; ?>]" value="<?php echo htmlentities($value, ENT_QUOTES); ?>" <?php echo $attributes; ?>/>
+                        <span class="input-group-addon">
+                            <span class="glyphicon glyphicon-time"></span>
+                        </span>
+                    </div>
+
+                    <!--TODO - move to external js-->
+                    <script type="text/javascript">
+                        $(function () {
+                            $('#<?php echo $columnName; ?>').datetimepicker({
+                                format: 'HH:mm'
+                            });
+                        });
+                    </script>
+                <?php elseif ($column['plugin'] === 'datetime') : ?>
+                    <div class="input-group time">
+                        <input id="<?php echo $columnName; ?>" class="form-control" name="<?php echo $action; ?>[<?php echo $columnName; ?>]" value="<?php echo htmlentities($value, ENT_QUOTES); ?>" <?php echo $attributes; ?>/>
+                        <span class="input-group-addon">
+                            <span class="glyphicon glyphicon-calendar"></span>
+                        </span>
+                    </div>
+
+                    <!--TODO - move to external js-->
+                    <script type="text/javascript">
+                        $(function () {
+                            $('#<?php echo $columnName; ?>').datetimepicker({
+                                format: 'YYYY-MM-DD HH:mm'
+                            });
+                        });
+                    </script>
                 <?php endif; ?>
             <?php else : ?>
                 <input id="<?php echo $columnName; ?>" class="form-control" name="<?php echo $action; ?>[<?php echo $columnName; ?>]" value="<?php echo htmlentities($value, ENT_QUOTES); ?>" <?php echo $attributes; ?>/>
