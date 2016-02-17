@@ -9,7 +9,8 @@
       "name": "Name",
       "view": "table",
       "attributes": {
-        "required": "true"
+        "required": "true",
+        "placeholder": "Enter name here..."
       }
     },
     "surname": {
@@ -17,15 +18,24 @@
       "view": "table",
       "attributes": {
         "required": "true",
-        "maxlength": 20
+        "placeholder": "Enter surname here..."
       }
+    },
+    "birthday": {
+      "name": "Birthday",
+      "view": "table",
+      "attributes": {
+        "required": "true"
+      },
+      "plugin": "datetime"
     },
     "email": {
       "name": "Email",
       "view": "table",
       "attributes": {
         "required": "true",
-        "type": "email"
+        "type": "email",
+        "placeholder": "Enter email here..."
       }
     },
     "photo": {

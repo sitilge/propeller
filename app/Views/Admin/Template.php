@@ -12,6 +12,7 @@
         <meta content="https://github.com/sitilge/curdle" property="og:url">
         <link rel="stylesheet" href="/css/all.css">
         <script src="/js/all.js"></script>
+        <script src="/js/src/main.js"></script>
     </head>
     <body>
         <nav class="navbar navbar-default navbar-fixed-top">

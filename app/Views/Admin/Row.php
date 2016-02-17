@@ -25,23 +25,23 @@
         <div class="form-group <?php echo empty($column['view']) ? 'hidden' : null; ?>">
             <label for="<?php echo $columnName; ?>"><?php echo (isset($column['name']) ? $column['name'] : $columnName); ?></label>
             <?php if (!empty($data[$table]['rowsJoin'][$columnName])) : ?>
-                <select id="<?php echo $columnName; ?>" class="form-control" name="<?php echo $action; ?>[<?php echo $columnName; ?>]">
-                    <option value="" <?php echo $attributes; ?>></option>
+                <select id="<?php echo $columnName; ?>" class="form-control" name="<?php echo $action; ?>[<?php echo $columnName; ?>]" <?php echo $attributes; ?>>
+                    <option value=""></option>
                     <?php foreach ($data[$table]['rowsJoin'][$columnName] as $rowJoinId => $rowJoinValue) : ?>
                         <?php if (isset($value) && $rowJoinId == $value) : ?>
-                            <option value="<?php echo $rowJoinId; ?>" <?php echo $attributes; ?> selected><?php echo htmlentities($rowJoinValue, ENT_QUOTES); ?></option>
+                            <option value="<?php echo $rowJoinId; ?>" selected><?php echo htmlentities($rowJoinValue, ENT_QUOTES); ?></option>
                         <?php else : ?>
-                            <option value="<?php echo $rowJoinId; ?>" <?php echo $attributes; ?>><?php echo htmlentities($rowJoinValue, ENT_QUOTES); ?></option>
+                            <option value="<?php echo $rowJoinId; ?>"><?php echo htmlentities($rowJoinValue, ENT_QUOTES); ?></option>
                         <?php endif; ?>
                     <?php endforeach; ?>
                 </select>
             <?php elseif (!empty($column['plugin'])) : ?>
                 <?php if ($column['plugin'] === 'image') : ?>
-                    <input class="form-control hidden" id="<?php echo $columnName; ?>" name="<?php echo $action; ?>[<?php echo $columnName; ?>]" value="<?php echo htmlentities($value, ENT_QUOTES); ?>" <?php echo $attributes; ?>/>
+                    <input id="<?php echo $columnName; ?>" class="form-control hidden" name="<?php echo $action; ?>[<?php echo $columnName; ?>]" value="<?php echo htmlentities($value, ENT_QUOTES); ?>" <?php echo $attributes; ?>/>
                     <?php echo $data[$table]['plugins'][$columnName]; ?>
                 <?php elseif ($column['plugin'] === 'text') : ?>
                     <div id="<?php echo $columnName; ?>" class="summernote"><?php echo $value; ?></div>
-                    <textarea id="summernote-<?php echo $columnName; ?>" name="<?php echo $action; ?>[<?php echo $columnName; ?>]" hidden><?php echo $value; ?></textarea>
+                    <textarea id="summernote-<?php echo $columnName; ?>" class="hidden" name="<?php echo $action; ?>[<?php echo $columnName; ?>]" <?php echo $attributes; ?>><?php echo $value; ?></textarea>
                 <?php elseif ($column['plugin'] === 'price') : ?>
                     <div class="input-group">
                         <input id="<?php echo $columnName; ?>" class="form-control" name="<?php echo $action; ?>[<?php echo $columnName; ?>]" value="<?php echo htmlentities($value, ENT_QUOTES); ?>" <?php echo $attributes; ?>/>
@@ -52,53 +52,26 @@
                 <?php elseif ($column['plugin'] === 'slug') : ?>
                     <input id="<?php echo $columnName; ?>" class="form-control slugify" name="<?php echo $action; ?>[<?php echo $columnName; ?>]" value="<?php echo htmlentities($value, ENT_QUOTES); ?>" <?php echo $attributes; ?>/>
                 <?php elseif ($column['plugin'] === 'date') : ?>
-                    <div class="input-group date">
-                        <input id="<?php echo $columnName; ?>" class="form-control" name="<?php echo $action; ?>[<?php echo $columnName; ?>]" value="<?php echo htmlentities($value, ENT_QUOTES); ?>" <?php echo $attributes; ?>/>
+                    <div class="input-group">
+                        <input id="<?php echo $columnName; ?>" class="form-control datetimepicker" name="<?php echo $action; ?>[<?php echo $columnName; ?>]" value="<?php echo htmlentities($value, ENT_QUOTES); ?>" <?php echo $attributes; ?> data-format="YYYY-MM-DD"/>
                         <span class="input-group-addon">
                             <span class="glyphicon glyphicon-calendar"></span>
                         </span>
                     </div>
-
-                    <!--TODO - move to external js-->
-                    <script type="text/javascript">
-                        $(function () {
-                            $('#<?php echo $columnName; ?>').datetimepicker({
-                                format: 'YYYY-MM-DD'
-                            });
-                        });
-                    </script>
                 <?php elseif ($column['plugin'] === 'time') : ?>
-                    <div class="input-group time">
-                        <input id="<?php echo $columnName; ?>" class="form-control" name="<?php echo $action; ?>[<?php echo $columnName; ?>]" value="<?php echo htmlentities($value, ENT_QUOTES); ?>" <?php echo $attributes; ?>/>
+                    <div class="input-group">
+                        <input id="<?php echo $columnName; ?>" class="form-control datetimepicker" name="<?php echo $action; ?>[<?php echo $columnName; ?>]" value="<?php echo htmlentities($value, ENT_QUOTES); ?>" <?php echo $attributes; ?> data-format="HH:mm"/>
                         <span class="input-group-addon">
                             <span class="glyphicon glyphicon-time"></span>
                         </span>
                     </div>
-
-                    <!--TODO - move to external js-->
-                    <script type="text/javascript">
-                        $(function () {
-                            $('#<?php echo $columnName; ?>').datetimepicker({
-                                format: 'HH:mm'
-                            });
-                        });
-                    </script>
                 <?php elseif ($column['plugin'] === 'datetime') : ?>
-                    <div class="input-group time">
-                        <input id="<?php echo $columnName; ?>" class="form-control" name="<?php echo $action; ?>[<?php echo $columnName; ?>]" value="<?php echo htmlentities($value, ENT_QUOTES); ?>" <?php echo $attributes; ?>/>
+                    <div class="input-group">
+                        <input id="<?php echo $columnName; ?>" class="form-control datetimepicker" name="<?php echo $action; ?>[<?php echo $columnName; ?>]" value="<?php echo htmlentities($value, ENT_QUOTES); ?>" <?php echo $attributes; ?> data-format="YYYY-MM-DD HH:mm"/>
                         <span class="input-group-addon">
                             <span class="glyphicon glyphicon-calendar"></span>
                         </span>
                     </div>
-
-                    <!--TODO - move to external js-->
-                    <script type="text/javascript">
-                        $(function () {
-                            $('#<?php echo $columnName; ?>').datetimepicker({
-                                format: 'YYYY-MM-DD HH:mm'
-                            });
-                        });
-                    </script>
                 <?php endif; ?>
             <?php else : ?>
                 <input id="<?php echo $columnName; ?>" class="form-control" name="<?php echo $action; ?>[<?php echo $columnName; ?>]" value="<?php echo htmlentities($value, ENT_QUOTES); ?>" <?php echo $attributes; ?>/>

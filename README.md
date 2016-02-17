@@ -30,11 +30,11 @@ composer install
 
 ## Configuration
 
-The respective ```.json``` files for the project are located under ```app/Misc/Admin```. File names must match the table names; let us examine one of them the ```menu.json``` that corresponds to ```menu``` table in the database
+The respective ```.json``` files for the project are located under ```app/Misc/Admin```. File names must match the table names.
 ```
 {
   "key": "id",              //required, the table primary key
-  "name": "Menu",           //optional, the table display name, defaults to table name
+  "name": "Users",          //optional, the table display name, defaults to table name
   "create": true,           //optional, allow to create a new row, defaults to false
   "update": true,           //optional, allow to update the row, defaults to false
   "delete": true,           //optional, allow to delete the row, defaults to false
@@ -48,10 +48,10 @@ The respective ```.json``` files for the project are located under ```app/Misc/A
       "view": "row",        //optional, display the column in table or row view, defaults to false
       "attributes": {       //optional, the input/select field attributes, defaults to false
         "required": "true",
-        "maxlength": "20"
+        "placeholder": "Enter your name..."
         ...
       },
-      "plugin": "slug",     //optional, set a plugin to slug, text or image, defaults to false
+      "plugin": "text",     //optional, set a plugin to slug, price, text, image, date, time, or datetime defaults to false
       "values": {           //optional, create a dropdown for the values, defaults to false
         "0": "No",
         "1": "Yes"
@@ -63,6 +63,7 @@ The respective ```.json``` files for the project are located under ```app/Misc/A
           "columns": {      //required, the join columns array
             "id": {},       //required, the join column name
             "name": {}
+            ...
           }
         }
       }

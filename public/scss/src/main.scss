@@ -130,6 +130,9 @@ table {
     font-size: 16px;
     cursor: pointer;
 }
+.glyphicon-eur, .glyphicon-calendar, .glyphicon-time {
+    cursor: default;
+}
 .size-image {
     width: 95px;
     height: 95px;

@@ -18,11 +18,19 @@
     },
     "name": {
       "name": "Name",
-      "view": "table"
+      "view": "table",
+      "attributes": {
+        "required": "true",
+        "placeholder": "Enter name here..."
+      }
     },
     "slug": {
       "name": "Slug",
       "view": "table",
+      "attributes": {
+        "required": "true",
+        "placeholder": "Enter slug here..."
+      },
       "plugin": "slug"
     },
     "display": {

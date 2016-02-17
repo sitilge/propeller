@@ -108,11 +108,7 @@ $(function () {
         slugify(this, true);
     });
 
-    //image plugin
-    $('#gallery-button').on('click',function() {
-        preview = $(this).parent().parent().children(':first-child').find('.image').attr('id');
-    });
-
+    //image plugin upload
     $(document).on('change', '.btn-file :file', function() {
         var input = $(this);
 
@@ -120,9 +116,9 @@ $(function () {
             var reader = new FileReader();
 
             reader.onload = function (ele) {
-                var preview = $(input).attr('preview');
+                var preview = $(input).data('preview');
 
-                var previewEle = $('#' + preview);
+                var previewEle = $('#preview-' + preview);
                 previewEle.css('background-image','url("' + ele.target.result + '")');
                 previewEle.css('width','100%');
                 previewEle.css('height','100%');
@@ -135,11 +131,21 @@ $(function () {
 
                 var imagePath = dir + filename + '.' + extension;
 
-                $('#' + preview.split('-')[1]).val(imagePath);
+                $('#' + preview).val(imagePath);
             };
 
             reader.readAsDataURL(input.prop('files')[0]);
         }
+    });
+
+    //datetimepicker
+    $('.datetimepicker').each(function() {
+        var ele = $(this);
+        var format = ele.data('format');
+
+        ele.datetimepicker({
+            format: format
+        });
     });
 });
 
@@ -180,26 +186,32 @@ function sanitize(ele) {
         .replace(/-+$/, '');            // Trim - from end of text
 }
 
-//image plugin
-function updateImage(ele) {
-    var imagePath = ele.data('file');
+//image plugin update
+function updateImage(input) {
+    var imagePath = input.data('file');
 
-    var previewEle = $('#' + preview);
+    var preview = $(input).data('preview');
+
+    var previewEle = $('#preview-' + preview);
     previewEle.css('background-image','url(' + imagePath + ')');
     previewEle.css('width','100%');
     previewEle.css('height','100%');
     previewEle.css('background-size','cover');
     previewEle.css('background-position','center');
 
-    $('#' + preview.split('-')[1]).val(imagePath);
+    $('#' + preview).val(imagePath);
+
     $('#gallery').modal('hide');
 }
 
+//image plugin remove
 function removeImage(input) {
-    var preview = $(input).attr('preview');
-    $('#' + preview).css('background-image', 'url("/img/system/image-empty.png")');
-    $('#' + preview.split('-')[1]).val('');
+    var preview = input.data('preview');
+
+    $('#preview-' + preview).css('background-image', 'url("/img/system/image-empty.png")');
+    $('#' + preview).val('');
 }
 
+//image plugin delete
 function deleteImage(input) {
 }
