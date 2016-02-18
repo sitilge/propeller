@@ -1,4 +1,6 @@
-<script>var dir = "<?php echo $imageDomain.'/'.$imageDir.'/'.$table.'/'; ?>";</script>
+<script>
+    var path = "<?php echo $imageDomain.'/'.$imageDir.'/'.$table.'/'; ?>";
+</script>
 <div class="row images">
     <div class="size-large col-md-1">
         <div id="preview-<?php echo $column;?>" class="image size-large"
@@ -37,7 +39,7 @@
             <div class="modal-body image-container">
                 <?php foreach ($structure as $dir => $files) : ?>
                     <?php foreach ($files as $file) : ?>
-                        <div class="size-image image col-md-1" style="background-image: url('<?php echo htmlentities($file, ENT_QUOTES); ?>')" onclick="updateImage($(this))" data-file="<?php echo htmlentities($file, ENT_QUOTES); ?>" data-preview="<?php echo $column;?>"></div>
+                        <div class="size-image image col-md-1" style="background-image: url('<?php echo htmlentities($file, ENT_QUOTES); ?>')" onclick="updateImage($(this))" data-file="<?php echo $imageDomain.$file; ?>" data-preview="<?php echo $column;?>"></div>
                     <?php endforeach; ?>
                 <?php endforeach; ?>
                 <div class="clearfix"></div>

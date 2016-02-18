@@ -129,9 +129,7 @@ $(function () {
                 var filename = sanitize(file.split('.').shift());
                 var extension = sanitize(file.split('.').pop());
 
-                var imagePath = dir + filename + '.' + extension;
-
-                $('#' + preview).val(imagePath);
+                $('#' + preview).val(path + filename + '.' + extension);
             };
 
             reader.readAsDataURL(input.prop('files')[0]);
@@ -190,7 +188,7 @@ function sanitize(ele) {
 function updateImage(input) {
     var imagePath = input.data('file');
 
-    var preview = $(input).data('preview');
+    var preview = input.data('preview');
 
     var previewEle = $('#preview-' + preview);
     previewEle.css('background-image','url(' + imagePath + ')');
