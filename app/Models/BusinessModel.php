@@ -211,6 +211,9 @@ class BusinessModel
      */
     private function pluginImage()
     {
+//        phpinfo();
+//        exit;
+
         //TODO - image plugin works only in the row view
         if (empty($this->action)) {
             return;
@@ -231,8 +234,7 @@ class BusinessModel
                 $file = new File('image', $storage);
 
 //                TODO - sanitize the filename
-//                $filename = Sanitize::string($file->getName());
-                $filename = $file->getName();
+                $filename = Sanitize::string($file->getName());
 
                 $file
                     ->setName($filename)
@@ -241,22 +243,21 @@ class BusinessModel
                             'image/png',
                             'image/jpg',
                             'image/jpeg',
-                            'image/gif',
-                            'image/tif',
+                            'image/gif'
                         ]),
                         new Size('5M')
                     ]);
 
                 $file->upload();
 
-//                TODO - optimize the image
+//                TODO - uncomment to optimize the image
 //                $optimizer = new OptimizerFactory([
 //                    'ignore_errors' => false
 //                ]);
 //
 //                $optimizer = $optimizer->get();
 //
-//                $optimizer->optimize($publicPath.'/'.$imagePath.'/'.$this->table.'/'.$file->getNameWithExtension());
+//                $optimizer->optimize($publicPath.'/'.$imageDir.'/'.$this->table.'/'.$file->getNameWithExtension());
             }
 
             return;

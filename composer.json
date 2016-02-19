@@ -16,6 +16,7 @@
   ],
   "require": {
     "php": ">= 5.5.0",
+    "ext-intl": "*",
     "sitilge/corde": "dev-master",
     "codeguy/upload": "*",
     "nikic/fast-route": "^0.7.0",
