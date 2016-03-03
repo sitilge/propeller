@@ -81,3 +81,6 @@ It is more than welcome to contribute to the project - feel free to send pull re
 [abimo]: <https://github.com/sitilge/abimo>
 
 [![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/sitilge/curdle/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
+
+[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/sitilge/curdle/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
+
