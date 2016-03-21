@@ -83,6 +83,7 @@ class PersistenceModel
         $columnsQuery = '';
         $tableQuery = '';
         $orderQuery = '';
+        $columnsArray = [];
 
         foreach ($this->businessModel->data[$this->table]['columns'] as $columnName => $column) {
             $columnQueryName = $this->db->backtick($columnName);
