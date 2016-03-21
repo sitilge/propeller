@@ -112,6 +112,7 @@ class PersistenceModel
                     $joinColumnsQuery = '';
                     $joinTableQuery = '';
                     $joinOrderQuery = '';
+                    $joinColumnsArray = [] ;
 
                     foreach ($join['columns'] as $joinColumnName => $joinColumn) {
                         $joinColumnQueryName = $this->db->backtick($joinColumnName);
