@@ -10,8 +10,8 @@
         <meta content="" property="og:image">
         <meta content="A simple database administration tool for simple CRUD operations." property="og:description">
         <meta content="https://github.com/sitilge/curdle" property="og:url">
-        <link rel="stylesheet" href="/css/all.css">
-        <script src="/js/all.js"></script>
+        <link rel="stylesheet" href="<?=$url->admin()?>css/all.css">
+        <script src="<?=$url->admin()?>js/all.js"></script>
     </head>
     <body>
         <nav class="navbar navbar-default navbar-fixed-top">

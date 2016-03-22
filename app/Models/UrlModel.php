@@ -26,7 +26,7 @@ class UrlModel
             }
         }
 
-        return $this->prepare('/'.implode('/', $pattern), [
+        return $this->prepare( BASE_PATH .'/'.implode('/', $pattern), [
             $table,
             $action,
             $id
