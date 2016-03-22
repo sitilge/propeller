@@ -220,7 +220,7 @@ class BusinessModel
         }
 
         $publicPath = rtrim($this->config->get('admin', 'publicPath'), '/');
-        $imageDomain = trim($this->config->get('admin', 'imageDomain'), '/');
+        $imageDomain = trim($this->config->get('admin', 'imageDomain') . BASE_PATH, '/');
         $imageDir = trim($this->config->get('admin', 'imageDir'), '/');
 
         if (!empty($_FILES)) {
