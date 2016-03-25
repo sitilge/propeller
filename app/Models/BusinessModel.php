@@ -211,25 +211,22 @@ class BusinessModel
      */
     private function pluginImage()
     {
-//        phpinfo();
-//        exit;
-
         //TODO - image plugin works only in the row view
         if (empty($this->action)) {
             return;
         }
 
-        $publicPath = rtrim($this->config->get('admin', 'publicPath'), '/');
+        $imagePublicPath = rtrim($this->config->get('admin', 'imagePublicPath'), '/');
         $imageDomain = trim($this->config->get('admin', 'imageDomain'), '/');
         $imageDir = trim($this->config->get('admin', 'imageDir'), '/');
 
         if (!empty($_FILES)) {
             if (isset($_FILES['image']['error']) && $_FILES['image']['error'] === 0) {
-                if (!is_dir($publicPath.'/'.$imageDir.'/'.$this->table)) {
-                    mkdir($publicPath.'/'.$imageDir.'/'.$this->table);
+                if (!is_dir($imagePublicPath.'/'.$imageDir.'/'.$this->table)) {
+                    mkdir($imagePublicPath.'/'.$imageDir.'/'.$this->table);
                 }
 
-                $storage = new FileSystem($publicPath.'/'.$imageDir.'/'.$this->table, true);
+                $storage = new FileSystem($imagePublicPath.'/'.$imageDir.'/'.$this->table, true);
 
                 $file = new File('image', $storage);
 
@@ -257,7 +254,7 @@ class BusinessModel
 //
 //                $optimizer = $optimizer->get();
 //
-//                $optimizer->optimize($publicPath.'/'.$imageDir.'/'.$this->table.'/'.$file->getNameWithExtension());
+//                $optimizer->optimize($imagePublicPath.'/'.$imageDir.'/'.$this->table.'/'.$file->getNameWithExtension());
             }
 
             return;
@@ -265,7 +262,7 @@ class BusinessModel
 
         $structure = [];
 
-        $directory = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($publicPath.'/'.$imageDir, \RecursiveDirectoryIterator::SKIP_DOTS));
+        $directory = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($imagePublicPath.'/'.$imageDir, \RecursiveDirectoryIterator::SKIP_DOTS));
 
         foreach ($directory as $file ) {
             if ('.' === substr($file->getFilename(), 0, 1)) {
@@ -276,7 +273,7 @@ class BusinessModel
             $dir = basename($file->getPath());
 
             //structure by modification time and filename
-            $structure[$dir][$file->getMtime().$file->getFilename()] = str_replace($publicPath, '', $pathname);
+            $structure[$dir][$file->getMtime().$file->getFilename()] = str_replace($imagePublicPath, '', $pathname);
 
             krsort($structure[$dir]);
         }
