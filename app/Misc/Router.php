@@ -12,12 +12,28 @@ class Router
      */
     public function __construct()
     {
-        $dispatcher = FastRoute\simpleDispatcher(function(FastRoute\RouteCollector $collector) {
-            $collector->addRoute(['GET'], '/logout', [new \App\Controllers\FrontController(), 'logout']);
-            $collector->addRoute(['GET', 'POST'], '/[{table}[/{action}[/{id}]]]', [new \App\Controllers\FrontController(), 'main']);
-        });
-
         $factory = new Abimo\Factory();
+        
+        $front_controller_class = $factory->config()->get('app','front_controller_class') ;
+        
+        $dispatcher = FastRoute\simpleDispatcher(
+          function(FastRoute\RouteCollector $collector) use ( $front_controller_class ) {
+            
+              $collector->addRoute(['GET'], '/logout', 
+                  function() use ($front_controller_class) { 
+                      return ( new $front_controller_class )->logout() ; 
+                  } 
+              );
+              
+              $collector->addRoute(['GET', 'POST'], '/[{table}[/{action}[/{id}]]]',
+                  function($table = null, $action = null, $id = null) use ($front_controller_class) { 
+                      return ( new $front_controller_class )->main($table,$action,$id) ; 
+                  } 
+              );
+              
+          });
+
+        
         $request = $factory->request();
 
         $method = $request->method();
