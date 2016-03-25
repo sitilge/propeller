@@ -45,6 +45,7 @@ class FrontController
     {
         $this->factory = new Factory();
         $this->urlModel = new UrlModel();
+        $this->businessModel = new BusinessModel() ;
     }
 
     /**
@@ -59,8 +60,9 @@ class FrontController
         $this->table = $table;
         $this->action = $action;
         $this->id = $id;
-
-        $this->businessModel = new BusinessModel($this->table, $this->action, $this->id);
+        
+        $businessModel = $this->businessModel ;
+        $this->businessModel = new $businessModel($this->table, $this->action, $this->id);
 
         $content = $this->getContent();
         $menu = $this->getMenu();
