@@ -15,8 +15,6 @@ $factory
     ->configure()
     ->register();
 
-define('BASE_PATH', str_replace( '/'. basename( __FILE__ ), '', $_SERVER['SCRIPT_NAME'] ) );
-
 
 //initialize router and dispatch
 new \App\Misc\Router();

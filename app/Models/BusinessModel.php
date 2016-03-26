@@ -216,9 +216,10 @@ class BusinessModel
             return;
         }
 
-
+        $base_uri_path = $this->factory->config()->get('app','base_uri_path');
+        
         $imagePublicPath = rtrim($this->config->get('admin', 'imagePublicPath'), '/');
-        $imageDomain = trim($this->config->get('admin', 'imageDomain'), '/');
+        $imageDomain = trim($this->config->get('admin', 'imageDomain') . $base_uri_path, '/');
         $imageDir = trim($this->config->get('admin', 'imageDir'), '/');
 
         if (!empty($_FILES)) {

@@ -26,7 +26,10 @@ class UrlModel
             }
         }
 
-        return $this->prepare( BASE_PATH .'/'.implode('/', $pattern), [
+        $factory = new \Abimo\Factory();
+        $base_uri_path = $factory->config()->get('app','base_uri_path');
+        
+        return $this->prepare( $base_uri_path .'/'.implode('/', $pattern), [
             $table,
             $action,
             $id
