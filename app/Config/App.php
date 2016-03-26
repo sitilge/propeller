@@ -1,5 +1,5 @@
 <?php
 
 return [
-    'development' => false //app development mode; array(true, false)
+    'frontController' => 'App\Controllers\FrontController', //front controller class; string
 ];
