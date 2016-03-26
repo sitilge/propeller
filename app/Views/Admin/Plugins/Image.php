@@ -6,7 +6,7 @@
         <div id="preview-<?php echo $column;?>" class="image size-large"
              style="
                 <?php echo (!empty($data[$table]['rows'][$id][$column])
-                    ? "background-image:url('". $data[$table]['rows'][$id][$column]."')"
+                    ? "background-image:url('".$data[$table]['rows'][$id][$column]."')"
                     : "background-image:url('/img/system/image-empty.png')"); ?>;"
                 >
         </div>
