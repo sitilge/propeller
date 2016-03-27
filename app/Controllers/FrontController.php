@@ -11,32 +11,32 @@ class FrontController
     /**
      * @var string
      */
-    private $table;
+    protected $table;
 
     /**
      * @var string
      */
-    private $action;
+    protected $action;
 
     /**
      * @var string
      */
-    private $id;
+    protected $id;
 
     /**
      * @var Factory
      */
-    private $factory;
+    protected $factory;
 
     /**
      * @var BusinessModel
      */
-    private $businessModel;
+    protected $businessModel;
 
     /**
      * @var UrlModel
      */
-    private $urlModel;
+    protected $urlModel;
 
     /**
      * FrontController constructor.
@@ -45,6 +45,7 @@ class FrontController
     {
         $this->factory = new Factory();
         $this->urlModel = new UrlModel();
+        $this->businessModel = new BusinessModel();
     }
 
     /**
@@ -60,7 +61,7 @@ class FrontController
         $this->action = $action;
         $this->id = $id;
 
-        $this->businessModel = new BusinessModel($this->table, $this->action, $this->id);
+        $this->businessModel = new $this->businessModel($this->table, $this->action, $this->id);
 
         $content = $this->getContent();
         $menu = $this->getMenu();
