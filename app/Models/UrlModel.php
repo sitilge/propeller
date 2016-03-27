@@ -5,6 +5,19 @@ namespace App\Models;
 class UrlModel
 {
     /**
+     * @var \Abimo\Factory
+     */
+    private $factory;
+
+    /**
+     * UrlModel constructor.
+     */
+    public function __construct()
+    {
+        $this->factory = new \Abimo\Factory();
+    }
+
+    /**
      * The admin URL generator.
      *
      * @param null $table
@@ -26,7 +39,9 @@ class UrlModel
             }
         }
 
-        return $this->prepare('/'.implode('/', $pattern), [
+        $baseUrl = $this->factory->config()->get('app','baseUrl');
+
+        return $this->prepare($baseUrl.'/'.implode('/', $pattern), [
             $table,
             $action,
             $id

@@ -17,8 +17,10 @@ class Router
         $frontController = $factory->config()->get('app', 'frontController');
         $frontController = new $frontController;
 
-        $dispatcher = FastRoute\simpleDispatcher(function(FastRoute\RouteCollector $collector) use ($frontController) {
-            $collector->addRoute(['GET', 'POST'], '/[{table}[/{action}[/{id}]]]', [new $frontController, 'main']);
+        $baseUrl = rtrim($factory->config()->get('app', 'baseUrl'), '/');
+
+        $dispatcher = FastRoute\simpleDispatcher(function(FastRoute\RouteCollector $collector) use ($frontController, $baseUrl) {
+            $collector->addRoute(['GET', 'POST'], $baseUrl.'/[{table}[/{action}[/{id}]]]', [new $frontController, 'main']);
         });
 
         $request = $factory->request();
