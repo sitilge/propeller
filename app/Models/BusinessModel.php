@@ -216,6 +216,7 @@ class BusinessModel
             return;
         }
 
+        $baseUrl = $this->factory->config()->get('app', 'baseUrl');
         $imagePublicPath = rtrim($this->config->get('admin', 'imagePublicPath'), '/');
         $imageDomain = trim($this->config->get('admin', 'imageDomain'), '/');
         $imageDir = trim($this->config->get('admin', 'imageDir'), '/');
@@ -282,6 +283,7 @@ class BusinessModel
             ->file(__DIR__.'/../Views/Admin/Plugins/Image')
             ->set('structure', $structure)
             ->set('data', $this->data)
+            ->set('baseUrl', $baseUrl)
             ->set('imageDomain', $imageDomain)
             ->set('imageDir', $imageDir)
             ->set('table', $this->table)
