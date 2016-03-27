@@ -1,5 +1,5 @@
 <?php
 
 return [
-    'frontController' => 'App\Controllers\FrontController', //front controller class; string
+    'frontController' => App\Controllers\FrontController::class, //front controller class; string
 ];
