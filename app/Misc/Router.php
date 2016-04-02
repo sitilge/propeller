@@ -34,7 +34,7 @@ class Router
             case FastRoute\Dispatcher::NOT_FOUND:
                 $response = $factory->response();
                 $response
-                    ->header('404', true, 404)
+                    ->header('HTTP/1.1 404 Not Found', true, 404)
                     ->send();
 
                 throw new \ErrorException("Route $method $uri not found.");
@@ -42,7 +42,7 @@ class Router
             case FastRoute\Dispatcher::METHOD_NOT_ALLOWED:
                 $response = $factory->response();
                 $response
-                    ->header('405', true, 405)
+                    ->header('HTTP/1.1 405 Method Not Allowed', true, 405)
                     ->send();
 
                 throw new \ErrorException("Method $method not allowed.");
