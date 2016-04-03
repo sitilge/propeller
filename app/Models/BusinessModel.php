@@ -30,7 +30,7 @@ class BusinessModel
     /**
      * @var Factory
      */
-    private $factory;
+    public $factory;
 
     /**
      * @var \Abimo\Config
@@ -201,9 +201,52 @@ class BusinessModel
      */
     public function managePlugins()
     {
-        $this->pluginImage();
-    }
+        
+        if (empty($this->action)) {
+            return;
+        }
+        
+        $plugins = [] ; 
+        
+        foreach ( $this->data[$this->table]['columns'] as $column => $columnconfig ) {
+          
+          if ( empty( $columnconfig['plugin'] ) ) continue ;
+          
+          $pluginclass = '\\App\\Plugins\\'. ucfirst( $columnconfig['plugin'] ) .'Plugin' ;
+          
+          if ( ! class_exists( $pluginclass ) ) {
+            #TODO: throw an exception of a plugin class does not exist
+            #   for now, there are lots of them, so skip it silently.          
+            #throw new \Exception( "Plugin class {$pluginclass} not found" ) ;
+            #var_export([ 'plugin class not found:' => $pluginclass, $column => $columnconfig ]) ;
+            continue ;
+          }
+          
+          #var_export([ $pluginclass, $column => $columnconfig ]) ; 
+          
+          // cache instantiated plugins for re-use
+          if ( empty( $plugins[$pluginclass] ) )
+            $plugins[$pluginclass] = new $pluginclass( $this, $this->config ) ;
 
+          $httpmethod = strtoupper( $this->factory->request()->method() ) ;
+          if ( $httpmethod === 'POST'  ) {
+            $plugins[$pluginclass]->postHandler( $column, $this->factory->request() ) ;
+            
+          } elseif ( $httpmethod === 'GET') {
+            
+            // call the viewTemplate() configuration method with a new template
+            $template = $this->factory->template() ;
+            $plugins[$pluginclass]->viewTemplate( $column, $template ) ;
+
+            // put the template (or its results?) into data structure for later rendering
+            $this->data[$this->table]['plugins'][$column] = $template->render() ;
+        
+          }
+          
+        }
+        
+        
+    }  
     /**
      * Build the image plugin.
      *
