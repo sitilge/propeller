@@ -112,7 +112,7 @@ class FrontController
      *
      * @return array
      */
-    private function getMenu()
+    protected function getMenu()
     {
         return $this->businessModel->data;
     }
