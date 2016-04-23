@@ -1,3 +1,5 @@
+<link rel="stylesheet" href="<?php echo $baseUrl; ?>/css/src/row/plugins/image.css">
+<script src="<?php echo $baseUrl; ?>/js/dist/plugins/image.js"></script>
 <script>
     var path = "<?php echo $imageDomain.$baseUrl.'/'.$imageDir.'/'.$table.'/'; ?>";
 </script>

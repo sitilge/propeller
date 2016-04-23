@@ -1,0 +1,51 @@
+.orderable-handle {
+  color: #337ab7;
+  cursor: move!important;
+  cursor: -webkit-grabbing!important;
+
+  * {
+    cursor: move!important;
+    cursor: -webkit-grabbing!important;
+  }
+}
+
+table {
+  tbody {
+    tr {
+      cursor: pointer;
+      &:hover {
+        background: #F9F9F9;
+      }
+
+      .order-row-button {
+        color: #337ab7;
+
+        &:hover {
+          text-decoration: none;
+          color: #286090;
+        }
+      }
+
+      .update-row-button {
+        color: #337ab7;
+        padding: 0 0 0 15px;
+        margin: 0 0 0 -15px;
+
+        &:hover {
+          text-decoration: none;
+          color: #286090;
+        }
+      }
+
+      .delete-row-button {
+        color: #d9534f;
+        padding: 0 0 0 15px;
+
+        &:hover {
+          text-decoration: none;
+          color: #C9302C;
+        }
+      }
+    }
+  }
+}

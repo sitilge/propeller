@@ -280,7 +280,7 @@ class BusinessModel
         }
 
         $content = $this->factory->template()
-            ->file(__DIR__.'/../Views/Admin/Plugins/Image')
+            ->file(__DIR__.'/../Views/Plugins/Image')
             ->set('structure', $structure)
             ->set('data', $this->data)
             ->set('baseUrl', $baseUrl)

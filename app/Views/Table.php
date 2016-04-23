@@ -1,3 +1,5 @@
+<link rel="stylesheet" href="<?php echo $url->admin(); ?>css/dist/table.css">
+<script src="<?php echo $url->admin(); ?>js/dist/table.js"></script>
 <h1 class="page-header">
     <span><?php echo !empty($data[$table]['name']) ? $data[$table]['name'] : $table; ?></span>
     <?php if (!empty($data[$table]['create'])) : ?>

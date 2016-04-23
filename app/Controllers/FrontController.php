@@ -68,7 +68,7 @@ class FrontController
         $segment = $this->factory->request()->segment(null, 1);
 
         echo $this->factory->template()
-            ->file(__DIR__.'/../Views/Admin/Template')
+            ->file(__DIR__.'/../Views/Template')
             ->set('url', new UrlModel())
             ->set('menu', $menu)
             ->set('content', $content)
@@ -87,7 +87,8 @@ class FrontController
 
         if (null === $this->table) {
             return $this->factory->template()
-                ->file(__DIR__.'/../Views/Admin/Welcome')
+                ->file(__DIR__.'/../Views/Schema')
+                ->set('url', $this->urlModel)
                 ->render();
         }
 
@@ -99,9 +100,9 @@ class FrontController
             ->set('id', $this->id);
 
         if (null === $this->action) {
-            $content->file(__DIR__.'/../Views/Admin/Table');
+            $content->file(__DIR__.'/../Views/Table');
         } else {
-            $content->file(__DIR__.'/../Views/Admin/Row');
+            $content->file(__DIR__.'/../Views/Row');
         }
 
         return $content->render();
