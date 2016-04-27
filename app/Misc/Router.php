@@ -2,25 +2,36 @@
 
 namespace App\Misc;
 
-use \Abimo;
-use \FastRoute;
+use Abimo\Factory;
+use App\Models\BusinessModel;
+use App\Models\PersistenceModel;
+use App\Models\UrlModel;
+use FastRoute\RouteCollector;
 
 class Router
 {
     /**
      * Router constructor.
+     * @param Factory $factory
+     * @throws \ErrorException
      */
-    public function __construct()
+    public function __construct(Factory $factory)
     {
-        $factory = new Abimo\Factory();
-
         $frontController = $factory->config()->get('app', 'frontController');
-        $frontController = new $frontController;
 
         $baseUrl = rtrim($factory->config()->get('app', 'baseUrl'), '/');
 
-        $dispatcher = FastRoute\simpleDispatcher(function(FastRoute\RouteCollector $collector) use ($frontController, $baseUrl) {
-            $collector->addRoute(['GET', 'POST'], $baseUrl.'/[{table}[/{action}[/{id}]]]', [new $frontController, 'main']);
+        $dispatcher = \FastRoute\simpleDispatcher(function(RouteCollector $collector) use ($frontController, $baseUrl) {
+            //TODO : S.T.U.P.I.D
+            $collector->addRoute(['GET', 'POST'], $baseUrl.'/[{table}[/{action}[/{id}]]]', [
+                new $frontController(
+                    new Factory(),
+                    new BusinessModel(
+                        new Factory(),
+                        new UrlModel(new Factory())),
+                    new PersistenceModel(new Factory()),
+                    new UrlModel(new Factory())
+                ), 'main']);
         });
 
         $request = $factory->request();
@@ -31,7 +42,7 @@ class Router
         $route = $dispatcher->dispatch($method, $uri);
 
         switch ($route[0]) {
-            case FastRoute\Dispatcher::NOT_FOUND:
+            case \FastRoute\Dispatcher::NOT_FOUND:
                 $response = $factory->response();
                 $response
                     ->header('HTTP/1.1 404 Not Found', true, 404)
@@ -39,7 +50,7 @@ class Router
 
                 throw new \ErrorException("Route $method $uri not found.");
                 break;
-            case FastRoute\Dispatcher::METHOD_NOT_ALLOWED:
+            case \FastRoute\Dispatcher::METHOD_NOT_ALLOWED:
                 $response = $factory->response();
                 $response
                     ->header('HTTP/1.1 405 Method Not Allowed', true, 405)
@@ -47,7 +58,7 @@ class Router
 
                 throw new \ErrorException("Method $method not allowed.");
                 break;
-            case FastRoute\Dispatcher::FOUND:
+            case \FastRoute\Dispatcher::FOUND:
                 $handler = $route[1];
                 $arguments = $route[2];
 

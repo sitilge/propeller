@@ -3,15 +3,24 @@
 namespace App\Models;
 
 use Abimo\Factory;
-use Upload\File;
-use Upload\Storage\FileSystem;
-use Upload\Validation\Mimetype;
-use Upload\Validation\Size;
-use ImageOptimizer\OptimizerFactory;
-use Webpatser\Sanitize\Sanitize;
 
 class BusinessModel
 {
+    /**
+     * @var Factory
+     */
+    protected $factory;
+
+    /**
+     * @var UrlModel
+     */
+    protected $urlModel;
+
+    /**
+     * @var PersistenceModel
+     */
+    public $persistenceModel;
+
     /**
      * @var string
      */
@@ -28,101 +37,77 @@ class BusinessModel
     public $id;
 
     /**
-     * @var Factory
-     */
-    private $factory;
-
-    /**
-     * @var \Abimo\Config
-     */
-    private $config;
-
-    /**
      * @var array
      */
-    public $data = [];
+    public $structure = [];
 
     /**
      * BusinessModel constructor.
-     *
-     * @param $table
-     * @param $action
-     * @param $id
+     * @param Factory $factory
+     * @param UrlModel $urlModel
      */
-    public function __construct($table = null, $action = null, $id = null)
+    public function __construct(Factory $factory, UrlModel $urlModel)
     {
-        $this->table = $table;
-        $this->action = $action;
-        $this->id = $id;
+        $this->factory = $factory;
+        $this->urlModel = $urlModel;
 
-        $this->factory = new Factory();
-
-        $this->config = $this->factory->config();
+        $this->structure = $this->getStructure();
+        $this->managePermissions();
     }
 
-    /**
-     * CRUD based on the data.
-     *
-     * @throws \ErrorException
-     * @return void
-     */
-    public function manageData()
+    public function manageSchema()
     {
-        $persistenceModel = new PersistenceModel($this);
 
-        $this->getJson();
+    }
 
-        $this->managePermissions();
+    public function manageTable()
+    {
+        if (!empty($_POST['order'])) {
+            $this->persistenceModel->updateOrder($this->table);
+        }
 
+        return $this->persistenceModel->readRows($this->table);
+    }
+
+    public function manageRow()
+    {
         if (!empty($_POST)) {
-            if (!empty($_POST['order'])) {
-                $persistenceModel->updateOrder();
-            } else {
-                $response = $this->factory->response();
-                $url = new UrlModel();
+            $this->managePluginsPost();
 
-                if ($this->action === 'create') {
-                    $this->managePlugins();
+            if ($this->action === 'create') {
+                $this->persistenceModel->createRow($this->table, $this->id, $this->structure[$this->table]['columns'], $_POST);
+            } elseif ($this->action === 'update') {
+                $this->persistenceModel->updateRow($this->table, $this->id, $this->structure[$this->table]['columns'], $_POST);
+            } elseif ($this->action === 'delete') {
+                $this->persistenceModel->deleteRow($this->table, $this->id);
+            }
 
-                    $persistenceModel->createRow();
-
-                    $response
-                        ->header('Location: '.$url->admin($this->table))
-                        ->send();
-
-                    exit;
-                } elseif ($this->action === 'update') {
-                    $this->managePlugins();
-
-                    $persistenceModel->updateRow();
-
-                    $response
-                        ->header('Location: '.$url->admin($this->table))
-                        ->send();
-
-                    exit;
-                } elseif ($this->action === 'delete') {
-                    $persistenceModel->deleteRow();
-
-                    if (!empty($this->id)) {
-                        exit(json_encode($url->admin($this->table)));
-                    }
-                }
+            if (!empty($this->id)) {
+                exit(json_encode($this->urlModel->admin($this->table)));
             }
         }
 
-        $persistenceModel->readRows();
+        $this->structure = $this->persistenceModel->readRows($this->table, $this->id);
+
+        $this->managePluginsStructure();
+
+        return $this->structure;
     }
 
     /**
      * Parse the .json files and prepare the structure.
-     *
      * @throws \ErrorException
      * @return array
      */
-    public function getJson()
+    public function getStructure()
     {
-        $path = rtrim($this->config->get('admin', 'jsonPath'), '/');
+        if (!empty($this->structure)) {
+            return $this->structure;
+        }
+
+        $config = $this->factory->config();
+
+        $path = rtrim($config->get('admin', 'jsonPath'), '/');
 
         $iterator = new \DirectoryIterator($path);
 
@@ -142,14 +127,14 @@ class BusinessModel
 
             $table = basename($file, '.json');
 
-            $data[$table] = $json;
+            $structure[$table] = $json;
 
             //TODO - there must always be the key present
-            $key = $data[$table]['key'];
+            $key = $structure[$table]['key'];
 
             //TODO - if the key is not provided, build the default
-            if (empty($data[$table]['columns'][$key])) {
-                $data[$table]['columns'] = [
+            if (empty($structure[$table]['columns'][$key])) {
+                $structure[$table]['columns'] = [
                         $key => [
                             'name' => 'ID',
                             'view' => false,
@@ -157,18 +142,17 @@ class BusinessModel
                                 'disabled' => 'true'
                             ]
                         ]
-                    ] + $data[$table]['columns'];
+                    ] + $structure[$table]['columns'];
             }
         }
 
-        ksort($data);
+        ksort($structure);
 
-        return $this->data = $data;
+        return $this->structure = $structure;
     }
 
     /**
      * Manage CRUD permissions.
-     *
      * @throws \ErrorException
      */
     public function managePermissions()
@@ -176,17 +160,22 @@ class BusinessModel
         if (!empty($this->action)) {
             switch($this->action) {
                 case 'create':
-                    if (empty($this->data[$this->table]['create'])) {
+                    if (empty($this->structure[$this->table]['create'])) {
+                        throw new \ErrorException('Permission denied to: '.$this->action);
+                    }
+                    break;
+                case 'read':
+                    if (empty($this->structure[$this->table]['read'])) {
                         throw new \ErrorException('Permission denied to: '.$this->action);
                     }
                     break;
                 case 'update':
-                    if (empty($this->data[$this->table]['update'])) {
+                    if (empty($this->structure[$this->table]['update'])) {
                         throw new \ErrorException('Permission denied to: '.$this->action);
                     }
                     break;
                 case 'delete':
-                    if (empty($this->data[$this->table]['delete'])) {
+                    if (empty($this->structure[$this->table]['delete'])) {
                         throw new \ErrorException('Permission denied to: '.$this->action);
                     }
                     break;
@@ -195,107 +184,40 @@ class BusinessModel
     }
 
     /**
-     * Manage the plugins.
-     *
-     * @return void
+     * Manage plugins post data.
      */
-    public function managePlugins()
+    public function managePluginsPost()
     {
-        $this->pluginImage();
-    }
-
-    /**
-     * Build the image plugin.
-     *
-     * @return void
-     */
-    private function pluginImage()
-    {
-        //TODO - image plugin works only in the row view
-        if (empty($this->action)) {
-            return;
-        }
-
-        $baseUrl = $this->factory->config()->get('app', 'baseUrl');
-        $imagePublicPath = rtrim($this->config->get('admin', 'imagePublicPath'), '/');
-        $imageDomain = trim($this->config->get('admin', 'imageDomain'), '/');
-        $imageDir = trim($this->config->get('admin', 'imageDir'), '/');
-
-        if (!empty($_FILES)) {
-            if (isset($_FILES['image']['error']) && $_FILES['image']['error'] === 0) {
-                if (!is_dir($imagePublicPath.'/'.$imageDir.'/'.$this->table)) {
-                    mkdir($imagePublicPath.'/'.$imageDir.'/'.$this->table);
-                }
-
-                $storage = new FileSystem($imagePublicPath.'/'.$imageDir.'/'.$this->table, true);
-
-                $file = new File('image', $storage);
-
-//                TODO - sanitize the filename
-                $filename = Sanitize::string($file->getName());
-
-                $file
-                    ->setName($filename)
-                    ->addValidations([
-                        new Mimetype([
-                            'image/png',
-                            'image/jpg',
-                            'image/jpeg',
-                            'image/gif'
-                        ]),
-                        new Size('5M')
-                    ]);
-
-                $file->upload();
-
-//                TODO - uncomment to optimize the image
-//                $optimizer = new OptimizerFactory([
-//                    'ignore_errors' => false
-//                ]);
-//
-//                $optimizer = $optimizer->get();
-//
-//                $optimizer->optimize($imagePublicPath.'/'.$imageDir.'/'.$this->table.'/'.$file->getNameWithExtension());
-            }
-
-            return;
-        }
-
-        $structure = [];
-
-        $directory = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($imagePublicPath.'/'.$imageDir, \RecursiveDirectoryIterator::SKIP_DOTS));
-
-        foreach ($directory as $file ) {
-            if ('.' === substr($file->getFilename(), 0, 1)) {
+        foreach ($this->structure[$this->table]['columns'] as $columnName => $column) {
+            if (empty($column['plugin'])) {
                 continue;
             }
 
-            $pathname = $file->getPathname();
-            $dir = basename($file->getPath());
+            //TODO - improvement required
+            $plugin = '\\App\\Plugins\\'.ucfirst($column['plugin']).'Plugin';
 
-            //structure by modification time and filename
-            $structure[$dir][$file->getMtime().$file->getFilename()] = str_replace($imagePublicPath, '', $pathname);
+            $plugin = new $plugin($this->persistenceModel);
 
-            krsort($structure[$dir]);
+            $this->structure[$this->table]['plugin'][$columnName] = $plugin->managePost($columnName, $_POST[$columnName]);
         }
+    }
 
-        $content = $this->factory->template()
-            ->file(__DIR__.'/../Views/Plugins/Image')
-            ->set('structure', $structure)
-            ->set('data', $this->data)
-            ->set('baseUrl', $baseUrl)
-            ->set('imageDomain', $imageDomain)
-            ->set('imageDir', $imageDir)
-            ->set('table', $this->table)
-            ->set('action', $this->action)
-            ->set('id', $this->id);
-
-        foreach ($this->data[$this->table]['columns'] as $columnName => $column) {
-            if (isset($column['plugin']) && $column['plugin'] == 'image') {
-                $this->data[$this->table]['plugins'][$columnName] = $content
-                    ->set('column', $columnName)
-                    ->render();
+    /**
+     * Manage plugins structure.
+     */
+    public function managePluginsStructure()
+    {
+        foreach ($this->structure[$this->table]['columns'] as $columnName => $column) {
+            if (empty($column['plugin'])) {
+                continue;
             }
+
+            //TODO - improvement required
+            $plugin = '\\App\\Plugins\\'.ucfirst($column['plugin']).'Plugin';
+
+            $plugin = new $plugin($this->persistenceModel);
+
+            $this->structure[$this->table]['plugin'][$columnName] = $plugin->manageView($columnName);
         }
     }
 }

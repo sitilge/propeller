@@ -21,7 +21,8 @@
     "codeguy/upload": "*",
     "nikic/fast-route": "^0.7.0",
     "ps/image-optimizer": "^1.0",
-    "webpatser/laravel-sanitize": "^1.0"
+    "webpatser/laravel-sanitize": "^1.0",
+    "nategood/commando": "*"
   },
   "autoload": {
     "psr-4": {
