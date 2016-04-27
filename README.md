@@ -2,7 +2,7 @@
 
 > curdle - separate or cause to separate into curds or lumps
 
-curdle is a simple database administration tool for simple [CRUD] operations using almost any relational database you prefer.
+curdle is a simple database administration tool for simple [CRUD] operations.
 
 ## Demo
 
@@ -10,11 +10,12 @@ See a live demo here: http://curdle.sitilge.id.lv
 
 ## Features
 
-- Adapt an existing or new database with ease
-- [CRUD] the tables, rows, and columns in an elegant interface
-- Search & order the rows instantly
-- Customize columns to fit your needs - simple value, dropdown, editor, image, and more
-- Join tables to get the best of multiple sources
+- Adapt an existing or a new database with ease
+- [CRUD] tables, rows, and columns in an elegant UI
+- Search & order rows instantly
+- Use built-in plugins (image, date, slug, text, ...)
+- Create a new custom plugin
+- Join multiple tables & columns
 - Use the image gallery to manage your media files
 
 ## Installation
