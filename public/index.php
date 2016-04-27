@@ -16,4 +16,4 @@ $factory
     ->register();
 
 //initialize router and dispatch
-new \App\Misc\Router();
+new \App\Misc\Router(new \Abimo\Factory());

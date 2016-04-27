@@ -25,8 +25,8 @@
                 </div>
                 <div id="navbar" class="navbar-collapse collapse">
                     <ul class="nav navbar-nav">
-                        <?php foreach ($menu as $table => $item) : ?>
-                            <li class="<?php echo ($segment === $table ? "active" : ""); ?>"><a href="<?php echo $url->admin($table); ?>"><?php echo !empty($item['name']) ? $item['name'] : $table; ?></a></li>
+                        <?php foreach ($structure as $tableName => $table) : ?>
+                            <li class="<?php echo ($segment === $tableName ? "active" : ""); ?>"><a href="<?php echo $url->admin($tableName); ?>"><?php echo !empty($table['name']) ? $table['name'] : $tableName; ?></a></li>
                         <?php endforeach; ?>
                     </ul>
                 </div>
@@ -36,8 +36,8 @@
         <div class="row">
             <div class="col-sm-3 col-md-2 sidebar">
                 <ul class="nav nav-sidebar">
-                    <?php foreach ($menu as $table => $item) : ?>
-                        <li class="<?php echo ($segment === $table ? "active" : ""); ?>"><a href="<?php echo $url->admin($table); ?>"><?php echo !empty($item['name']) ? $item['name'] : $table; ?></a></li>
+                    <?php foreach ($structure as $tableName => $table) : ?>
+                        <li class="<?php echo ($segment === $tableName ? "active" : ""); ?>"><a href="<?php echo $url->admin($tableName); ?>"><?php echo !empty($table['name']) ? $table['name'] : $tableName; ?></a></li>
                     <?php endforeach; ?>
                 </ul>
             </div>

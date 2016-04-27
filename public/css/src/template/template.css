@@ -5,6 +5,9 @@ body {
   border-bottom: 1px solid #eeeeee;
   padding-bottom: 10px; }
 
+.navbar-fixed-top, .navbar-fixed-bottom {
+  z-index: 1; }
+
 .sidebar {
   display: none; }
 
@@ -20,7 +23,7 @@ body {
     padding: 20px;
     position: fixed;
     top: 50px;
-    z-index: 1000; }
+    z-index: 0; }
   #navbar {
     display: none; }
     #navbar .nav {

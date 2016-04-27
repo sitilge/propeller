@@ -1,14 +1,16 @@
-<link rel="stylesheet" href="<?php echo $baseUrl; ?>/css/src/row/plugins/image.css">
-<script src="<?php echo $baseUrl; ?>/js/dist/plugins/image.js"></script>
+<link rel="stylesheet" href="<?php echo $url->admin(); ?>css/dist/plugins/image/image.css">
+<script src="<?php echo $url->admin(); ?>js/dist/plugins/image/image.js"></script>
 <script>
     var path = "<?php echo $imageDomain.$baseUrl.'/'.$imageDir.'/'.$table.'/'; ?>";
 </script>
+<?php $attributes = isset($structure[$table]['columns'][$column]['attributes']) ? implode(' ', array_map(function($key, $value) {return $key.' = "'.$value.'"';}, array_keys($structure[$table]['columns'][$column]['attributes']), array_values($structure[$table]['columns'][$column]['attributes']))) : null; ?>
+<input id="<?php echo $column; ?>" class="form-control hidden" name="<?php echo $column; ?>" value="<?php echo htmlentities($data, ENT_QUOTES); ?>" <?php echo $attributes; ?>/>
 <div class="row images">
     <div class="size-large col-md-1">
         <div id="preview-<?php echo $column;?>" class="image size-large"
              style="
-                <?php echo (!empty($data[$table]['rows'][$id][$column])
-                    ? "background-image:url('".$data[$table]['rows'][$id][$column]."')"
+                <?php echo (!empty($data)
+                    ? "background-image:url('".$data."')"
                     : "background-image:url('".$baseUrl."/img/system/image-empty.png')"); ?>;"
                 >
         </div>
@@ -39,7 +41,7 @@
                 <h4 class="modal-title"></h4>
             </div>
             <div class="modal-body image-container">
-                <?php foreach ($structure as $dir => $files) : ?>
+                <?php foreach ($directories as $directory => $files) : ?>
                     <?php foreach ($files as $file) : ?>
                         <div class="size-image image col-md-1" style="background-image: url('<?php echo $imageDomain.$baseUrl.$file; ?>')" onclick="updateImage($(this))" data-file="<?php echo $imageDomain.$baseUrl.$file; ?>" data-preview="<?php echo $column;?>"></div>
                     <?php endforeach; ?>

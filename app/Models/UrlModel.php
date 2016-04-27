@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use Abimo\Factory;
+
 class UrlModel
 {
     /**
@@ -9,17 +11,13 @@ class UrlModel
      */
     private $factory;
 
-    /**
-     * UrlModel constructor.
-     */
-    public function __construct()
+    public function __construct(Factory $factory)
     {
-        $this->factory = new \Abimo\Factory();
+        $this->factory = $factory;
     }
 
     /**
      * The admin URL generator.
-     *
      * @param null $table
      * @param null $action
      * @param null $id
@@ -48,9 +46,10 @@ class UrlModel
         ]);
     }
 
+//SHOW COLUMNS FROM `$table`
+
     /**
      * Prepare the pattern.
-     *
      * @param $pattern
      * @param $arguments
      * @return string

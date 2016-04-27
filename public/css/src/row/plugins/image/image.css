@@ -1,0 +1,102 @@
+.size {
+  width: 94px;
+  height: 94px;
+  margin: 2px;
+  display: block;
+  text-align: center;
+  line-height: 113px;
+  float: left;
+  border-radius: 50%;
+  cursor: pointer; }
+  .size .glyphicon:before {
+    font-size: 36px;
+    text-align: center; }
+
+.glyphicon {
+  font-size: 16px;
+  cursor: pointer; }
+
+.glyphicon-eur, .glyphicon-calendar, .glyphicon-time {
+  cursor: default; }
+
+.size-image {
+  width: 95px;
+  height: 95px;
+  margin: 2px;
+  display: inline-block; }
+
+.size-large {
+  width: 196px;
+  height: 196px;
+  display: inline-block;
+  margin: 2px; }
+
+.image {
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  cursor: pointer; }
+
+.btn-file {
+  position: relative;
+  overflow: hidden; }
+
+#image-buttons {
+  margin: 2px;
+  width: 196px;
+  height: 196px; }
+
+.btn-file input[type=file] {
+  position: absolute;
+  top: 0;
+  right: 0;
+  min-width: 100%;
+  min-height: 100%;
+  font-size: 100px;
+  text-align: right;
+  filter: alpha(opacity=0);
+  opacity: 0;
+  outline: none;
+  background: white;
+  cursor: inherit;
+  display: block; }
+
+.col-md-1 {
+  padding: 0; }
+
+.row.images {
+  padding-left: 15px; }
+
+#upload-button {
+  color: #5cb85c; }
+  #upload-button:hover {
+    color: #449D44; }
+
+#remove-button {
+  color: #f0ad4e; }
+  #remove-button:hover {
+    color: #EC971F; }
+
+#delete-button {
+  color: #d9534f; }
+  #delete-button:hover {
+    color: #C9302C; }
+
+#gallery-button {
+  color: #337ab7; }
+  #gallery-button:hover {
+    color: #286090; }
+
+.image-container {
+  min-height: 100px; }
+
+#gallery .modal-body {
+  padding: 0; }
+
+#gallery .modal-footer, #gallery .modal-header {
+  border: none; }
+
+#gallery .modal-header .close {
+  position: absolute;
+  right: 5px;
+  top: 5px; }

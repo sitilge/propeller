@@ -11,7 +11,7 @@ class ThrowableController
     /**
      * @var Factory
      */
-    private $factory;
+    public $factory;
 
     /**
      * @var UrlModel
@@ -19,57 +19,54 @@ class ThrowableController
     private $urlModel;
 
     /**
+     * @var BusinessModel
+     */
+    public $businessModel;
+
+    /**
      * ThrowableController constructor.
      */
     public function __construct()
     {
-        $this->factory = new Factory();
-        $this->urlModel = new UrlModel();
 
-        $this->businessModel = new BusinessModel();
     }
 
     /**
      * The main method called on error.
-     *
      * @return void
      */
     public function main()
     {
-        $content = $this->getContent();
-        $menu = $this->getMenu();
-        $segment = $this->factory->request()->segment(null, 1);
+        //TODO - move away from STUPID
+        $this->factory = new Factory();
+        $this->urlModel = new UrlModel();
+        $this->businessModel = new BusinessModel();
 
-        echo $this->factory->template()
-            ->file(__DIR__.'/../Views/Admin/Template')
-            ->set('url', new UrlModel())
-            ->set('menu', $menu)
-            ->set('content', $content)
-            ->set('segment', $segment)
+        echo $this->getTemplate();
+    }
+
+    /**
+     * @return string
+     */
+    private function getTemplate()
+    {
+        return $this->factory->template()
+            ->file(__DIR__.'/../Views/Template')
+            ->set('url', $this->urlModel)
+            ->set('structure', $this->businessModel->structure)
+            ->set('segment', $this->factory->request()->segment(null, 1))
+            ->set('content', $this->getContent())
             ->render();
     }
 
     /**
      * Get the content.
-     *
      * @return string
      */
     private function getContent()
     {
-        $this->businessModel->getJson();
-
         return $this->factory->template()
-            ->file(__DIR__.'/../Views/Admin/Throwable')
+            ->file(__DIR__.'/../Views/Throwable')
             ->render();
-    }
-
-    /**
-     * Get the data for menu.
-     *
-     * @return array
-     */
-    private function getMenu()
-    {
-        return $this->businessModel->data;
     }
 }

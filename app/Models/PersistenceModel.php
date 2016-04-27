@@ -3,77 +3,62 @@
 namespace App\Models;
 
 use Abimo\Factory;
+use Abimo\Database;
 
 class PersistenceModel
 {
     /**
-     * @var string
-     */
-    private $table;
-
-    /**
-     * @var string
-     */
-    private $action;
-
-    /**
-     * @var string
-     */
-    private $id;
-
-    /**
-     * @var BusinessModel
-     */
-    private $businessModel;
-
-    /**
      * @var Factory
      */
-    private $factory;
+    protected $factory;
 
     /**
-     * @var \Abimo\Config;
+     * @var Database
      */
-    private $config;
+    protected $db;
 
     /**
-     * @var \Abimo\Database
+     * @var string
      */
-    private $db;
+    public $table;
+
+    /**
+     * @var string
+     */
+    public $action;
+
+    /**
+     * @var string
+     */
+    public $id;
+
+    /**
+     * @var array
+     */
+    public $structure = [];
 
     /**
      * PersistenceModel constructor.
-     *
-     * @param BusinessModel $businessModel
+     * @param Factory $factory
      */
-    public function __construct(BusinessModel $businessModel)
+    public function __construct(Factory $factory)
     {
-        $this->businessModel = $businessModel;
+        $this->factory = $factory;
 
-        $this->table = $this->businessModel->table;
-        $this->action = $this->businessModel->action;
-        $this->id = $this->businessModel->id;
-
-        $this->factory = new Factory();
-
-        $this->config = $this->factory->config();
         $this->db = $this->factory->database();
     }
 
     /**
-     * Read all rows.
-     *
+     * Read rows.
+     * @param $table
+     * @param null $id
      * @return array
      * @throws \ErrorException
      */
-    public function readRows()
+    public function readRows($table, $id = null)
     {
-        if (empty($this->table)) {
-            return $this->businessModel->data;
-        }
-
-        if (empty($this->businessModel->data[$this->table]['columns'])) {
-            throw new \ErrorException('No columns provided in '.$this->table.'.json.');
+        if (empty($this->structure[$table]['columns'])) {
+            throw new \ErrorException('No columns provided in '.$table.'.json.');
         }
 
         //loop the columns, the structure for main columns and join columns
@@ -82,10 +67,12 @@ class PersistenceModel
         //regular query
         $columnsQuery = '';
         $tableQuery = '';
+        $whereQuery = '';
         $orderQuery = '';
         $columnsArray = [];
+        $valuesArray = [];
 
-        foreach ($this->businessModel->data[$this->table]['columns'] as $columnName => $column) {
+        foreach ($this->structure[$table]['columns'] as $columnName => $column) {
             $columnQueryName = $this->db->backtick($columnName);
 
             $columnsArray[] = $columnQueryName;
@@ -101,7 +88,7 @@ class PersistenceModel
             //TODO - special join, override db if values already given
             if (!empty($column['values'])) {
                 foreach ($column['values'] as $joinValueId => $joinValueValue) {
-                    $this->businessModel->data[$this->table]['rowsJoin'][$columnName][$joinValueId] = $joinValueValue;
+                    $this->structure[$table]['rowsJoin'][$columnName][$joinValueId] = $joinValueValue;
                 }
 
                 continue;
@@ -151,7 +138,7 @@ class PersistenceModel
                             $key = $row[$join['key']];
                             unset($row[$join['key']]);
 
-                            $this->businessModel->data[$this->table]['rowsJoin'][$columnName][$key] = implode(', ', $row);
+                            $this->structure[$table]['rowsJoin'][$columnName][$key] = implode(', ', $row);
                         }
                     }
                 }
@@ -161,7 +148,13 @@ class PersistenceModel
         if (!empty($columnsArray)) {
             $columnsQuery = 'SELECT '.implode(',', $columnsArray);
 
-            $tableQuery = ' FROM '.$this->db->backtick($this->table);
+            $tableQuery = ' FROM '.$this->db->backtick($table);
+        }
+
+        if (!empty($id)) {
+            $whereQuery = ' WHERE '.$this->db->backtick($this->structure[$table]['key']).' = :'.$this->structure[$table]['key'];
+
+            $valuesArray[$this->structure[$table]['key']] = $id;
         }
 
         if (!empty($orderArray)) {
@@ -170,56 +163,60 @@ class PersistenceModel
         }
 
         //TODO - special table order here
-        if (!empty($this->businessModel->data[$this->table]['order'])) {
+        if (!empty($this->structure[$table]['order'])) {
             if (empty($orderQuery)) {
-                $orderQuery .= ' ORDER BY '.$this->db->backtick($this->businessModel->data[$this->table]['order']['column']);
+                $orderQuery .= ' ORDER BY '.$this->db->backtick($this->structure[$table]['order']['column']);
             } else {
-                $orderQuery .= $this->db->backtick($this->businessModel->data[$this->table]['order']['column']);
+                $orderQuery .= $this->db->backtick($this->structure[$table]['order']['column']);
             }
 
-            if (!empty($this->businessModel->data[$this->table]['order']['direction'])) {
-                $orderQuery .= ' '.$this->businessModel->data[$this->table]['order']['direction'];
+            if (!empty($this->structure[$table]['order']['direction'])) {
+                $orderQuery .= ' '.$this->structure[$table]['order']['direction'];
             }
         }
 
-        $query = $columnsQuery.$tableQuery.$orderQuery;
+        $query = $columnsQuery.$tableQuery.$whereQuery.$orderQuery;
 
         $statement = $this->db->handle->prepare($query);
 
-        if ($statement->execute()) {
-            $key = $this->businessModel->data[$this->table]['key'];
+        if ($statement->execute($valuesArray)) {
+            $key = $this->structure[$table]['key'];
 
             while ($row = $statement->fetch()) {
-                $this->businessModel->data[$this->table]['rows'][$row[$key]] = $row;
+                $this->structure[$table]['rows'][$row[$key]] = $row;
             }
         }
 
-        $this->businessModel->managePlugins();
-
-        return $this->businessModel->data;
+        return $this->structure;
     }
 
     /**
-     * Create the row.
-     *
+     * Create a row.
+     * @param $table
+     * @param $inputColumns
+     * @param $inputData
      * @return bool
      */
-    public function createRow()
+    public function createRow($table, $inputColumns, $inputData)
     {
         $columns = [];
         $values = [];
 
-        foreach ($this->businessModel->data[$this->table]['columns'] as $columnName => $column) {
+        foreach ($inputColumns as $columnName => $column) {
+            if (!empty($column['plugin'])) {
+                continue;
+            }
+
             if (!empty($column['attributes']['disabled'])) {
                 continue;
             }
 
-            $values[':'.$columnName] = $_POST[$this->action][$columnName];
+            $values[':'.$columnName] = $inputData[$columnName];
 
             $columns[] = $this->db->backtick($columnName);
         }
 
-        $tableQuery = $this->db->backtick($this->table);
+        $tableQuery = $this->db->backtick($table);
         $columnsQuery = implode(',', $columns);
 
         $valuesQuery = implode(',', array_keys($values));
@@ -232,33 +229,48 @@ class PersistenceModel
     }
 
     /**
-     * Update the row.
-     *
+     * Update a row.
+     * @param $table
+     * @param $id
+     * @param $inputColumns
+     * @param $inputData
      * @return bool
      */
-    public function updateRow()
+    public function updateRow($table, $id, $inputColumns, $inputData)
     {
+        if (!is_array($inputData)) {
+            $inputData = [$inputColumns => $inputData];
+        }
+
+        if (!is_array($inputColumns)) {
+            $inputColumns = [$inputColumns => []];
+        }
+
         $columns = [];
         $values = [];
         $valuesQuery = [];
 
-        foreach ($this->businessModel->data[$this->table]['columns'] as $columnName => $column) {
+        foreach ($inputColumns as $columnName => $column) {
+            if (!empty($column['plugin'])) {
+                continue;
+            }
+
             if (!empty($column['attributes']['disabled'])) {
                 continue;
             }
 
-            $values[':'.$columnName] = $_POST[$this->action][$columnName];
+            $values[':'.$columnName] = $inputData[$columnName];
 
             $columns[] = $this->db->backtick($columnName);
 
             $valuesQuery[] = $columnName.'=:'.$columnName;
         }
 
-        $tableQuery = $this->db->backtick($this->table);
+        $tableQuery = $this->db->backtick($table);
         $valuesQuery = implode(',', $valuesQuery);
 
-        $key = $this->businessModel->data[$this->table]['key'];
-        $values[':'.$key] = $this->id;
+        $key = $this->structure[$table]['key'];
+        $values[':'.$key] = $id;
 
         $query = '
             UPDATE '.$tableQuery.'
@@ -272,42 +284,40 @@ class PersistenceModel
     }
 
     /**
-     * Delete the row.
-     *
-     * @return boolean
+     * Delete a row.
+     * @param $table
+     * @param $id
+     * @return bool
      */
-    public function deleteRow()
+    public function deleteRow($table, $id)
     {
-        $key = $this->businessModel->data[$this->table]['key'];
+        $key = $this->structure[$table]['key'];
 
         $query = '
-            DELETE FROM
-                '.$this->db->backtick($this->table).'
-            WHERE
-                '.$this->db->backtick($key).' = :'.$key
+            DELETE FROM '.$this->db->backtick($table).'
+            WHERE '.$this->db->backtick($key).' = :'.$key
         ;
 
         $statement = $this->db->handle->prepare($query);
-        $statement->bindValue(':'.$key, $this->id);
+        $statement->bindValue(':'.$key, $id);
 
         return $statement->execute();
     }
 
     /**
      * Update the order of column.
-     *
-     * @return void
+     * @param $table
      */
-    public function updateOrder()
+    public function updateOrder($table)
     {
         if (!empty($_POST['order'])) {
             $values = [];
 
-            $key = $this->businessModel->data[$this->table]['key'];
+            $key = $this->structure[$table]['key'];
 
             $query = '
-                UPDATE '.$this->db->backtick($this->table).'
-                SET '.$this->db->backtick($this->businessModel->data[$this->table]['order']['column']).' = CASE '.$this->db->backtick($key)
+                UPDATE '.$this->db->backtick($table).'
+                SET '.$this->db->backtick($this->structure[$table]['order']['column']).' = CASE '.$this->db->backtick($key)
             ;
 
             foreach ($_POST['order'] as $order => $id) {
