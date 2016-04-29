@@ -14,8 +14,6 @@ $factory
     ->throwable($config)
     ->configure()
     ->register();
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
+
 //initialize router and dispatch
 new \App\Misc\Router(new \Abimo\Factory());
