@@ -35,25 +35,26 @@ The respective ```.json``` files for the project are located under ```app/Misc/A
 ```
 {
   "key": "id",              //required, the table primary key
-  "name": "Users",          //optional, the table display name, defaults to table name
-  "create": true,           //optional, allow to create a new row, defaults to false
-  "update": true,           //optional, allow to update the row, defaults to false
-  "delete": true,           //optional, allow to delete the row, defaults to false
-  "order": {                //optional, change the order of rows in table view, defaults to false
+  "name": "Users",          //optional, the table display name
+  "create": true,           //optional, allow to create a new row
+  "update": true,           //optional, allow to update the row
+  "delete": true,           //optional, allow to delete the row
+  "order": {                //optional, allow to change the order of rows in table view
     "column": "sequence",   //required, the name of the column
-    "direction": "ASC"      //optional, the direction of order, defaults to ASC
+    "direction": "ASC"      //optional, the direction of order
   },
   "columns": {              //required, the columns array
     "name": {               //required, the column name
-      "name": "Name",       //optional, the column display name, defaults to column name
-      "view": "row",        //optional, display the column in table or row view, defaults to false
-      "attributes": {       //optional, the input/select field attributes, defaults to false
+      "name": "Name",       //optional, the column display name
+      "view": "row",        //optional, the column display in table or row view
+      "attributes": {       //optional, the input/select field attributes
         "required": "true",
-        "placeholder": "Enter your name..."
+        "min": "3",
+        "max": "89"
         ...
       },
-      "plugin": "text",     //optional, set a plugin to slug, price, text, image, date, time, or datetime defaults to false
-      "values": {           //optional, create a dropdown for the values, defaults to false
+      "plugin": "text",     //optional, the plugin (slug, price, text, image, date, time, datetime, custom)
+      "values": {           //optional, join with a set of values
         "0": "No",
         "1": "Yes"
         ...
@@ -72,6 +73,10 @@ The respective ```.json``` files for the project are located under ```app/Misc/A
   }
 }
 ```
+
+## Troubleshooting
+
+It may be beneficial to change the value of `development` under `app/Config/Throwable.php` to `true` to see the respective errors.
 
 ## Contributing
 

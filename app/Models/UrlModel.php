@@ -11,6 +11,10 @@ class UrlModel
      */
     private $factory;
 
+    /**
+     * UrlModel constructor.
+     * @param Factory $factory
+     */
     public function __construct(Factory $factory)
     {
         $this->factory = $factory;
@@ -37,7 +41,10 @@ class UrlModel
             }
         }
 
-        $baseUrl = $this->factory->config()->get('app','baseUrl');
+        $baseUrl = $this->factory
+            ->config()
+            ->path(__DIR__.'/../../app/Config')
+            ->get('app','baseUrl');
 
         return $this->prepare($baseUrl.'/'.implode('/', $pattern), [
             $table,
@@ -45,8 +52,6 @@ class UrlModel
             $id
         ]);
     }
-
-//SHOW COLUMNS FROM `$table`
 
     /**
      * Prepare the pattern.

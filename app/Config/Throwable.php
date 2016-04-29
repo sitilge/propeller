@@ -4,6 +4,7 @@ use Abimo\Factory;
 use App\Models\UrlModel;
 use App\Models\BusinessModel;
 use App\Models\PersistenceModel;
+use App\Controllers\ThrowableController;
 
 return [
     'development' => false, //development mode; array(true, false)
@@ -12,7 +13,7 @@ return [
     'log' => true, //throwable error logging; array(true, false)
     'path' => __DIR__.'/../Logs/Error.log', //throwable error log path; string
     'callable' => function(){
-        $throwableController = new \App\Controllers\ThrowableController(
+        $throwableController = new ThrowableController(
             new Factory(),
             new BusinessModel(
                 new Factory(),

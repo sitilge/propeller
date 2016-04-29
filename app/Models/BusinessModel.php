@@ -55,11 +55,20 @@ class BusinessModel
         $this->managePermissions();
     }
 
+    /**
+     * Manage the schema.
+     * @return array
+     */
     public function manageSchema()
     {
-
+        return [];
     }
 
+    /**
+     * Manage the table.
+     * @return array
+     * @throws \ErrorException
+     */
     public function manageTable()
     {
         if (!empty($_POST['order'])) {
@@ -69,6 +78,11 @@ class BusinessModel
         return $this->persistenceModel->readRows($this->table);
     }
 
+    /**
+     * Manage the row.
+     * @return array
+     * @throws \ErrorException
+     */
     public function manageRow()
     {
         if (!empty($_POST)) {
@@ -105,7 +119,9 @@ class BusinessModel
             return $this->structure;
         }
 
-        $config = $this->factory->config();
+        $config = $this->factory
+            ->config()
+            ->path(__DIR__.'/../../app/Config');
 
         $path = rtrim($config->get('admin', 'jsonPath'), '/');
 

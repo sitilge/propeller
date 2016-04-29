@@ -3,6 +3,7 @@
 namespace App\Plugins;
 
 use Abimo\Factory;
+use Abimo\Config;
 use App\Models\UrlModel;
 use App\Models\PersistenceModel;
 use Upload\File;
@@ -28,6 +29,11 @@ class ImagePlugin implements PluginInterface
      * @var UrlModel
      */
     protected $urlModel;
+
+    /**
+     * @var Config
+     */
+    protected $config;
 
     /**
      * @var array
@@ -63,6 +69,10 @@ class ImagePlugin implements PluginInterface
 
         $this->factory = new Factory();
         $this->urlModel = new UrlModel(new Factory());
+
+        $this->config = $this->factory
+            ->config()
+            ->path(__DIR__.'/../../app/Config');
     }
 
     /**
@@ -73,8 +83,8 @@ class ImagePlugin implements PluginInterface
      */
     public function managePost($column, $data)
     {
-        $imagePublicPath = rtrim($this->factory->config()->get('admin', 'imagePublicPath'), '/');
-        $imageDir = trim($this->factory->config()->get('admin', 'imageDir'), '/');
+        $imagePublicPath = rtrim($this->config->get('admin', 'imagePublicPath'), '/');
+        $imageDir = trim($this->config->get('admin', 'imageDir'), '/');
 
         if (!empty($_FILES)) {
             if (isset($_FILES['image']['error']) && $_FILES['image']['error'] === 0) {
@@ -112,9 +122,9 @@ class ImagePlugin implements PluginInterface
 //
 //                $optimizer->optimize($imagePublicPath.'/'.$imageDir.'/'.$this->table.'/'.$file->getNameWithExtension());
             }
-
-            $this->persistenceModel->updateRow($this->table, $this->id, $column, $data);
         }
+
+        $this->persistenceModel->updateRow($this->table, $this->id, $column, $data);
     }
 
     /**
@@ -124,10 +134,10 @@ class ImagePlugin implements PluginInterface
      */
     public function manageView($column)
     {
-        $baseUrl = $this->factory->config()->get('app', 'baseUrl');
-        $imagePublicPath = rtrim($this->factory->config()->get('admin', 'imagePublicPath'), '/');
-        $imageDomain = trim($this->factory->config()->get('admin', 'imageDomain'), '/');
-        $imageDir = trim($this->factory->config()->get('admin', 'imageDir'), '/');
+        $baseUrl = $this->config->get('app', 'baseUrl');
+        $imagePublicPath = rtrim($this->config->get('admin', 'imagePublicPath'), '/');
+        $imageDomain = trim($this->config->get('admin', 'imageDomain'), '/');
+        $imageDir = trim($this->config->get('admin', 'imageDir'), '/');
 
         $directories = [];
 

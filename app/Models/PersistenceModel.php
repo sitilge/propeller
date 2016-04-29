@@ -45,7 +45,11 @@ class PersistenceModel
     {
         $this->factory = $factory;
 
-        $this->db = $this->factory->database();
+        $this->db = $this->factory->database(
+            $this->factory
+                ->config()
+                ->path(__DIR__.'/../../app/Config')
+        );
     }
 
     /**

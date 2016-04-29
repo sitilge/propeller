@@ -17,9 +17,13 @@ class Router
      */
     public function __construct(Factory $factory)
     {
-        $frontController = $factory->config()->get('app', 'frontController');
+        $config = $factory
+            ->config()
+            ->path(__DIR__.'/../../app/Config');
 
-        $baseUrl = rtrim($factory->config()->get('app', 'baseUrl'), '/');
+        $frontController = $config->get('app', 'frontController');
+
+        $baseUrl = rtrim($config->get('app', 'baseUrl'), '/');
 
         $dispatcher = \FastRoute\simpleDispatcher(function(RouteCollector $collector) use ($frontController, $baseUrl) {
             //TODO : S.T.U.P.I.D
