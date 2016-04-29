@@ -2,9 +2,10 @@
 
 namespace App\Controllers;
 
-use \Abimo\Factory;
+use Abimo\Factory;
 use App\Models\UrlModel;
 use App\Models\BusinessModel;
+use App\Models\PersistenceModel;
 
 class ThrowableController
 {
@@ -14,21 +15,33 @@ class ThrowableController
     public $factory;
 
     /**
-     * @var UrlModel
-     */
-    private $urlModel;
-
-    /**
      * @var BusinessModel
      */
     public $businessModel;
 
     /**
-     * ThrowableController constructor.
+     * @var PersistenceModel
      */
-    public function __construct()
-    {
+    public $persistenceModel;
 
+    /**
+     * @var UrlModel
+     */
+    public $urlModel;
+
+    /**
+     * ThrowableController constructor.
+     * @param Factory $factory
+     * @param BusinessModel $businessModel
+     * @param PersistenceModel $persistenceModel
+     * @param UrlModel $urlModel
+     */
+    public function __construct(Factory $factory, BusinessModel $businessModel, PersistenceModel $persistenceModel, UrlModel $urlModel)
+    {
+        $this->factory = $factory;
+        $this->businessModel = $businessModel;
+        $this->persistenceModel = $persistenceModel;
+        $this->urlModel = $urlModel;
     }
 
     /**
@@ -37,15 +50,11 @@ class ThrowableController
      */
     public function main()
     {
-        //TODO - move away from STUPID
-        $this->factory = new Factory();
-        $this->urlModel = new UrlModel();
-        $this->businessModel = new BusinessModel();
-
         echo $this->getTemplate();
     }
 
     /**
+     * Get the template.
      * @return string
      */
     private function getTemplate()

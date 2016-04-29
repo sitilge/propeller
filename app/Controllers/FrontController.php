@@ -83,6 +83,10 @@ class FrontController
         echo $this->getTemplate();
     }
 
+    /**
+     * Get the template.
+     * @return string
+     */
     private function getTemplate()
     {
         return $this->factory->template()

@@ -1,5 +1,10 @@
 <?php
 
+use Abimo\Factory;
+use App\Models\UrlModel;
+use App\Models\BusinessModel;
+use App\Models\PersistenceModel;
+
 return [
     'development' => false, //development mode; array(true, false)
     'display' => false, //throwable error display; array(true, false)
@@ -7,7 +12,14 @@ return [
     'log' => true, //throwable error logging; array(true, false)
     'path' => __DIR__.'/../Logs/Error.log', //throwable error log path; string
     'callable' => function(){
-        $throwableController = new \App\Controllers\ThrowableController();
+        $throwableController = new \App\Controllers\ThrowableController(
+            new Factory(),
+            new BusinessModel(
+                new Factory(),
+                new UrlModel(new Factory())),
+            new PersistenceModel(new Factory()),
+            new UrlModel(new Factory())
+        );
         $throwableController->main();
     } //throwable callable; callable
 ];
