@@ -2,7 +2,7 @@
 
 > curdle - separate or cause to separate into curds or lumps
 
-curdle is a simple database administration tool for simple [CRUD] operations.
+curdle is a tool for simple [CRUD] operations.
 
 ## Demo
 

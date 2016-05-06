@@ -51,8 +51,8 @@ class BusinessModel
         $this->factory = $factory;
         $this->urlModel = $urlModel;
 
-        $this->structure = $this->getStructure();
         $this->managePermissions();
+        $this->structure = $this->getStructure();
     }
 
     /**
@@ -118,6 +118,8 @@ class BusinessModel
         if (!empty($this->structure)) {
             return $this->structure;
         }
+        
+        $structure = [];
 
         $config = $this->factory
             ->config()
@@ -174,28 +176,9 @@ class BusinessModel
     public function managePermissions()
     {
         if (!empty($this->action)) {
-            switch($this->action) {
-                case 'create':
-                    if (empty($this->structure[$this->table]['create'])) {
-                        throw new \ErrorException('Permission denied to: '.$this->action);
-                    }
-                    break;
-                case 'read':
-                    if (empty($this->structure[$this->table]['read'])) {
-                        throw new \ErrorException('Permission denied to: '.$this->action);
-                    }
-                    break;
-                case 'update':
-                    if (empty($this->structure[$this->table]['update'])) {
-                        throw new \ErrorException('Permission denied to: '.$this->action);
-                    }
-                    break;
-                case 'delete':
-                    if (empty($this->structure[$this->table]['delete'])) {
-                        throw new \ErrorException('Permission denied to: '.$this->action);
-                    }
-                    break;
-            };
+            if (empty($this->structure[$this->table][$this->action])) {
+                throw new \ErrorException('Permission denied to: '.$this->action);
+            }
         }
     }
 
