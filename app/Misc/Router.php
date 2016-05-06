@@ -38,10 +38,8 @@ class Router
                 ), 'main']);
         });
 
-        $request = $factory->request();
-
-        $method = $request->method();
-        $uri = $request->uri();
+        $method = $_SERVER['REQUEST_METHOD'];
+        $uri = $factory->request()->uri();
 
         $route = $dispatcher->dispatch($method, $uri);
 
