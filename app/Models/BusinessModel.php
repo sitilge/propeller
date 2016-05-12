@@ -51,6 +51,7 @@ class BusinessModel
         $this->factory = $factory;
         $this->urlModel = $urlModel;
 
+        //TODO - move the computation out of constructor
         $this->managePermissions();
         $this->structure = $this->getStructure();
     }
@@ -118,7 +119,7 @@ class BusinessModel
         if (!empty($this->structure)) {
             return $this->structure;
         }
-        
+
         $structure = [];
 
         $config = $this->factory
