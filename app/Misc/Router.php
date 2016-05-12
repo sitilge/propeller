@@ -11,13 +11,28 @@ use FastRoute\RouteCollector;
 class Router
 {
     /**
+     * @var Factory
+     */
+    public $factory;
+
+    /**
      * Router constructor.
      * @param Factory $factory
      * @throws \ErrorException
      */
     public function __construct(Factory $factory)
     {
-        $config = $factory
+        $this->factory = $factory;
+    }
+
+    /**
+     * Initialize application.
+     *
+     * @throws \ErrorException
+     */
+    public function init()
+    {
+        $config = $this->factory
             ->config()
             ->path(__DIR__.'/../../app/Config');
 
@@ -39,13 +54,13 @@ class Router
         });
 
         $method = $_SERVER['REQUEST_METHOD'];
-        $uri = $factory->request()->uri();
+        $uri = $this->factory->request()->uri();
 
         $route = $dispatcher->dispatch($method, $uri);
 
         switch ($route[0]) {
             case \FastRoute\Dispatcher::NOT_FOUND:
-                $response = $factory->response();
+                $response = $this->factory->response();
                 $response
                     ->header('HTTP/1.1 404 Not Found', true, 404)
                     ->send();
@@ -53,7 +68,7 @@ class Router
                 throw new \ErrorException("Route $method $uri not found.");
                 break;
             case \FastRoute\Dispatcher::METHOD_NOT_ALLOWED:
-                $response = $factory->response();
+                $response = $this->factory->response();
                 $response
                     ->header('HTTP/1.1 405 Method Not Allowed', true, 405)
                     ->send();
