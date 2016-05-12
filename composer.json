@@ -15,14 +15,20 @@
     }
   ],
   "require": {
-    "php": ">= 5.5.0",
+    "php": ">= 5.6.0",
     "ext-intl": "*",
+    "ext-pdo": "*",
     "sitilge/corde": "dev-master",
     "codeguy/upload": "*",
     "nikic/fast-route": "^0.7.0",
     "ps/image-optimizer": "^1.0",
     "webpatser/laravel-sanitize": "^1.0",
     "nategood/commando": "*"
+  },
+  "require-dev" : {
+    "phpmd/phpmd" : "@stable",
+    "phpunit/phpunit": "5.1.*",
+    "mikey179/vfsStream": "1.*"
   },
   "autoload": {
     "psr-4": {
