@@ -1,8 +1,6 @@
 # curdle
 
-> curdle - separate or cause to separate into curds or lumps
-
-curdle is a tool for simple [CRUD] operations.
+A tool for simple [CRUD] operations.
 
 ## Demo
 
@@ -10,13 +8,11 @@ See a live demo here: http://curdle.sitilge.id.lv
 
 ## Features
 
-- Adapt an existing or a new database with ease
+- Adapt database easily using .json skeleton files
 - [CRUD] tables, rows, and columns in an elegant UI
 - Search & order rows instantly
-- Use built-in plugins (image, date, slug, text, ...)
-- Create a new custom plugin
+- Use built-in plugins or create custom
 - Join multiple tables & columns
-- Use the image gallery to manage your media files
 
 ## Installation
 
