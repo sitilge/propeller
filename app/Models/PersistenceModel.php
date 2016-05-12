@@ -49,7 +49,8 @@ class PersistenceModel
             $this->factory
                 ->config()
                 ->path(__DIR__.'/../../app/Config')
-        );
+        )
+        ->connect();
     }
 
     /**
