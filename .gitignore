@@ -14,8 +14,7 @@ Network\ Trash\ Folder
 Temporary\ Items
 .apdisk
 .project
-
 .idea
-composer.lock
+
 /vendor
 /node_modules

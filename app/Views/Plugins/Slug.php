@@ -1,4 +1,0 @@
-<link rel="stylesheet" href="<?php echo $url->admin(); ?>css/dist/plugins/slug/slug.css">
-<script src="<?php echo $url->admin(); ?>js/dist/plugins/slug/slug.js"></script>
-<?php $attributes = isset($structure[$table]['columns'][$column]['attributes']) ? implode(' ', array_map(function($key, $value) {return $key.' = "'.$value.'"';}, array_keys($structure[$table]['columns'][$column]['attributes']), array_values($structure[$table]['columns'][$column]['attributes']))) : null; ?>
-<input id="<?php echo $column; ?>" class="form-control slugify" name="<?php echo $column; ?>" value="<?php echo htmlentities($data, ENT_QUOTES); ?>" <?php echo $attributes; ?>/>

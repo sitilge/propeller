@@ -1,7 +1,7 @@
 {
   "name": "sitilge/curdle",
-  "description": "A simple database administration tool for simple CRUD operations.",
-  "keywords": ["framework", "abimo", "php", "http"],
+  "description": "A REST tool for database manipulations.",
+  "keywords": ["php", "http", "rest", "database"],
   "license": "MIT",
   "homepage": "http://curdle.sitilge.id.lv",
   "support": {
@@ -18,21 +18,26 @@
     "php": ">= 5.6.0",
     "ext-intl": "*",
     "ext-pdo": "*",
-    "sitilge/corde": "dev-master",
-    "codeguy/upload": "*",
     "nikic/fast-route": "^0.7.0",
-    "ps/image-optimizer": "^1.0",
-    "webpatser/laravel-sanitize": "^1.0",
-    "nategood/commando": "*"
+    "propel/propel": "~2.0@dev",
+    "filp/whoops": "^2.1"
   },
   "require-dev" : {
-    "phpmd/phpmd" : "@stable",
     "phpunit/phpunit": "5.1.*",
-    "mikey179/vfsStream": "1.*"
+    "fzaninotto/faker": "~1.4",
+    "friendsofphp/php-cs-fixer": "^1.11",
+    "phploc/phploc": "*",
+    "phpmd/phpmd" : "@stable"
   },
   "autoload": {
     "psr-4": {
-      "App\\": "app/"
-    }
+      "Propeller\\": "src/"
+    },
+    "classmap": [
+      "src/Database/Models"
+    ],
+    "files": [
+      "src/Config/Database/config.php"
+    ]
   }
 }

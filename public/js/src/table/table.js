@@ -1,5 +1,25 @@
 $(function () {
-    //delete rows
+    //create row
+    $('.create-row-button').click(function(ele) {
+        var ele = $(ele.target);
+
+        $.ajax({
+            type: 'POST',
+            contentType: 'application/x-www-form-urlencoded; charset=utf-8',
+            url: ele.data('url'),
+            data: {},
+            success: function(response) {
+                $('.main').first().html(response);
+            }
+        });
+    });
+
+    //update row
+    $('.update-row-button, .update-row').click(function(ele) {
+        window.location.href = $(ele.target).data('url');
+    });
+
+    //delete row
     $('.delete-row-button').on('click', function(ele) {
         var ele = $(ele.target);
         var row = ele.parent().parent();
@@ -16,7 +36,7 @@ $(function () {
             },
             function() {
                 $.ajax({
-                    type: 'POST',
+                    type: 'DELETE',
                     contentType: 'application/x-www-form-urlencoded; charset=utf-8',
                     url: ele.data('url'),
                     data: {
@@ -31,11 +51,6 @@ $(function () {
                     }
                 });
             });
-    });
-
-    //update rows
-    $('.update-row').click(function(ele) {
-        window.location.href = $(ele.target).data('url');
     });
 
     //search rows

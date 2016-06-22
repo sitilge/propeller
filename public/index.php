@@ -1,20 +1,18 @@
 <?php
 
+//TODO - delete this
+
+function dd($i)
+{
+    ob_clean();
+    echo "<pre>";
+    var_dump($i);
+    echo "<pre>";
+    exit;
+}
+
 require __DIR__.'/../vendor/autoload.php';
 
-$factory = new \Abimo\Factory();
+$frontController = new \Propeller\Misc\Bootstrap();
 
-//factory config and set the path for config files
-$config = $factory
-    ->config()
-    ->path(__DIR__.'/../app/Config');
-
-//factory throwable and register handlers
-$factory
-    ->throwable($config)
-    ->configure()
-    ->register();
-
-//initialize router and dispatch
-$router = new \App\Misc\Router(new \Abimo\Factory());
-$router->init();
+$frontController->init();

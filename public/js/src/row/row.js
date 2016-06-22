@@ -1,5 +1,38 @@
 $(function () {
-    //delete rows
+
+    //create row
+    $('.create-row-button').click(function(ele) {
+        var ele = $(ele.target);
+        var form = $('#form');
+
+        $.ajax({
+            type: 'POST',
+            contentType: 'application/x-www-form-urlencoded; charset=utf-8',
+            url: ele.data('url'),
+            data: form.serialize(),
+            success: function(response) {
+                window.location.href = $.parseJSON(response);
+            }
+        });
+    });
+
+    //update row
+    $('.update-row-button').on('click', function(ele) {
+        var ele = $(ele.target);
+        var form = $('#form');
+
+        $.ajax({
+            type: 'PUT',
+            contentType: 'application/x-www-form-urlencoded; charset=utf-8',
+            url: ele.data('url'),
+            data: form.serialize(),
+            success: function (response) {
+                window.location.href = $.parseJSON(response);
+            }
+        });
+    });
+
+    //delete row
     $('.delete-row-button').on('click', function(ele) {
         var ele = $(ele.target);
         var row = ele.parent().parent();
@@ -16,7 +49,7 @@ $(function () {
             },
             function() {
                 $.ajax({
-                    type: 'POST',
+                    type: 'DELETE',
                     contentType: 'application/x-www-form-urlencoded; charset=utf-8',
                     url: ele.data('url'),
                     data: {
@@ -31,21 +64,5 @@ $(function () {
                     }
                 });
             });
-    });
-
-    //update rows
-    $('.update-row-button').on('click', function(ele) {
-        var ele = $(ele.target);
-        var form = $('#form');
-
-        $.ajax({
-            type: 'POST',
-            contentType: 'application/x-www-form-urlencoded; charset=utf-8',
-            url: ele.data('url'),
-            data: form.serialize(),
-            success: function (response) {
-                window.location.href = $.parseJSON(response);
-            }
-        });
     });
 });

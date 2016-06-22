@@ -1,18 +1,18 @@
-# curdle
+# Propeller
 
-A tool for simple [CRUD] operations.
+A REST tool for database manipulations.
 
 ## Demo
 
-See a live demo here: http://curdle.sitilge.id.lv
+See a live demo here: http://dearest.sitilge.id.lv
 
 ## Features
 
 - Adapt database easily using .json skeleton files
-- [CRUD] tables, rows, and columns in an elegant UI
+- Manipulate tables, rows, and columns in an elegant UI
 - Search & order rows instantly
-- Use built-in plugins or create custom
 - Join multiple tables & columns
+- Use built-in or custom plugins
 
 ## Installation
 
