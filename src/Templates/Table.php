@@ -2,7 +2,7 @@
 <script src="<?php echo $url->main(); ?>js/dist/table.js"></script>
 <h1 class="page-header">
     <span><?php echo $map->getPhpName(); ?></span>
-    <?php if (!empty($query->tableCreate)) : ?>
+    <?php if (!empty($query->getPropellerTableCreate())) : ?>
         <div class="pull-right">
             <a class="create-row-button btn btn-success" data-url="<?php echo $url->main($map->getName()); ?>">Create</a>
         </div>
@@ -16,7 +16,7 @@
         <thead>
             <tr class="head">
                 <?php foreach ($columns as $column) : ?>
-                    <?php if (!empty($query->tableColumnsDisable[$column->getName()])) : ?>
+                    <?php if (!empty($query->getPropellerTableColumnsShow($column->getName()))) : ?>
                         <?php continue; ?>
                     <?php endif; ?>
                     <th><?php echo $column->getPhpName(); ?></th>
@@ -30,7 +30,7 @@
             <?php foreach ($rows as $index => $row) : ?>
                 <tr data-id="<?php echo $keys[$index]; ?>">
                     <?php foreach ($columns as $column) : ?>
-                        <?php if (!empty($query->tableColumnsDisable[$column->getName()])) : ?>
+                        <?php if (!empty($query->getPropellerTableColumnsShow($column->getName()))) : ?>
                             <?php continue; ?>
                         <?php endif; ?>
                         <td class="update-row" data-url="<?php echo $url->main($map->getName(), $keys[$index]); ?>">

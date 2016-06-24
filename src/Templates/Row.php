@@ -8,10 +8,10 @@
         </div>
     <?php elseif ($_SERVER['REQUEST_METHOD'] === 'GET') : ?>
         <div class="pull-right">
-            <?php if (!empty($query->tableDelete)) : ?>
+            <?php if (!empty($query->getPropellerTableDelete())) : ?>
                 <a class="delete-row-button btn btn-danger" data-url="<?php echo $url->main($map->getName(), $key); ?>" data-id="<?php echo $key; ?>">Delete</a>
             <?php endif; ?>
-            <?php if (!empty($query->tableUpdate)) : ?>
+            <?php if (!empty($query->getPropellerTableUpdate())) : ?>
                 <a class="update-row-button btn btn-primary" data-url="<?php echo $url->main($map->getName(), $key); ?>" data-id="<?php echo $key; ?>">Update</a>
             <?php endif; ?>
         </div>
@@ -19,7 +19,7 @@
 </h1>
 <form id="form" action="" method="post" enctype="multipart/form-data">
     <?php foreach ($columns as $column) : ?>
-        <?php if (!empty($query->tableColumnsDisable[$column->getName()])) : ?>
+        <?php if (!empty($query->getPropellerTableColumnsShow($column->getName()))) : ?>
             <?php continue; ?>
         <?php endif; ?>
         <?php $attributes = 9879789789; ?>
