@@ -16,10 +16,13 @@ class FrontController
             $table,
             $key
         );
+        $persistenceModel->init();
 
         $templateModel = new TemplateModel();
+        $templateModel->init();
 
         $urlModel = new UrlModel();
+        $urlModel->init();
 
         //init controller layer
         $controller = new MainController(
@@ -38,6 +41,6 @@ class FrontController
             $templateModel,
             $urlModel
         );
-        $view->output();
+        $view->manageOutput();
     }
 }
