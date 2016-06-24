@@ -4,6 +4,16 @@ namespace Propeller\Models;
 
 class UrlModel
 {
+    public function __construct()
+    {
+
+    }
+
+    public function init()
+    {
+
+    }
+
     public function main($table = null, $key = null)
     {
         $pattern = [];

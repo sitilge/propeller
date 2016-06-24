@@ -17,7 +17,12 @@ class PersistenceModel
     /**
      * @var string
      */
-    private $schemaPath = __DIR__.'/../Config/Database/schema.xml';
+    private $schemaPath = __DIR__.'/../Config/Database/Config/schema.xml';
+
+    /**
+     * @var string
+     */
+    private $configPath = __DIR__.'/../Config/Database/Config/generated-conf/config.php';
 
     /**
      * @var string
@@ -28,6 +33,11 @@ class PersistenceModel
     {
         $this->table = $table;
         $this->key = $key;
+    }
+
+    public function init()
+    {
+        require $this->configPath;
     }
 
     public function getTables()

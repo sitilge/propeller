@@ -8,6 +8,16 @@ class TemplateModel
 
     public $file = '';
 
+    public function __construct()
+    {
+
+    }
+
+    public function init()
+    {
+
+    }
+
     public function file($file)
     {
         $this->file = $file;
