@@ -89,7 +89,7 @@ class MainView
         return $template->render();
     }
 
-    public function output()
+    public function manageOutput()
     {
         $method = $_SERVER['REQUEST_METHOD'];
 
