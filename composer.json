@@ -1,12 +1,12 @@
 {
-  "name": "sitilge/curdle",
-  "description": "A REST tool for database manipulations.",
-  "keywords": ["php", "http", "rest", "database"],
+  "name": "sitilge/propeller",
+  "description": "Propel GUI wrapper.",
+  "keywords": ["php", "propel", "rest"],
   "license": "MIT",
-  "homepage": "http://curdle.sitilge.id.lv",
+  "homepage": "http://propeller.sitilge.id.lv",
   "support": {
-    "issues": "https://github.com/sitilge/curdle/issues",
-    "source": "https://github.com/sitilge/curdle"
+    "issues": "https://github.com/sitilge/propeller/issues",
+    "source": "https://github.com/sitilge/propeller"
   },
   "authors": [
     {
@@ -34,10 +34,7 @@
       "Propeller\\": "src/"
     },
     "classmap": [
-      "src/Database/Models"
-    ],
-    "files": [
-      "src/Config/Database/config.php"
+      "src/Config/Database/Models"
     ]
   }
 }
