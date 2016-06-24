@@ -20,7 +20,7 @@ class Bootstrap
     private function initThrowable()
     {
         //TODO - move to attribute of the class
-        $throwable = require __DIR__.'/../Config/Main/Throwable.php';
+        $throwable = require __DIR__.'/../Config/Main/Config.php';
 
         if (empty($throwable['development'])) {
             $handler = $throwable['callable'];
