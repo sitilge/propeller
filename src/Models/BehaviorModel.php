@@ -26,7 +26,7 @@ class BehaviorModel extends Behavior
     }
 
     /**
-     * Generator method to allow to create a new record.
+     * Generator method to allow to create a record.
      *
      * @return string
      */
@@ -34,7 +34,7 @@ class BehaviorModel extends Behavior
     {
         return "
 /**
- * Allow to create a new record.
+ * Allow to create a record.
  *
  * @var bool
  */
@@ -43,7 +43,7 @@ private \$propellerTableCreate = true;
     }
 
     /**
-     * Generator method to allow to read a record.
+     * Generator method to allow to read the record.
      *
      * @return string
      */
@@ -51,7 +51,7 @@ private \$propellerTableCreate = true;
     {
         return "
 /**
- * Allow to read a record.
+ * Allow to read the record.
  *
  * @var bool
  */
@@ -60,7 +60,7 @@ private \$propellerTableRead = true;
     }
 
     /**
-     * Generator method to allow to update a record.
+     * Generator method to allow to update the record.
      *
      * @return string
      */
@@ -68,7 +68,7 @@ private \$propellerTableRead = true;
     {
         return "
 /**
- * Allow to update a record.
+ * Allow to update the record.
  *
  * @var bool
  */
@@ -77,7 +77,7 @@ private \$propellerTableUpdate = true;
     }
 
     /**
-     * Generator method to allow to delete a record.
+     * Generator method to allow to delete the record.
      *
      * @return string
      */
@@ -85,7 +85,7 @@ private \$propellerTableUpdate = true;
     {
         return "
 /**
- * Allow to delete a record.
+ * Allow to delete the record.
  *
  * @var bool
  */
@@ -153,7 +153,7 @@ private \$propellerTableColumnsShow = [];
     }
 
     /**
-     * Generator method to set a new row creating boolean.
+     * Generator method to set the record creating boolean.
      *
      * @return string
      */
@@ -161,7 +161,7 @@ private \$propellerTableColumnsShow = [];
     {
         return "
 /**
- * Set the boolean to allow to create a record record.
+ * Set the boolean to allow to create a record.
  *
  * @param bool \$key
  *
@@ -175,7 +175,7 @@ public function setPropellerTableCreate(\$key = true)
     }
 
     /**
-     * Generator method to get a new record creating boolean.
+     * Generator method to get the record creating boolean.
      *
      * @return string
      */
@@ -183,7 +183,7 @@ public function setPropellerTableCreate(\$key = true)
     {
         return "
 /**
- * Get the boolean to allow to create a new record.
+ * Get the boolean to allow to create a record.
  *
  * @return bool
  */
@@ -203,7 +203,7 @@ public function getPropellerTableCreate()
     {
         return "
 /**
- * Set the boolean to allow to read a new record.
+ * Set the boolean to allow to read the record.
  *
  * @param bool \$key
  *
@@ -245,7 +245,7 @@ public function getPropellerTableRead()
     {
         return "
 /**
- * Set the boolean to allow to update a new record.
+ * Set the boolean to allow to update the record.
  *
  * @param bool \$key
  *

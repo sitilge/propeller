@@ -9,22 +9,25 @@ use Propeller\Views\MainView;
 
 class FrontController
 {
+    /**
+     * Initialize the MVC triad and send the output.
+     *
+     * @param null $table
+     * @param null $key
+     */
     public function init($table = null, $key = null)
     {
-        //init model layer
+        //build the model layer
         $persistenceModel = new PersistenceModel(
             $table,
             $key
         );
-        $persistenceModel->init();
 
         $templateModel = new TemplateModel();
-        $templateModel->init();
 
         $urlModel = new UrlModel();
-        $urlModel->init();
 
-        //init controller layer
+        //build the controller layer
         $controller = new MainController(
             $table,
             $key,
@@ -33,7 +36,7 @@ class FrontController
         );
         $controller->manageInput();
 
-        //init view layer
+        //build the view layer
         $view = new MainView(
             $table,
             $key,

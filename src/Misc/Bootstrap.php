@@ -10,6 +10,15 @@ use Whoops\Util\Misc;
 
 class Bootstrap
 {
+    /**
+     * @var string
+     */
+    private $configPath = __DIR__.'/../Config/Main/Config.php';
+
+    /**
+     * The initial method called.
+     * @throws \ErrorException
+     */
     public function init()
     {
         $this->initThrowable();
@@ -17,13 +26,16 @@ class Bootstrap
         $this->initRoute();
     }
 
+    /**
+     * Initialize the throwable handler.
+     */
     private function initThrowable()
     {
         //TODO - move to attribute of the class
-        $throwable = require __DIR__.'/../Config/Main/Config.php';
+        $config = require $this->configPath;
 
-        if (empty($throwable['development'])) {
-            $handler = $throwable['callable'];
+        if (empty($config['development'])) {
+            $handler = $config['callable'];
         } else {
             $handler = new PrettyPageHandler();
         }
@@ -33,7 +45,7 @@ class Bootstrap
         $run->pushHandler($handler);
 
         if (Misc::isAjaxRequest()) {
-            if (empty($throwable['development'])) {
+            if (empty($config['development'])) {
                 //TODO - check here
             } else {
                 $run->pushHandler(new JsonResponseHandler());
@@ -43,6 +55,10 @@ class Bootstrap
         $run->register();
     }
 
+    /**
+     * Initialize the route handler.
+     * @throws \ErrorException
+     */
     private function initRoute()
     {
         $routes = require __DIR__.'/../Misc/Routes.php';

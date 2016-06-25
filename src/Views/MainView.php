@@ -93,26 +93,24 @@ class MainView
     {
         $method = $_SERVER['REQUEST_METHOD'];
 
-        if ($method === 'POST') {
-            if (empty($_POST)) {
-                echo $this->renderRowTemplate();
+        switch ($method) {
+            case 'POST' :
+                if (!empty($_POST)) {
+                    $this->persistenceModel->createRow($_POST);
+                    http_response_code(201);
+                }
 
-                return;
-            }
+                break;
+            case 'PUT' :
+                $this->persistenceModel->updateRow($_POST);
 
-            echo $this->persistenceModel->output;
+                break;
+            case 'DELETE' :
+                $this->persistenceModel->deleteRow($_POST);
+
+                break;
         }
 
-        if ($method === 'GET') {
-            echo $this->renderContainerTemplate();
-        }
-
-        if ($method === 'PUT') {
-            echo $this->persistenceModel->output;
-        }
-
-        if ($method === 'DELETE') {
-            echo $this->persistenceModel->output;
-        }
+        $this->persistenceModel->output = json_encode($this->urlModel->main($this->table));
     }
 }

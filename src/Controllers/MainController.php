@@ -7,14 +7,33 @@ use Propeller\Models\UrlModel;
 
 class MainController
 {
-    public $table;
+    /**
+     * @var string
+     */
+    private $table = '';
 
-    public $structure = [];
+    /**
+     * @var string
+     */
+    private $key = '';
 
-    public $factory;
+    /**
+     * @var PersistenceModel
+     */
+    private $persistenceModel;
 
-    public $urlModel;
+    /**
+     * @var UrlModel
+     */
+    private $urlModel;
 
+    /**
+     * MainController constructor.
+     * @param $table
+     * @param $key
+     * @param PersistenceModel $persistenceModel
+     * @param UrlModel $urlModel
+     */
     public function __construct(
         $table,
         $key,
@@ -27,6 +46,9 @@ class MainController
         $this->urlModel = $urlModel;
     }
 
+    /**
+     * Manage the input.
+     */
     public function manageInput()
     {
         $method = $_SERVER['REQUEST_METHOD'];

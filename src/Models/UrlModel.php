@@ -4,16 +4,17 @@ namespace Propeller\Models;
 
 class UrlModel
 {
-    public function __construct()
-    {
+    /**
+     * @var string
+     */
+    private $base = '';
 
-    }
-
-    public function init()
-    {
-
-    }
-
+    /**
+     * The main route builder.
+     * @param null $table
+     * @param null $key
+     * @return string
+     */
     public function main($table = null, $key = null)
     {
         $pattern = [];
@@ -26,14 +27,7 @@ class UrlModel
             $pattern[] = '%d';
         }
 
-        $baseUrl = '';
-
-//        $baseUrl = $this->factory
-//            ->config()
-//            ->path(__DIR__.'/../../app/Config')
-//            ->get('app', 'baseUrl');
-
-        return $this->prepare($baseUrl.'/'.implode('/', $pattern), [
+        return $this->prepare($this->base.'/'.implode('/', $pattern), [
             $table,
             $key,
         ]);
@@ -56,6 +50,12 @@ class UrlModel
         return vsprintf($pattern, $arguments);
     }
 
+    /**
+     * Get the segment.
+     * @param null $uri
+     * @param int $index
+     * @return mixed
+     */
     public function getSegment($uri = null, $index = 1)
     {
         if (null === $uri) {
@@ -69,9 +69,13 @@ class UrlModel
             }
             return $segments[$index];
         }
-        return false;
+        return null;
     }
 
+    /**
+     * Get the current url.
+     * @return mixed
+     */
     public function getCurrentUrl()
     {
         if (!empty($_SERVER['PATH_INFO'])) {

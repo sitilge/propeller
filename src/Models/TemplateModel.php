@@ -4,20 +4,21 @@ namespace Propeller\Models;
 
 class TemplateModel
 {
-    public $data = [];
+    /**
+     * @var array
+     */
+    private $data = [];
 
-    public $file = '';
+    /**
+     * @var string
+     */
+    private $file = '';
 
-    public function __construct()
-    {
-
-    }
-
-    public function init()
-    {
-
-    }
-
+    /**
+     * Set the file.
+     * @param string $file
+     * @return $this
+     */
     public function file($file)
     {
         $this->file = $file;
@@ -27,6 +28,12 @@ class TemplateModel
         return $this;
     }
 
+    /**
+     * Set the parameter.
+     * @param mixed $key
+     * @param string $value
+     * @return $this
+     */
     public function set($key, $value)
     {
         if (is_array($key)) {
@@ -39,11 +46,21 @@ class TemplateModel
         return $this;
     }
 
+    /**
+     * Get the parameter.
+     * @param $key
+     * @return mixed
+     */
     public function get($key)
     {
         return isset($this->data[$key]) ? $this->data[$key] : null;
     }
 
+    /**
+     * Render the template.
+     * @param null $input
+     * @return string
+     */
     public function render($input = null)
     {
         ob_start();

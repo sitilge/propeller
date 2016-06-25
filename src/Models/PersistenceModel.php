@@ -2,17 +2,23 @@
 
 namespace Propeller\Models;
 
+use Propel\Runtime\ActiveQuery\ModelCriteria;
+use Propel\Runtime\Map\TableMap;
+use Propel\Runtime\Map\ColumnMap;
+use Propel\Runtime\ActiveRecord\ActiveRecordInterface;
+use Propel\Runtime\Collection\ObjectCollection;
+
 class PersistenceModel
 {
     /**
      * @var string
      */
-    private $table;
+    private $table = '';
 
     /**
      * @var string
      */
-    private $key;
+    private $key = '';
 
     /**
      * @var string
@@ -22,24 +28,67 @@ class PersistenceModel
     /**
      * @var string
      */
-    private $configPath = __DIR__.'/../Config/Database/Config/generated-conf/config.php';
+    private $runtimePath = __DIR__.'/../Config/Database/Config/generated-conf/config.php';
 
     /**
      * @var string
      */
-    public $output;
+    private $modelNamespace = 'Models\\Models';
 
+    /**
+     * @var array
+     */
+    private $tables = [];
+
+    /**
+     * @var ModelCriteria
+     */
+    private $query;
+
+    /**
+     * @var TableMap
+     */
+    private $map;
+
+    /**
+     * @var ColumnMap
+     */
+    private $columns;
+
+    /**
+     * @var ActiveRecordInterface
+     */
+    private $model;
+
+    /**
+     * @var string
+     */
+    public $output = '';
+
+    /**
+     * PersistenceModel constructor.
+     * @param $table
+     * @param $key
+     */
     public function __construct($table, $key)
     {
         $this->table = $table;
         $this->key = $key;
     }
 
-    public function init()
+    /**
+     * Get the configuration file.
+     * @return void
+     */
+    private function getConfig()
     {
-        require $this->configPath;
+        require $this->runtimePath;
     }
 
+    /**
+     * Get schema tables.
+     * @return array
+     */
     public function getTables()
     {
         if (!empty($this->tables)) {
@@ -59,15 +108,22 @@ class PersistenceModel
         return $this->tables = $tables;
     }
 
+    /**
+     * Get the query.
+     * @return ModelCriteria
+     */
     public function getQuery()
     {
         if (!empty($this->query)) {
             return $this->query;
         }
 
+        //load the config
+        $this->getConfig();
+
         $tables = $this->getTables();
 
-        $queryName = 'Models\\Models\\'.$tables[$this->table].'Query';
+        $queryName = $this->modelNamespace.$tables[$this->table].'Query';
         $query = new $queryName;
 
         //initialize the table query subclass
@@ -78,6 +134,10 @@ class PersistenceModel
         return $this->query = $query;
     }
 
+    /**
+     * Get the table map.
+     * @return TableMap
+     */
     public function getMap()
     {
         if (!empty($this->map)) {
@@ -89,6 +149,10 @@ class PersistenceModel
         return $this->map = $query->getTableMap();
     }
 
+    /**
+     * Get the table columns.
+     * @return ColumnMap
+     */
     public function getColumns()
     {
         if (!empty($this->columns)) {
@@ -100,6 +164,10 @@ class PersistenceModel
         return $map->getColumns();
     }
 
+    /**
+     * Get primary keys.
+     * @return array
+     */
     public function getKeys()
     {
         if (!empty($this->keys)) {
@@ -111,12 +179,15 @@ class PersistenceModel
         return $rows->getPrimaryKeys(false);
     }
 
-    //TODO - move to OOP
+    /**
+     * Get the behavior.
+     * @param $query
+     * @return ModelCriteria
+     */
     private function getBehavior($query)
     {
         //TODO - not using `select` on columns here
         //TODO - see http://stackoverflow.com/questions/37847376/propel-get-primary-key-after-find
-
         if (!empty($query->tableOrder)) {
             foreach ($query->tableOrder as $column => $direction) {
                 $query->orderBy($column, $direction);
@@ -126,17 +197,31 @@ class PersistenceModel
         return $query;
     }
 
-    //TODO - merge with $this->getQuery()
-    public function getModel()
+    /**
+     * Get the model.
+     * @return ActiveRecordInterface
+     */
+    private function getModel()
     {
+        if (!empty($this->model)) {
+            return $this->model;
+        }
+
+        //load the config
+        $this->getConfig();
+
         $tables = $this->getTables();
 
-        $modelName = 'Models\\Models\\'.$tables[$this->table];
+        $modelName = $this->modelNamespace.$tables[$this->table];
         $model = new $modelName;
 
         return $this->model = $model;
     }
 
+    /**
+     * Create a record.
+     * @return int
+     */
     public function createRow()
     {
         $model = $this->getModel();
@@ -153,29 +238,39 @@ class PersistenceModel
             $model->setByName($column, $value, $map::TYPE_FIELDNAME);
         }
 
-        $model->save();
+        return $model->save();
     }
 
+    /**
+     * Read a row.
+     * @return mixed
+     */
     public function readRow()
     {
         $query = $this->getQuery();
 
-        //TODO - clean this mess
         $query = $this->getBehavior($query);
 
         return $query->findPk($this->key);
     }
 
+    /**
+     * Read rows.
+     * @return ObjectCollection
+     */
     public function readRows()
     {
         $query = $this->getQuery();
 
-        //TODO - clean this mess
         $query = $this->getBehavior($query);
 
         return $query->find();
     }
 
+    /**
+     * Update the row.
+     * @return int
+     */
     public function updateRow()
     {
         $query = $this->getQuery()->findPk($this->key);
@@ -195,6 +290,10 @@ class PersistenceModel
         return $query->save();
     }
 
+    /**
+     * Delete the row.
+     * @return int
+     */
     public function deleteRow()
     {
         $query = $this->getQuery();
