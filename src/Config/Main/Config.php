@@ -1,5 +1,5 @@
 <?php
 
 return [
-    'development' => true, //development mode;
+    'development' => true, //the development mode;
 ];
