@@ -10,35 +10,35 @@ class MainController
     /**
      * @var string
      */
-    private $table = '';
+    public $table = '';
 
     /**
      * @var string
      */
-    private $key = '';
+    public $key = '';
 
     /**
      * @var PersistenceModel
      */
-    private $persistenceModel;
+    public $persistenceModel;
 
     /**
      * @var UrlModel
      */
-    private $urlModel;
+    public $urlModel;
 
     /**
      * MainController constructor.
-     * @param $table
-     * @param $key
-     * @param PersistenceModel $persistenceModel
-     * @param UrlModel $urlModel
+     * @param null $table
+     * @param null $key
+     * @param PersistenceModel|null $persistenceModel
+     * @param UrlModel|null $urlModel
      */
     public function __construct(
-        $table,
-        $key,
-        PersistenceModel $persistenceModel,
-        UrlModel $urlModel
+        $table = null,
+        $key = null,
+        PersistenceModel $persistenceModel = null,
+        UrlModel $urlModel = null
     ) {
         $this->table = $table;
         $this->key = $key;
@@ -51,22 +51,25 @@ class MainController
      */
     public function manageInput()
     {
+        //TODO - fix this mess
         $method = $_SERVER['REQUEST_METHOD'];
 
         switch ($method) {
             case 'POST' :
                 if (!empty($_POST)) {
-                    $this->persistenceModel->createRow($_POST);
+                    $input = $_POST;
+                    $this->persistenceModel->createRow($input);
                     http_response_code(201);
                 }
 
                 break;
             case 'PUT' :
-                $this->persistenceModel->updateRow($_POST);
+                parse_str(file_get_contents("php://input"), $input);
+                $this->persistenceModel->updateRow($input);
 
                 break;
             case 'DELETE' :
-                $this->persistenceModel->deleteRow($_POST);
+                $this->persistenceModel->deleteRow();
 
                 break;
         }

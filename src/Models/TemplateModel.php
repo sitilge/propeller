@@ -12,7 +12,7 @@ class TemplateModel
     /**
      * @var string
      */
-    private $file = '';
+    public $file = '';
 
     /**
      * Set the file.

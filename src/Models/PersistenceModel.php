@@ -2,6 +2,7 @@
 
 namespace Propeller\Models;
 
+use Models\Models\UsersQuery;
 use Propel\Runtime\ActiveQuery\ModelCriteria;
 use Propel\Runtime\Map\TableMap;
 use Propel\Runtime\Map\ColumnMap;
@@ -13,52 +14,52 @@ class PersistenceModel
     /**
      * @var string
      */
-    private $table = '';
+    public $table = '';
 
     /**
      * @var string
      */
-    private $key = '';
+    public $key = '';
 
     /**
      * @var string
      */
-    private $schemaPath = __DIR__.'/../Config/Database/Config/schema.xml';
+    public $schemaPath = __DIR__.'/../Config/Database/Config/schema.xml';
 
     /**
      * @var string
      */
-    private $runtimePath = __DIR__.'/../Config/Database/Config/generated-conf/config.php';
+    public $runtimePath = __DIR__.'/../Config/Database/Config/generated-conf/config.php';
 
     /**
      * @var string
      */
-    private $modelNamespace = 'Models\\Models';
+    public $modelNamespace = 'Models\\Models\\';
 
     /**
      * @var array
      */
-    private $tables = [];
+    public $tables = [];
 
     /**
      * @var ModelCriteria
      */
-    private $query;
+    public $query;
 
     /**
      * @var TableMap
      */
-    private $map;
+    public $map;
 
     /**
      * @var ColumnMap
      */
-    private $columns;
+    public $columns;
 
     /**
      * @var ActiveRecordInterface
      */
-    private $model;
+    public $model;
 
     /**
      * @var string
@@ -67,22 +68,13 @@ class PersistenceModel
 
     /**
      * PersistenceModel constructor.
-     * @param $table
-     * @param $key
+     * @param null $table
+     * @param null $key
      */
-    public function __construct($table, $key)
+    public function __construct($table = null, $key = null)
     {
         $this->table = $table;
         $this->key = $key;
-    }
-
-    /**
-     * Get the configuration file.
-     * @return void
-     */
-    private function getConfig()
-    {
-        require $this->runtimePath;
     }
 
     /**
@@ -119,24 +111,19 @@ class PersistenceModel
         }
 
         //load the config
-        $this->getConfig();
+        require $this->runtimePath;
 
         $tables = $this->getTables();
 
         $queryName = $this->modelNamespace.$tables[$this->table].'Query';
         $query = new $queryName;
 
-        //initialize the table query subclass
-        if (method_exists($query, 'init')) {
-            $query->init();
-        }
-
         return $this->query = $query;
     }
 
     /**
      * Get the table map.
-     * @return TableMap
+     * @return TableMapQuery
      */
     public function getMap()
     {
@@ -180,35 +167,17 @@ class PersistenceModel
     }
 
     /**
-     * Get the behavior.
-     * @param $query
-     * @return ModelCriteria
-     */
-    private function getBehavior($query)
-    {
-        //TODO - not using `select` on columns here
-        //TODO - see http://stackoverflow.com/questions/37847376/propel-get-primary-key-after-find
-        if (!empty($query->tableOrder)) {
-            foreach ($query->tableOrder as $column => $direction) {
-                $query->orderBy($column, $direction);
-            }
-        }
-
-        return $query;
-    }
-
-    /**
      * Get the model.
      * @return ActiveRecordInterface
      */
-    private function getModel()
+    public function getModel()
     {
         if (!empty($this->model)) {
             return $this->model;
         }
 
         //load the config
-        $this->getConfig();
+        require $this->runtimePath;
 
         $tables = $this->getTables();
 
@@ -222,13 +191,11 @@ class PersistenceModel
      * Create a record.
      * @return int
      */
-    public function createRow()
+    public function createRow($input)
     {
         $model = $this->getModel();
 
         $map = $this->getMap();
-
-        $input = $_POST;
 
         foreach ($input as $column => $value) {
             if (!empty($map->getPrimaryKeys()[$column])) {
@@ -268,16 +235,37 @@ class PersistenceModel
     }
 
     /**
+     * Get the behavior.
+     * @param $query
+     * @return ModelCriteria
+     */
+    private function getBehavior($query)
+    {
+        //initialize the table query subclass
+        if (!method_exists($query, 'init')) {
+            return $query;
+        }
+
+        $query->init();
+
+        if (!empty($query->tableOrder)) {
+            foreach ($query->tableOrder as $column => $direction) {
+                $query->orderBy($column, $direction);
+            }
+        }
+
+        return $query;
+    }
+
+    /**
      * Update the row.
      * @return int
      */
-    public function updateRow()
+    public function updateRow($input)
     {
         $query = $this->getQuery()->findPk($this->key);
 
         $map = $this->getMap();
-
-        parse_str(file_get_contents("php://input"), $input);
 
         foreach ($input as $column => $value) {
             if (!empty($map->getPrimaryKeys()[$column])) {
