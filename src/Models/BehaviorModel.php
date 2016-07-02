@@ -30,7 +30,7 @@ class BehaviorModel extends Behavior
      *
      * @return string
      */
-    protected function generateQueryAttributesPropellerTableCreate()
+    public function generateQueryAttributesPropellerTableCreate()
     {
         return "
 /**
@@ -47,7 +47,7 @@ private \$propellerTableCreate = true;
      *
      * @return string
      */
-    protected function generateQueryAttributesPropellerTableRead()
+    public function generateQueryAttributesPropellerTableRead()
     {
         return "
 /**
@@ -64,7 +64,7 @@ private \$propellerTableRead = true;
      *
      * @return string
      */
-    protected function generateQueryAttributesPropellerTableUpdate()
+    public function generateQueryAttributesPropellerTableUpdate()
     {
         return "
 /**
@@ -81,7 +81,7 @@ private \$propellerTableUpdate = true;
      *
      * @return string
      */
-    protected function generateQueryAttributesPropellerTableDelete()
+    public function generateQueryAttributesPropellerTableDelete()
     {
         return "
 /**
@@ -98,7 +98,7 @@ private \$propellerTableDelete = true;
      *
      * @return string
      */
-    protected function generateQueryAttributesPropellerTableOrder()
+    public function generateQueryAttributesPropellerTableOrder()
     {
         return "
 /**
@@ -115,7 +115,7 @@ private \$propellerTableOrder = [];
      *
      * @return string
      */
-    protected function generateQueryAttributesPropellerTableColumnsShow()
+    public function generateQueryAttributesPropellerTableColumnsShow()
     {
         return "
 /**
@@ -157,7 +157,7 @@ private \$propellerTableColumnsShow = [];
      *
      * @return string
      */
-    protected function generateQueryMethodsSetPropellerTableCreate()
+    public function generateQueryMethodsSetPropellerTableCreate()
     {
         return "
 /**
@@ -179,7 +179,7 @@ public function setPropellerTableCreate(\$key = true)
      *
      * @return string
      */
-    protected function generateQueryMethodsGetPropellerTableCreate()
+    public function generateQueryMethodsGetPropellerTableCreate()
     {
         return "
 /**
@@ -199,7 +199,7 @@ public function getPropellerTableCreate()
      *
      * @return string
      */
-    protected function generateQueryMethodsSetPropellerTableRead()
+    public function generateQueryMethodsSetPropellerTableRead()
     {
         return "
 /**
@@ -221,7 +221,7 @@ public function setPropellerTableRead(\$key = true)
      *
      * @return string
      */
-    protected function generateQueryMethodsGetPropellerTableRead()
+    public function generateQueryMethodsGetPropellerTableRead()
     {
         return "
 /**
@@ -241,7 +241,7 @@ public function getPropellerTableRead()
      *
      * @return string
      */
-    protected function generateQueryMethodsSetPropellerTableUpdate()
+    public function generateQueryMethodsSetPropellerTableUpdate()
     {
         return "
 /**
@@ -263,7 +263,7 @@ public function setPropellerTableUpdate(\$key = true)
      *
      * @return string
      */
-    protected function generateQueryMethodsGetPropellerTableUpdate()
+    public function generateQueryMethodsGetPropellerTableUpdate()
     {
         return "
 /**
@@ -283,7 +283,7 @@ public function getPropellerTableUpdate()
      *
      * @return string
      */
-    protected function generateQueryMethodsSetPropellerTableDelete()
+    public function generateQueryMethodsSetPropellerTableDelete()
     {
         return "
 /**
@@ -305,7 +305,7 @@ public function setPropellerTableDelete(\$key = true)
      *
      * @return string
      */
-    protected function generateQueryMethodsGetPropellerTableDelete()
+    public function generateQueryMethodsGetPropellerTableDelete()
     {
         return "
 /**
@@ -325,7 +325,7 @@ public function getPropellerTableDelete()
      *
      * @return string
      */
-    protected function generateQueryMethodsSetPropellerTableOrder()
+    public function generateQueryMethodsSetPropellerTableOrder()
     {
         return "
 /**
@@ -348,7 +348,7 @@ public function setPropellerTableOrder(\$key, \$value)
      *
      * @return string
      */
-    protected function generateQueryMethodsGetPropellerTableOrder()
+    public function generateQueryMethodsGetPropellerTableOrder()
     {
         return "
 /**
@@ -370,7 +370,7 @@ public function getPropellerTableOrder(\$key)
      *
      * @return string
      */
-    protected function generateQueryMethodsSetPropellerTableColumnsShow()
+    public function generateQueryMethodsSetPropellerTableColumnsShow()
     {
         return "
 /**
@@ -393,7 +393,7 @@ public function setPropellerTableColumnsShow(\$key, \$value = true)
      *
      * @return string
      */
-    protected function generateQueryMethodsGetPropellerTableColumnsShow()
+    public function generateQueryMethodsGetPropellerTableColumnsShow()
     {
         return "
 /**
@@ -417,7 +417,7 @@ public function getPropellerTableColumnsShow(\$key)
 //        return $script;
 //    }
 //
-//    protected function addUpdateAggregateColumn()
+//    public function addUpdateAggregateColumn()
 //    {
 //        $sql = sprintf('SELECT %s FROM %s WHERE %s = ?',
 //            $this->getParameter('expression'),
