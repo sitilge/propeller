@@ -9,11 +9,11 @@ use Propeller\Models\UrlModel;
 class MainView
 {
     public function __construct(
-        $table,
-        $key,
-        PersistenceModel $persistenceModel,
-        TemplateModel $templateModel,
-        UrlModel $urlModel
+        $table = null,
+        $key = null,
+        PersistenceModel $persistenceModel = null,
+        TemplateModel $templateModel = null,
+        UrlModel $urlModel = null
     ) {
         $this->table = $table;
         $this->key = $key;
@@ -91,26 +91,29 @@ class MainView
 
     public function manageOutput()
     {
+        //TODO - fix this mess
         $method = $_SERVER['REQUEST_METHOD'];
 
-        switch ($method) {
-            case 'POST' :
-                if (!empty($_POST)) {
-                    $this->persistenceModel->createRow($_POST);
-                    http_response_code(201);
-                }
+            if ($method === 'POST') {
+                if (empty($_POST)) {
+                    echo $this->renderRowTemplate();
 
-                break;
-            case 'PUT' :
-                $this->persistenceModel->updateRow($_POST);
+                return;
+            }
 
-                break;
-            case 'DELETE' :
-                $this->persistenceModel->deleteRow($_POST);
-
-                break;
+            echo $this->persistenceModel->output;
         }
 
-        $this->persistenceModel->output = json_encode($this->urlModel->main($this->table));
+        if ($method === 'GET') {
+            echo $this->renderContainerTemplate();
+        }
+
+        if ($method === 'PUT') {
+            echo $this->persistenceModel->output;
+        }
+
+        if ($method === 'DELETE') {
+            echo $this->persistenceModel->output;
+        }
     }
 }
