@@ -3,6 +3,7 @@
 namespace Propeller\Controllers;
 
 use Propeller\Models\PersistenceModel;
+use Propeller\Models\OrmModel;
 use Propeller\Models\TemplateModel;
 use Propeller\Models\UrlModel;
 use Propeller\Views\MainView;
@@ -13,6 +14,11 @@ class FrontController
      * @var PersistenceModel
      */
     public $persistenceModel;
+
+    /**
+     * @var OrmModel
+     */
+    public $ormModel;
 
     /**
      * @var TemplateModel
@@ -36,21 +42,24 @@ class FrontController
 
     /**
      * FrontController constructor.
+     *
      * @param PersistenceModel $persistenceModel
-     * @param TemplateModel $templateModel
-     * @param UrlModel $urlModel
-     * @param MainController $mainController
-     * @param MainView $mainView
+     * @param OrmModel         $ormModel
+     * @param TemplateModel    $templateModel
+     * @param UrlModel         $urlModel
+     * @param MainController   $mainController
+     * @param MainView         $mainView
      */
     public function __construct(
         PersistenceModel $persistenceModel = null,
+        OrmModel $ormModel = null,
         TemplateModel $templateModel = null,
         UrlModel $urlModel = null,
         MainController $mainController = null,
         MainView $mainView = null
-    )
-    {
+    ) {
         $this->persistenceModel = $persistenceModel;
+        $this->ormModel = $ormModel;
         $this->templateModel = $templateModel;
         $this->urlModel = $urlModel;
         $this->mainController = $mainController;
@@ -69,6 +78,7 @@ class FrontController
         $persistenceModel = $this->persistenceModel;
         $persistenceModel->table = $table;
         $persistenceModel->key = $key;
+        $persistenceModel->ormModel = $this->ormModel;
 
         //build the controller layer
         $controller = $this->mainController;
