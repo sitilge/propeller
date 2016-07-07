@@ -2,7 +2,6 @@
 
 namespace Propeller\Models;
 
-use Models\Models\UsersQuery;
 use Propel\Runtime\ActiveQuery\ModelCriteria;
 use Propel\Runtime\Map\TableMap;
 use Propel\Runtime\Map\ColumnMap;
@@ -22,19 +21,24 @@ class PersistenceModel
     public $key = '';
 
     /**
-     * @var string
+     * @var OrmModel
      */
-    public $schemaPath = __DIR__.'/../Config/Database/Config/schema.xml';
+    public $ormModel;
 
     /**
      * @var string
      */
-    public $runtimePath = __DIR__.'/../Config/Database/Config/generated-conf/config.php';
+    public $schema = __DIR__.'/../Config/Database/Config/schema.xml';
 
     /**
      * @var string
      */
-    public $modelNamespace = 'Models\\Models\\';
+    public $runtime = __DIR__.'/../Config/Database/Config/generated-conf/config.php';
+
+    /**
+     * @var string
+     */
+    public $namespace = 'Models\\Models\\';
 
     /**
      * @var array
@@ -57,6 +61,11 @@ class PersistenceModel
     public $columns;
 
     /**
+     * @var array
+     */
+    public $keys = [];
+
+    /**
      * @var ActiveRecordInterface
      */
     public $model;
@@ -68,6 +77,7 @@ class PersistenceModel
 
     /**
      * PersistenceModel constructor.
+     *
      * @param null $table
      * @param null $key
      */
@@ -79,6 +89,7 @@ class PersistenceModel
 
     /**
      * Get schema tables.
+     *
      * @return array
      */
     public function getTables()
@@ -87,7 +98,7 @@ class PersistenceModel
             return $this->tables;
         }
 
-        $xml = simplexml_load_file($this->schemaPath);
+        $xml = simplexml_load_file($this->schema);
 
         $tables = [];
 
@@ -102,6 +113,7 @@ class PersistenceModel
 
     /**
      * Get the query.
+     *
      * @return ModelCriteria
      */
     public function getQuery()
@@ -110,20 +122,20 @@ class PersistenceModel
             return $this->query;
         }
 
-        //load the config
-        require $this->runtimePath;
+        require $this->runtime;
 
         $tables = $this->getTables();
 
-        $queryName = $this->modelNamespace.$tables[$this->table].'Query';
-        $query = new $queryName;
-
-        return $this->query = $query;
+        return $this->query = $this->ormModel->getQuery(
+            $this->namespace,
+            $tables[$this->table]
+        );
     }
 
     /**
      * Get the table map.
-     * @return TableMapQuery
+     *
+     * @return TableMap
      */
     public function getMap()
     {
@@ -138,6 +150,7 @@ class PersistenceModel
 
     /**
      * Get the table columns.
+     *
      * @return ColumnMap
      */
     public function getColumns()
@@ -148,11 +161,12 @@ class PersistenceModel
 
         $map = $this->getMap();
 
-        return $map->getColumns();
+        return $this->columns = $map->getColumns();
     }
 
     /**
      * Get primary keys.
+     *
      * @return array
      */
     public function getKeys()
@@ -163,11 +177,12 @@ class PersistenceModel
 
         $rows = $this->readRows();
 
-        return $rows->getPrimaryKeys(false);
+        return $this->keys = $rows->getPrimaryKeys(false);
     }
 
     /**
      * Get the model.
+     *
      * @return ActiveRecordInterface
      */
     public function getModel()
@@ -176,20 +191,20 @@ class PersistenceModel
             return $this->model;
         }
 
-        //load the config
-        require $this->runtimePath;
+        require $this->runtime;
 
         $tables = $this->getTables();
 
-        $modelName = $this->modelNamespace.$tables[$this->table];
-        $model = new $modelName;
-
-        return $this->model = $model;
+        return $this->model = $this->ormModel->getModel(
+            $this->namespace,
+            $tables[$this->table]
+        );
     }
 
     /**
-     * Create a record.
-     * @return int
+     * @param array $input
+     *
+     * @return mixed
      */
     public function createRow($input)
     {
@@ -205,12 +220,13 @@ class PersistenceModel
             $model->setByName($column, $value, $map::TYPE_FIELDNAME);
         }
 
-        return $model->save();
+        return $this->ormModel->save($model);
     }
 
     /**
      * Read a row.
-     * @return mixed
+     *
+     * @return ObjectCollection
      */
     public function readRow()
     {
@@ -223,6 +239,7 @@ class PersistenceModel
 
     /**
      * Read rows.
+     *
      * @return ObjectCollection
      */
     public function readRows()
@@ -235,31 +252,11 @@ class PersistenceModel
     }
 
     /**
-     * Get the behavior.
-     * @param $query
-     * @return ModelCriteria
-     */
-    private function getBehavior($query)
-    {
-        //initialize the table query subclass
-        if (!method_exists($query, 'init')) {
-            return $query;
-        }
-
-        $query->init();
-
-        if (!empty($query->tableOrder)) {
-            foreach ($query->tableOrder as $column => $direction) {
-                $query->orderBy($column, $direction);
-            }
-        }
-
-        return $query;
-    }
-
-    /**
      * Update the row.
-     * @return int
+     *
+     * @param $input
+     *
+     * @return mixed
      */
     public function updateRow($input)
     {
@@ -275,17 +272,43 @@ class PersistenceModel
             $query->setByName($column, $value, $map::TYPE_FIELDNAME);
         }
 
-        return $query->save();
+        return $this->ormModel->save($query);
     }
 
     /**
      * Delete the row.
+     *
      * @return int
      */
     public function deleteRow()
     {
-        $query = $this->getQuery();
+        $query = $this->getQuery()->findPk($this->key);
 
-        return $query->findPk($this->key)->delete();
+        return $this->ormModel->delete($query);
+    }
+
+    /**
+     * Get the behavior.
+     *
+     * @param $query
+     *
+     * @return ModelCriteria
+     */
+    private function getBehavior(ModelCriteria $query)
+    {
+        //initialize the table query subclass
+        if (!method_exists($query, 'init')) {
+            return $query;
+        }
+
+        $query->init();
+
+        if (!empty($query->tableOrder)) {
+            foreach ($query->tableOrder as $column => $direction) {
+                $query->orderBy($column, $direction);
+            }
+        }
+
+        return $query;
     }
 }
