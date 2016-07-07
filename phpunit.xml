@@ -14,8 +14,6 @@
         </testsuite>
     </testsuites>
     <php>
-        <post name="foo" value="bar"/>
-        <get name="foo" value="bar"/>
         <server name="REQUEST_URI" value="/"/>
         <server name="REQUEST_METHOD" value="GET"/>
     </php>
