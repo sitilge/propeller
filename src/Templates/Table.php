@@ -21,7 +21,7 @@
                     <?php endif; ?>
                     <th><?php echo $column->getPhpName(); ?></th>
                 <?php endforeach; ?>
-                <?php if (!empty($query->tableUpdate) || !empty($query->tableDelete)) : ?>
+                <?php if (!empty($query->getPropellerTableUpdate()) || !empty($query->getPropellerTableDelete())) : ?>
                     <th class="text-right">Actions</th>
                 <?php endif; ?>
             </tr>
@@ -41,12 +41,12 @@
                             <?php endif; ?>
                         </td>
                     <?php endforeach; ?>
-                    <?php if (!empty($query->tableUpdate) || !empty($query->tableDelete)) : ?>
+                    <?php if (!empty($query->getPropellerTableUpdate()) || !empty($query->getPropellerTableDelete())) : ?>
                         <td class="text-right">
-                            <?php if (!empty($query->tableUpdate)) : ?>
+                            <?php if (!empty($query->getPropellerTableUpdate())) : ?>
                                 <a class="update-row-button glyphicon glyphicon-pencil" data-url="<?php echo $url->main($map->getName(), $keys[$index]); ?>"></a>
                             <?php endif; ?>
-                            <?php if (!empty($query->tableDelete)) : ?>
+                            <?php if (!empty($query->getPropellerTableDelete())) : ?>
                                 <a class="delete-row-button glyphicon glyphicon-remove" data-url="<?php echo $url->main($map->getName(), $keys[$index]); ?>" data-id="<?php echo $keys[$index]; ?>"></a>
                             <?php endif; ?>
                         </td>
