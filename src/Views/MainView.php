@@ -8,6 +8,15 @@ use Propeller\Models\UrlModel;
 
 class MainView
 {
+    /**
+     * MainView constructor.
+     *
+     * @param null                  $table
+     * @param null                  $key
+     * @param PersistenceModel|null $persistenceModel
+     * @param TemplateModel|null    $templateModel
+     * @param UrlModel|null         $urlModel
+     */
     public function __construct(
         $table = null,
         $key = null,
@@ -22,7 +31,12 @@ class MainView
         $this->urlModel = $urlModel;
     }
 
-    private function renderContainerTemplate()
+    /**
+     * Render container template.
+     *
+     * @return string
+     */
+    public function renderContainerTemplate()
     {
         return $this->templateModel
             ->set('url', $this->urlModel)
@@ -33,6 +47,11 @@ class MainView
             ->render();
     }
 
+    /**
+     * Get the content.
+     *
+     * @return string
+     */
     private function getContent()
     {
         if (null === $this->table) {
@@ -43,9 +62,15 @@ class MainView
             return $this->renderTableTemplate();
         }
 
-        return $this->renderRowTemplate();}
+        return $this->renderRowTemplate();
+    }
 
-    private function renderSchemaTemplate()
+    /**
+     * Render schema template.
+     *
+     * @return string
+     */
+    public function renderSchemaTemplate()
     {
         return $this->templateModel
             ->set('url', $this->urlModel)
@@ -53,11 +78,16 @@ class MainView
             ->render();
     }
 
-    private function renderTableTemplate()
+    /**
+     * Render table template.
+     *
+     * @return string
+     */
+    public function renderTableTemplate()
     {
         return $this->templateModel
             ->set('url', $this->urlModel)
-            ->set('query',$this->persistenceModel->getQuery())
+            ->set('query', $this->persistenceModel->getQuery())
             ->set('map', $this->persistenceModel->getMap())
             ->set('columns', $this->persistenceModel->getColumns())
             ->set('keys', $this->persistenceModel->getKeys())
@@ -66,11 +96,16 @@ class MainView
             ->render();
     }
 
-    private function renderRowTemplate()
+    /**
+     * Render row template.
+     *
+     * @return string
+     */
+    public function renderRowTemplate()
     {
         $template = $this->templateModel
             ->set('url', $this->urlModel)
-            ->set('query',$this->persistenceModel->getQuery())
+            ->set('query', $this->persistenceModel->getQuery())
             ->set('map', $this->persistenceModel->getMap())
             ->set('columns', $this->persistenceModel->getColumns())
             ->set('key', $this->key)
@@ -85,35 +120,78 @@ class MainView
                 ->set('row', empty($_POST) ? null : $this->persistenceModel->readRow());
         }
 
-
         return $template->render();
     }
 
+    /**
+     * Manage the output.
+     */
     public function manageOutput()
     {
-        //TODO - fix this mess
         $method = $_SERVER['REQUEST_METHOD'];
 
-            if ($method === 'POST') {
-                if (empty($_POST)) {
-                    echo $this->renderRowTemplate();
+        //TODO - violating DRY
+        $input = $this->getInput();
+
+        //create
+        if ($method === 'POST') {
+            if (!empty($input)) {
+                http_response_code(201);
+                echo $this->getOutput(json_encode($this->persistenceModel->output));
 
                 return;
             }
 
-            echo $this->persistenceModel->output;
+            echo $this->getOutput($this->renderRowTemplate());
         }
 
+        //read
         if ($method === 'GET') {
-            echo $this->renderContainerTemplate();
+            echo $this->getOutput($this->renderContainerTemplate());
         }
 
+        //update
         if ($method === 'PUT') {
-            echo $this->persistenceModel->output;
+            echo $this->getOutput(json_encode($this->persistenceModel->output));
         }
 
+        //delete
         if ($method === 'DELETE') {
-            echo $this->persistenceModel->output;
+            echo $this->getOutput(json_encode($this->persistenceModel->output));
         }
+    }
+
+    /**
+     * Get the output.
+     *
+     * @param string $output
+     *
+     * @return string
+     */
+    private function getOutput($output = '')
+    {
+        return PHP_SAPI === 'cli' ? '' : $output;
+    }
+
+    /**
+     * Get the input.
+     *
+     * @return array
+     */
+    private function getInput()
+    {
+        $input = [];
+
+        parse_str(file_get_contents('php://input'), $input);
+
+        if (!isset($input)) {
+            if (!empty($_POST)) {
+                $input = $_POST;
+            } else {
+                $input = $_GET;
+            }
+        }
+
+        return $input;
     }
 }
