@@ -29,10 +29,11 @@ class MainController
 
     /**
      * MainController constructor.
-     * @param null $table
-     * @param null $key
+     *
+     * @param null                  $table
+     * @param null                  $key
      * @param PersistenceModel|null $persistenceModel
-     * @param UrlModel|null $urlModel
+     * @param UrlModel|null         $urlModel
      */
     public function __construct(
         $table = null,
@@ -51,29 +52,56 @@ class MainController
      */
     public function manageInput()
     {
-        //TODO - fix this mess
         $method = $_SERVER['REQUEST_METHOD'];
 
-        switch ($method) {
-            case 'POST' :
-                if (!empty($_POST)) {
-                    $input = $_POST;
-                    $this->persistenceModel->createRow($input);
-                    http_response_code(201);
-                }
+        //TODO - violating DRY
+        $input = $this->getInput();
 
-                break;
-            case 'PUT' :
-                parse_str(file_get_contents("php://input"), $input);
-                $this->persistenceModel->updateRow($input);
-
-                break;
-            case 'DELETE' :
-                $this->persistenceModel->deleteRow();
-
-                break;
+        //create
+        if ($method === 'POST') {
+            if (!empty($input)) {
+                $this->persistenceModel->createRow($input);
+            }
         }
 
-        $this->persistenceModel->output = json_encode($this->urlModel->main($this->table));
+        //read
+        if ($method === 'GET') {
+        }
+
+        //update
+        if ($method === 'PUT') {
+            if (!empty($input)) {
+                $this->persistenceModel->updateRow($input);
+            }
+        }
+
+        //delete
+        if ($method === 'DELETE') {
+            $this->persistenceModel->deleteRow();
+        }
+
+        $this->persistenceModel->output = $this->urlModel->main($this->table);
+    }
+
+    /**
+     * Get the input.
+     *
+     * @return array
+     */
+    private function getInput()
+    {
+        $input = [];
+
+        parse_str(file_get_contents('php://input'), $input);
+
+        if (!isset($input)) {
+            if (!empty($_POST)) {
+                $input = $_POST;
+            } else {
+                $input = $_GET;
+            }
+        }
+
+        return $input;
     }
 }
