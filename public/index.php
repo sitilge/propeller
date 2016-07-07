@@ -1,13 +1,12 @@
 <?php
 
 //TODO - delete this
-
 function dd($i)
 {
     ob_clean();
-    echo "<pre>";
+    echo '<pre>';
     var_dump($i);
-    echo "<pre>";
+    echo '<pre>';
     exit;
 }
 
