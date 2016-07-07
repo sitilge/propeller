@@ -26,88 +26,88 @@ class BehaviorModel extends Behavior
     }
 
     /**
-     * Generator method to allow to create a record.
+     * Generator method to allow to create a row.
      *
      * @return string
      */
-    public function generateQueryAttributesPropellerTableCreate()
+    private function generateQueryAttributesPropellerTableCreate()
     {
-        return "
+        return '
 /**
- * Allow to create a record.
+ * Allow to create a row.
  *
  * @var bool
  */
-private \$propellerTableCreate = true;
-";
+private $propellerTableCreate = true;
+';
     }
 
     /**
-     * Generator method to allow to read the record.
+     * Generator method to allow to read the row.
      *
      * @return string
      */
-    public function generateQueryAttributesPropellerTableRead()
+    private function generateQueryAttributesPropellerTableRead()
     {
-        return "
+        return '
 /**
- * Allow to read the record.
+ * Allow to read the row.
  *
  * @var bool
  */
-private \$propellerTableRead = true;
-";
+private $propellerTableRead = true;
+';
     }
 
     /**
-     * Generator method to allow to update the record.
+     * Generator method to allow to update the row.
      *
      * @return string
      */
-    public function generateQueryAttributesPropellerTableUpdate()
+    private function generateQueryAttributesPropellerTableUpdate()
     {
-        return "
+        return '
 /**
- * Allow to update the record.
+ * Allow to update the row.
  *
  * @var bool
  */
-private \$propellerTableUpdate = true;
-";
+private $propellerTableUpdate = true;
+';
     }
 
     /**
-     * Generator method to allow to delete the record.
+     * Generator method to allow to delete the row.
      *
      * @return string
      */
-    public function generateQueryAttributesPropellerTableDelete()
+    private function generateQueryAttributesPropellerTableDelete()
     {
-        return "
+        return '
 /**
- * Allow to delete the record.
+ * Allow to delete the row.
  *
  * @var bool
  */
-private \$propellerTableDelete = true;
-";
+private $propellerTableDelete = true;
+';
     }
 
     /**
-     * Generator method to order records according to columns and directions.
+     * Generator method to order rows according to columns and directions.
      *
      * @return string
      */
-    public function generateQueryAttributesPropellerTableOrder()
+    private function generateQueryAttributesPropellerTableOrder()
     {
-        return "
+        return '
 /**
- * Order records according to columns and directions.
+ * Order rows according to columns and directions.
  *
  * @var array
  */
-private \$propellerTableOrder = [];
-";
+private $propellerTableOrder = [];
+';
     }
 
     /**
@@ -115,16 +115,16 @@ private \$propellerTableOrder = [];
      *
      * @return string
      */
-    public function generateQueryAttributesPropellerTableColumnsShow()
+    private function generateQueryAttributesPropellerTableColumnsShow()
     {
-        return "
+        return '
 /**
  * Show columns.
  *
  * @var array
  */
-private \$propellerTableColumnsShow = [];
-";
+private $propellerTableColumnsShow = [];
+';
     }
 
     /**
@@ -153,216 +153,216 @@ private \$propellerTableColumnsShow = [];
     }
 
     /**
-     * Generator method to set the record creating boolean.
+     * Generator method to set the row creating boolean.
      *
      * @return string
      */
-    public function generateQueryMethodsSetPropellerTableCreate()
+    private function generateQueryMethodsSetPropellerTableCreate()
     {
-        return "
+        return '
 /**
- * Set the boolean to allow to create a record.
+ * Set the boolean to allow to create a row.
  *
- * @param bool \$key
+ * @param bool $key
  *
  * @return void
  */
-public function setPropellerTableCreate(\$key = true)
+public function setPropellerTableCreate($key = true)
 {
-    \$this->propellerTableCreate = \$key;
+    $this->propellerTableCreate = $key;
 }
-";
+';
     }
 
     /**
-     * Generator method to get the record creating boolean.
+     * Generator method to get the row creating boolean.
      *
      * @return string
      */
-    public function generateQueryMethodsGetPropellerTableCreate()
+    private function generateQueryMethodsGetPropellerTableCreate()
     {
-        return "
+        return '
 /**
- * Get the boolean to allow to create a record.
+ * Get the boolean to allow to create a row.
  *
  * @return bool
  */
 public function getPropellerTableCreate()
 {
-    return \$this->propellerTableCreate;
+    return $this->propellerTableCreate;
 }
-";
+';
     }
 
     /**
-     * Generator method to set the record reading boolean.
+     * Generator method to set the row reading boolean.
      *
      * @return string
      */
-    public function generateQueryMethodsSetPropellerTableRead()
+    private function generateQueryMethodsSetPropellerTableRead()
     {
-        return "
+        return '
 /**
- * Set the boolean to allow to read the record.
+ * Set the boolean to allow to read the row.
  *
- * @param bool \$key
+ * @param bool $key
  *
  * @return void
  */
-public function setPropellerTableRead(\$key = true)
+public function setPropellerTableRead($key = true)
 {
-    \$this->propellerTableRead = \$key;
+    $this->propellerTableRead = $key;
 }
-";
+';
     }
 
     /**
-     * Generator method to get the record reading boolean.
+     * Generator method to get the row reading boolean.
      *
      * @return string
      */
-    public function generateQueryMethodsGetPropellerTableRead()
+    private function generateQueryMethodsGetPropellerTableRead()
     {
-        return "
+        return '
 /**
- * Get the boolean to allow to read a new record.
+ * Get the boolean to allow to read a new row.
  *
  * @return bool
  */
 public function getPropellerTableRead()
 {
-    return \$this->propellerTableRead;
+    return $this->propellerTableRead;
 }
-";
+';
     }
 
     /**
-     * Generator method to set the record updating boolean.
+     * Generator method to set the row updating boolean.
      *
      * @return string
      */
-    public function generateQueryMethodsSetPropellerTableUpdate()
+    private function generateQueryMethodsSetPropellerTableUpdate()
     {
-        return "
+        return '
 /**
- * Set the boolean to allow to update the record.
+ * Set the boolean to allow to update the row.
  *
- * @param bool \$key
+ * @param bool $key
  *
  * @return void
  */
-public function setPropellerTableUpdate(\$key = true)
+public function setPropellerTableUpdate($key = true)
 {
-    \$this->propellerTableUpdate = \$key;
+    $this->propellerTableUpdate = $key;
 }
-";
+';
     }
 
     /**
-     * Generator method to get the record updating boolean.
+     * Generator method to get the row updating boolean.
      *
      * @return string
      */
-    public function generateQueryMethodsGetPropellerTableUpdate()
+    private function generateQueryMethodsGetPropellerTableUpdate()
     {
-        return "
+        return '
 /**
- * Get the boolean to allow to update a new record.
+ * Get the boolean to allow to update a new row.
  *
  * @return bool
  */
 public function getPropellerTableUpdate()
 {
-    return \$this->propellerTableUpdate;
+    return $this->propellerTableUpdate;
 }
-";
+';
     }
 
     /**
-     * Generator method to set the record deleting boolean.
+     * Generator method to set the row deleting boolean.
      *
      * @return string
      */
-    public function generateQueryMethodsSetPropellerTableDelete()
+    private function generateQueryMethodsSetPropellerTableDelete()
     {
-        return "
+        return '
 /**
- * Set the boolean to allow to delete a new record.
+ * Set the boolean to allow to delete a new row.
  *
- * @param bool \$key
+ * @param bool $key
  *
  * @return void
  */
-public function setPropellerTableDelete(\$key = true)
+public function setPropellerTableDelete($key = true)
 {
-    \$this->propellerTableDelete = \$key;
+    $this->propellerTableDelete = $key;
 }
-";
+';
     }
 
     /**
-     * Generator method to get the record deleting boolean.
+     * Generator method to get the row deleting boolean.
      *
      * @return string
      */
-    public function generateQueryMethodsGetPropellerTableDelete()
+    private function generateQueryMethodsGetPropellerTableDelete()
     {
-        return "
+        return '
 /**
- * Get the boolean to allow to delete a new record.
+ * Get the boolean to allow to delete a new row.
  *
  * @return bool
  */
 public function getPropellerTableDelete()
 {
-    return \$this->propellerTableDelete;
+    return $this->propellerTableDelete;
 }
-";
+';
     }
 
     /**
-     * Generator method to set the order of records.
+     * Generator method to set the order of rows.
      *
      * @return string
      */
-    public function generateQueryMethodsSetPropellerTableOrder()
+    private function generateQueryMethodsSetPropellerTableOrder()
     {
-        return "
+        return '
 /**
- * Set the order of records according to the column and the direction.
+ * Set the order of rows according to the column and the direction.
  *
- * @param string \$key The column.
- * @param string \$value The value.
+ * @param string $key The column.
+ * @param string $value The value.
  *
  * @return void
  */
-public function setPropellerTableOrder(\$key, \$value)
+public function setPropellerTableOrder($key, $value)
 {
-    \$this->propellerTableOrder[\$key] = \$value;
+    $this->propellerTableOrder[$key] = $value;
 }
-";
+';
     }
 
     /**
-     * Generator method to get the order of records.
+     * Generator method to get the order of rows.
      *
      * @return string
      */
-    public function generateQueryMethodsGetPropellerTableOrder()
+    private function generateQueryMethodsGetPropellerTableOrder()
     {
-        return "
+        return '
 /**
- * Get the order of records according to the column and the direction.
+ * Get the order of rows according to the column and the direction.
  *
- * @param string \$key The column.
+ * @param string $key The column.
  *
  * @return string
  */
-public function getPropellerTableOrder(\$key)
+public function getPropellerTableOrder($key)
 {
-    return isset(\$this->propellerTableOrder[\$key]) ? \$this->propellerTableOrder[\$key] : null;
+    return isset($this->propellerTableOrder[$key]) ? $this->propellerTableOrder[$key] : null;
 }
-";
+';
     }
 
     /**
@@ -370,22 +370,22 @@ public function getPropellerTableOrder(\$key)
      *
      * @return string
      */
-    public function generateQueryMethodsSetPropellerTableColumnsShow()
+    private function generateQueryMethodsSetPropellerTableColumnsShow()
     {
-        return "
+        return '
 /**
  * Set the visibility of the column.
  *
- * @param string \$key The column.
- * @param bool \$value The value.
+ * @param string $key The column.
+ * @param bool $value The value.
  *
  * @return void
  */
-public function setPropellerTableColumnsShow(\$key, \$value = true)
+public function setPropellerTableColumnsShow($key, $value = true)
 {
-    \$this->propellerTableColumnsShow[\$key] = \$value;
+    $this->propellerTableColumnsShow[$key] = $value;
 }
-";
+';
     }
 
     /**
@@ -393,57 +393,20 @@ public function setPropellerTableColumnsShow(\$key, \$value = true)
      *
      * @return string
      */
-    public function generateQueryMethodsGetPropellerTableColumnsShow()
+    private function generateQueryMethodsGetPropellerTableColumnsShow()
     {
-        return "
+        return '
 /**
  * Get the visibility of the column.
  *
- * @param string \$key The column.
+ * @param string $key The column.
  *
  * @return bool
  */
-public function getPropellerTableColumnsShow(\$key)
+public function getPropellerTableColumnsShow($key)
 {
-    return isset(\$this->propellerTableColumnsShow[\$key]) ? \$this->propellerTableColumnsShow[\$key] : null;
+    return isset($this->propellerTableColumnsShow[$key]) ? $this->propellerTableColumnsShow[$key] : null;
 }
-";
+';
     }
-
-//    public function objectMethods()
-//    {
-//        $script = '';
-//        $script .= $this->addUpdateAggregateColumn();
-//        return $script;
-//    }
-//
-//    public function addUpdateAggregateColumn()
-//    {
-//        $sql = sprintf('SELECT %s FROM %s WHERE %s = ?',
-//            $this->getParameter('expression'),
-//            $this->getParameter('foreign_table'),
-//            $this->getParameter('foreign_column')
-//        );
-////        echo $sql;exit;
-//        $table = $this->getTable();
-//        $aggregateColumn = $table->getColumn($this->getParameter('name'));
-//        $columnPhpName = $aggregateColumn->getPhpName();
-//        $localColumn = $table->getColumn($this->getParameter('local_column'));
-//
-//        return "
-///**
-// * Updates the aggregate column {$aggregateColumn->getName()}
-// *
-// * @param PropelPDO \$con A connection object
-// */
-//public function martinsBest{$columnPhpName}(PropelPDO \$con)
-//{
-//  \$sql = '{$sql}';
-//  \$stmt = \$con->prepare(\$sql);
-//  \$stmt->execute(array(\$this->get{$localColumn->getPhpName()}()));
-//  \$this->set{$columnPhpName}(\$stmt->fetchColumn());
-//  \$this->save(\$con);
-//}
-//";
-//    }
 }
