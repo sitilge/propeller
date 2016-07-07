@@ -7,7 +7,7 @@ class TemplateModel
     /**
      * @var array
      */
-    private $data = [];
+    public $data = [];
 
     /**
      * @var string
@@ -16,7 +16,9 @@ class TemplateModel
 
     /**
      * Set the file.
+     *
      * @param string $file
+     *
      * @return $this
      */
     public function file($file)
@@ -25,16 +27,19 @@ class TemplateModel
         if (empty(pathinfo($file, PATHINFO_EXTENSION))) {
             $this->file .= '.php';
         }
+
         return $this;
     }
 
     /**
      * Set the parameter.
-     * @param mixed $key
+     *
+     * @param mixed  $key
      * @param string $value
+     *
      * @return $this
      */
-    public function set($key, $value)
+    public function set($key, $value = null)
     {
         if (is_array($key)) {
             foreach ($key as $name => $value) {
@@ -43,12 +48,15 @@ class TemplateModel
         } else {
             $this->data[$key] = $value;
         }
+
         return $this;
     }
 
     /**
      * Get the parameter.
+     *
      * @param $key
+     *
      * @return mixed
      */
     public function get($key)
@@ -58,7 +66,9 @@ class TemplateModel
 
     /**
      * Render the template.
+     *
      * @param null $input
+     *
      * @return string
      */
     public function render($input = null)
