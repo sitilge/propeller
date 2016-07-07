@@ -13,10 +13,26 @@ class Bootstrap
     /**
      * @var string
      */
-    private $configPath = __DIR__.'/../Config/Main/Config.php';
+    public $configPath = __DIR__.'/../Config/Main/Config.php';
+
+    /**
+     * @var string
+     */
+    public $routesPath = __DIR__.'/Routes.php';
+
+    /**
+     * @var array
+     */
+    public $config = [];
+
+    /**
+     * @var array
+     */
+    public $routes = [];
 
     /**
      * The initial method called.
+     *
      * @throws \ErrorException
      */
     public function init()
@@ -29,39 +45,36 @@ class Bootstrap
     /**
      * Initialize the throwable handler.
      */
-    private function initThrowable()
+    public function initThrowable()
     {
         //TODO - move to attribute of the class
         $config = require $this->configPath;
 
+        $run = new Run();
+
         if (empty($config['development'])) {
             $handler = $config['callable'];
         } else {
-            $handler = new PrettyPageHandler();
-        }
-
-        $run = new Run();
-
-        $run->pushHandler($handler);
-
-        if (Misc::isAjaxRequest()) {
-            if (empty($config['development'])) {
-                //TODO - check here
+            if (Misc::isAjaxRequest()) {
+                $handler = new JsonResponseHandler();
             } else {
-                $run->pushHandler(new JsonResponseHandler());
+                $handler = new PrettyPageHandler();
             }
         }
+
+        $run->pushHandler($handler);
 
         $run->register();
     }
 
     /**
      * Initialize the route handler.
+     *
      * @throws \ErrorException
      */
-    private function initRoute()
+    public function initRoute()
     {
-        $routes = require __DIR__.'/../Misc/Routes.php';
+        $routes = require $this->routesPath;
 
         $dispatcher = \FastRoute\simpleDispatcher(function (RouteCollector $collector) use ($routes) {
             foreach ($routes as $route) {
