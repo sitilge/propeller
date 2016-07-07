@@ -8,6 +8,7 @@ class FrontControllerTest extends TestCase
     {
         //test the model layer
         $persistenceModel = $this->createMock(\Propeller\Models\PersistenceModel::class);
+        $ormModel = $this->createMock(\Propeller\Models\OrmModel::class);
         $templateModel = $this->createMock(\Propeller\Models\TemplateModel::class);
         $urlModel = $this->createMock(\Propeller\Models\UrlModel::class);
 
@@ -21,6 +22,7 @@ class FrontControllerTest extends TestCase
 
         new \Propeller\Controllers\FrontController(
             $persistenceModel,
+            $ormModel,
             $templateModel,
             $urlModel,
             $mainController,
