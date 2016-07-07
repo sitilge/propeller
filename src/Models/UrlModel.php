@@ -7,12 +7,14 @@ class UrlModel
     /**
      * @var string
      */
-    private $base = '';
+    public $base = '';
 
     /**
      * The main route builder.
+     *
      * @param null $table
      * @param null $key
+     *
      * @return string
      */
     public function main($table = null, $key = null)
@@ -24,10 +26,10 @@ class UrlModel
         }
 
         if (null !== $key) {
-            $pattern[] = '%d';
+            $pattern[] = '%s';
         }
 
-        return $this->prepare($this->base.'/'.implode('/', $pattern), [
+        return $this->base.'/'.$this->prepare(implode('/', $pattern), [
             $table,
             $key,
         ]);
@@ -52,37 +54,38 @@ class UrlModel
 
     /**
      * Get the segment.
-     * @param null $uri
+     *
      * @param int $index
-     * @return mixed
+     *
+     * @return string
      */
-    public function getSegment($uri = null, $index = 1)
+    public function getSegment($index = 1)
     {
-        if (null === $uri) {
-            $uri = $this->getCurrentUrl();
+        $url = $this->getUrl();
+
+        $segments = explode('/', $url);
+        $count = count($segments);
+
+        if ($count <= $index || $index < 1) {
+            return $segments[$count - 1];
         }
-        if ($uri) {
-            $segments = explode('/', $uri);
-            $count = count($segments);
-            if ($count <= $index || $index < 1) {
-                return $segments[$count - 1];
-            }
-            return $segments[$index];
-        }
-        return null;
+
+        return $segments[$index];
     }
 
     /**
      * Get the current url.
+     *
      * @return mixed
      */
-    public function getCurrentUrl()
+    public function getUrl()
     {
         if (!empty($_SERVER['PATH_INFO'])) {
             return rawurldecode(parse_url($_SERVER['PATH_INFO'], PHP_URL_PATH));
         } elseif (!empty($_SERVER['REQUEST_URI'])) {
             return rawurldecode(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH));
         }
-        return false;
+
+        return;
     }
 }
