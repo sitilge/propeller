@@ -23,7 +23,7 @@ ln -s vendor/bin/propel propel
 By default, Propel settings are stored under `propeller/src/Config/Database/Config`
 
 ````
-cd propeller/src/Config/Database/Config
+cd src/Config/Database/Config
 ````
 
 Next, initialize ([the easy way]) or setup your own config ([the hard way]). Let us use the easy way; run
@@ -34,8 +34,8 @@ propel init
 
 And use your settings to setup the connection to the DB. The following Q/A will lead you through the questions asked by the final steps of the initializer
 
-* **Q:** Where do you want to store your schema.xml? [/var/www/propeller/src/Config/Database/Config]: **A:** <Enter>
-* **Q:** Where do you want propel to save the generated php models? [/var/www/propeller/src/Config/Database/Config]: **A:** ./…/
+* **Q:** Where do you want to store your schema.xml? [/var/www/propeller/src/Config/Database/Config]: **A:** .
+* **Q:** Where do you want propel to save the generated php models? [/var/www/propeller/src/Config/Database/Config]: **A:** ./../
 * **Q:** Which namespace should the generated php models use?: **A:** Models
 * **Q:** Please enter the format to use for the generated configuration file (yml, xml, json, ini, php) **A:** php
 

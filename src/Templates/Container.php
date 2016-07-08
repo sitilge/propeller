@@ -8,7 +8,7 @@
         <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
         <meta content="Propeller" property="og:title">
         <meta content="" property="og:image">
-        <meta content="" property="og:description">
+        <meta content="Propeller is a graphical DBMS tool based on Propel." property="og:description">
         <meta content="https://github.com/sitilge/propeller" property="og:url">
         <link rel="stylesheet" href="<?php echo $url->main(); ?>css/dist/template.css">
         <script src="<?php echo $url->main(); ?>js/dist/template.js"></script>
