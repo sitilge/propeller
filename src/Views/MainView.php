@@ -9,6 +9,26 @@ use Propeller\Models\UrlModel;
 class MainView
 {
     /**
+     * @var string
+     */
+    public $containerTemplate = __DIR__.'/../Templates/Container';
+
+    /**
+     * @var string
+     */
+    public $schemaTemplate = __DIR__.'/../Templates/Schema';
+
+    /**
+     * @var string
+     */
+    public $tableTemplate = __DIR__.'/../Templates/Table';
+
+    /**
+     * @var string
+     */
+    public $rowTemplate = __DIR__.'/../Templates/Row';
+
+    /**
      * MainView constructor.
      *
      * @param null                  $table
@@ -43,7 +63,7 @@ class MainView
             ->set('tables', $this->persistenceModel->getTables())
             ->set('segment', $this->urlModel->getSegment())
             ->set('content', $this->getContent())
-            ->file(__DIR__.'/../Templates/Container')
+            ->file($this->containerTemplate)
             ->render();
     }
 
@@ -74,7 +94,7 @@ class MainView
     {
         return $this->templateModel
             ->set('url', $this->urlModel)
-            ->file(__DIR__.'/../Templates/Schema')
+            ->file($this->schemaTemplate)
             ->render();
     }
 
@@ -92,7 +112,7 @@ class MainView
             ->set('columns', $this->persistenceModel->getColumns())
             ->set('keys', $this->persistenceModel->getKeys())
             ->set('rows', $this->persistenceModel->readRows())
-            ->file(__DIR__.'/../Templates/Table')
+            ->file($this->tableTemplate)
             ->render();
     }
 
@@ -110,7 +130,7 @@ class MainView
             ->set('columns', $this->persistenceModel->getColumns())
             ->set('key', $this->key)
             ->set('row', $this->persistenceModel->readRow())
-            ->file(__DIR__.'/../Templates/Row');
+            ->file($this->rowTemplate);
 
         $method = $_SERVER['REQUEST_METHOD'];
 
