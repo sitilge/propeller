@@ -20,7 +20,8 @@ class BehaviorModel extends Behavior
             $this->generateQueryAttributesPropellerTableUpdate(),
             $this->generateQueryAttributesPropellerTableDelete(),
             $this->generateQueryAttributesPropellerTableOrder(),
-            $this->generateQueryAttributesPropellerTableColumnsShow(),
+            $this->generateQueryAttributesPropellerTableColumnShow(),
+            $this->generateQueryAttributesPropellerRowColumnAttributes(),
         ]).'
  ';
     }
@@ -115,15 +116,42 @@ private $propellerTableOrder = [];
      *
      * @return string
      */
-    private function generateQueryAttributesPropellerTableColumnsShow()
+    private function generateQueryAttributesPropellerTableColumnShow()
     {
+        $data = [];
+
+        $columns = $this->getTable()->getColumns();
+
+        foreach ($columns as $column) {
+            if ($column->isPrimaryKey()) {
+                $data[] = '\''.$column->getName().'\' => true';
+            }
+        }
+
         return '
 /**
  * Show columns.
  *
  * @var array
  */
-private $propellerTableColumnsShow = [];
+private $propellerTableColumnShow = ['.implode(',', $data).'];
+';
+    }
+
+    /**
+     * Generator method to set row column attributes.
+     *
+     * @return string
+     */
+    private function generateQueryAttributesPropellerRowColumnAttributes()
+    {
+        return '
+/**
+ * Set row column attributes.
+ *
+ * @var array
+ */
+private $propellerRowColumnAttributes = [];
 ';
     }
 
@@ -146,8 +174,10 @@ private $propellerTableColumnsShow = [];
             $this->generateQueryMethodsGetPropellerTableDelete(),
             $this->generateQueryMethodsSetPropellerTableOrder(),
             $this->generateQueryMethodsGetPropellerTableOrder(),
-            $this->generateQueryMethodsSetPropellerTableColumnsShow(),
-            $this->generateQueryMethodsGetPropellerTableColumnsShow(),
+            $this->generateQueryMethodsSetPropellerTableColumnShow(),
+            $this->generateQueryMethodsGetPropellerTableColumnShow(),
+            $this->generateQueryMethodsSetPropellerRowColumnAttributes(),
+            $this->generateQueryMethodsGetPropellerRowColumnAttributes(),
         ]).'
  ';
     }
@@ -370,7 +400,7 @@ public function getPropellerTableOrder($key)
      *
      * @return string
      */
-    private function generateQueryMethodsSetPropellerTableColumnsShow()
+    private function generateQueryMethodsSetPropellerTableColumnShow()
     {
         return '
 /**
@@ -381,9 +411,9 @@ public function getPropellerTableOrder($key)
  *
  * @return void
  */
-public function setPropellerTableColumnsShow($key, $value = true)
+public function setPropellerTableColumnShow($key, $value = true)
 {
-    $this->propellerTableColumnsShow[$key] = $value;
+    $this->propellerTableColumnShow[$key] = $value;
 }
 ';
     }
@@ -393,7 +423,7 @@ public function setPropellerTableColumnsShow($key, $value = true)
      *
      * @return string
      */
-    private function generateQueryMethodsGetPropellerTableColumnsShow()
+    private function generateQueryMethodsGetPropellerTableColumnShow()
     {
         return '
 /**
@@ -403,9 +433,55 @@ public function setPropellerTableColumnsShow($key, $value = true)
  *
  * @return bool
  */
-public function getPropellerTableColumnsShow($key)
+public function getPropellerTableColumnShow($key)
 {
-    return isset($this->propellerTableColumnsShow[$key]) ? $this->propellerTableColumnsShow[$key] : null;
+    return isset($this->propellerTableColumnShow[$key]) ? $this->propellerTableColumnShow[$key] : null;
+}
+';
+    }
+
+    /**
+     * Generator method to set row column attributes.
+     *
+     * @return string
+     */
+    private function generateQueryMethodsSetPropellerRowColumnAttributes()
+    {
+        return '
+/**
+ * Set row column attributes.
+ *
+ * @param string $key The column.
+ * @param string $attribute The attribute.
+ * @param string $value The value.
+ *
+ * @return void
+ */
+public function setPropellerRowColumnAttributes($key, $attribute, $value = \'\')
+{
+    $this->propellerRowColumnAttributes[$key][$attribute] = $value;
+}
+';
+    }
+
+    /**
+     * Generator method to get row column attributes.
+     *
+     * @return string
+     */
+    private function generateQueryMethodsGetPropellerRowColumnAttributes()
+    {
+        return '
+/**
+ * Get row column attributes.
+ *
+ * @param string $key The column.
+ *
+ * @return array
+ */
+public function getPropellerRowColumnAttributes($key)
+{
+    return isset($this->propellerRowColumnAttributes[$key]) ? $this->propellerRowColumnAttributes[$key] : null;
 }
 ';
     }
