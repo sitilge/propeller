@@ -1,6 +1,6 @@
 {
   "name": "sitilge/propeller",
-  "description": "Propel GUI wrapper.",
+  "description": "A graphical DBMS tool based on Propel.",
   "keywords": ["php", "propel", "rest"],
   "license": "MIT",
   "homepage": "http://propeller.sitilge.id.lv",
