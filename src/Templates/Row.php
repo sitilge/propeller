@@ -19,10 +19,12 @@
 </h1>
 <form id="form" action="" method="post" enctype="multipart/form-data">
     <?php foreach ($columns as $column) : ?>
-        <?php if (!empty($query->getPropellerTableColumnsShow($column->getName()))) : ?>
-            <?php continue; ?>
+        <?php $attributes = ''; ?>
+        <?php if (!empty($properties = $query->getPropellerRowColumnAttributes($column->getName()))) : ?>
+            <?php foreach ($properties as $attribute => $value) : ?>
+                <?php $attributes .= $attribute.' = "'.$value.'"'.' '; ?>
+            <?php endforeach; ?>
         <?php endif; ?>
-        <?php $attributes = 9879789789; ?>
         <div class="form-group">
             <label for="<?php echo $column->getName(); ?>"><?php echo $column->getPhpName(); ?></label>
             <?php if (!empty($row)) : ?>
