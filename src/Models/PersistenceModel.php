@@ -213,10 +213,6 @@ class PersistenceModel
         $map = $this->getMap();
 
         foreach ($input as $column => $value) {
-            if (!empty($map->getPrimaryKeys()[$column])) {
-                continue;
-            }
-
             $model->setByName($column, $value, $map::TYPE_FIELDNAME);
         }
 
@@ -265,10 +261,6 @@ class PersistenceModel
         $map = $this->getMap();
 
         foreach ($input as $column => $value) {
-            if (!empty($map->getPrimaryKeys()[$column])) {
-                continue;
-            }
-
             $query->setByName($column, $value, $map::TYPE_FIELDNAME);
         }
 
