@@ -2,7 +2,7 @@
 
 return [
     'development' => true, //the development mode;
-    'callable' => function() {
-        echo "This is some error.";
-    }
+    'callable' => function () {
+        echo 'This is some error.';
+    },
 ];
