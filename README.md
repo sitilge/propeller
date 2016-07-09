@@ -87,7 +87,7 @@ class ***Query extends BaseUsersQuery
 }
 ````
 
-[Propel]: <https://github.com/joemccann/dillinger>
+[Propel]: <https://github.com/propelorm/Propel>
 [the easy way]: <http://propelorm.org/documentation/02-buildtime.html#the-easy-way>
 [the hard way]: <http://propelorm.org/documentation/02-buildtime.html#the-hard-way>
 [behaviors]: <http://propelorm.org/documentation/06-behaviors.html>
