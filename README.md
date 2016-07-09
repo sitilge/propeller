@@ -20,7 +20,7 @@ ln -s vendor/bin/propel propel
 
 ## Configuration
 
-By default, Propel settings are stored under `propeller/src/Config/Database/Config`
+By default, settings are stored under `src/Config/Database/Config`
 
 ````
 cd src/Config/Database/Config
@@ -48,7 +48,7 @@ Next, it is important to edit the freshly generated `schema.xml` and add the beh
 </database>
 ````
 
-Now it is time to build the `Models` - the backbone of Propel and Propeller
+Now it is time to build models - the backbone of Propel and Propeller. Models will be stored under `src/Config/Database/Models`
 
 ````
 propel model:build
