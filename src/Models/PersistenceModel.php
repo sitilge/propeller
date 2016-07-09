@@ -3,8 +3,6 @@
 namespace Propeller\Models;
 
 use Propel\Runtime\ActiveQuery\ModelCriteria;
-use Propel\Runtime\Map\TableMap;
-use Propel\Runtime\Map\ColumnMap;
 use Propel\Runtime\ActiveRecord\ActiveRecordInterface;
 use Propel\Runtime\Collection\ObjectCollection;
 
@@ -49,21 +47,6 @@ class PersistenceModel
      * @var ModelCriteria
      */
     public $query;
-
-    /**
-     * @var TableMap
-     */
-    public $map;
-
-    /**
-     * @var ColumnMap
-     */
-    public $columns;
-
-    /**
-     * @var array
-     */
-    public $keys = [];
 
     /**
      * @var ActiveRecordInterface
@@ -118,10 +101,6 @@ class PersistenceModel
      */
     public function getQuery()
     {
-        if (!empty($this->query)) {
-            return $this->query;
-        }
-
         require $this->runtime;
 
         $tables = $this->getTables();
@@ -133,64 +112,12 @@ class PersistenceModel
     }
 
     /**
-     * Get the table map.
-     *
-     * @return TableMap
-     */
-    public function getMap()
-    {
-        if (!empty($this->map)) {
-            return $this->map;
-        }
-
-        $query = $this->getQuery();
-
-        return $this->map = $query->getTableMap();
-    }
-
-    /**
-     * Get the table columns.
-     *
-     * @return ColumnMap
-     */
-    public function getColumns()
-    {
-        if (!empty($this->columns)) {
-            return $this->columns;
-        }
-
-        $map = $this->getMap();
-
-        return $this->columns = $map->getColumns();
-    }
-
-    /**
-     * Get primary keys.
-     *
-     * @return array
-     */
-    public function getKeys()
-    {
-        if (!empty($this->keys)) {
-            return $this->keys;
-        }
-
-        $rows = $this->readRows();
-
-        return $this->keys = $rows->getPrimaryKeys(false);
-    }
-
-    /**
      * Get the model.
      *
      * @return ActiveRecordInterface
      */
     public function getModel()
     {
-        if (!empty($this->model)) {
-            return $this->model;
-        }
-
         require $this->runtime;
 
         $tables = $this->getTables();
@@ -210,10 +137,8 @@ class PersistenceModel
     {
         $model = $this->getModel();
 
-        $map = $this->getMap();
-
         foreach ($input as $column => $value) {
-            $model->setByName($column, $value, $map::TYPE_FIELDNAME);
+            $model->setByName($column, $value, 'fieldName');
         }
 
         return $this->ormModel->save($model);
@@ -230,7 +155,9 @@ class PersistenceModel
 
         $query = $this->getBehavior($query);
 
-        return $query->findPk($this->key);
+        $key = is_array($this->key) ? explode('-', $this->key) : $this->key;
+
+        return $query->findPk($key);
     }
 
     /**
@@ -258,10 +185,8 @@ class PersistenceModel
     {
         $query = $this->getQuery()->findPk($this->key);
 
-        $map = $this->getMap();
-
         foreach ($input as $column => $value) {
-            $query->setByName($column, $value, $map::TYPE_FIELDNAME);
+            $query->setByName($column, $value, 'fieldName');
         }
 
         return $this->ormModel->save($query);
