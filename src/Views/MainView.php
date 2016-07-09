@@ -61,7 +61,6 @@ class MainView
         return $this->templateModel
             ->set('url', $this->urlModel)
             ->set('tables', $this->persistenceModel->getTables())
-            ->set('segment', $this->urlModel->getSegment())
             ->set('content', $this->getContent())
             ->file($this->containerTemplate)
             ->render();
@@ -108,9 +107,7 @@ class MainView
         return $this->templateModel
             ->set('url', $this->urlModel)
             ->set('query', $this->persistenceModel->getQuery())
-            ->set('map', $this->persistenceModel->getMap())
-            ->set('columns', $this->persistenceModel->getColumns())
-            ->set('keys', $this->persistenceModel->getKeys())
+            ->set('model', $this->persistenceModel->getModel())
             ->set('rows', $this->persistenceModel->readRows())
             ->file($this->tableTemplate)
             ->render();
@@ -126,8 +123,7 @@ class MainView
         $template = $this->templateModel
             ->set('url', $this->urlModel)
             ->set('query', $this->persistenceModel->getQuery())
-            ->set('map', $this->persistenceModel->getMap())
-            ->set('columns', $this->persistenceModel->getColumns())
+            ->set('model', $this->persistenceModel->getModel())
             ->set('key', $this->key)
             ->set('row', $this->persistenceModel->readRow())
             ->file($this->rowTemplate);
