@@ -54,52 +54,6 @@ class PersistenceModelTest extends TestCase
         $this->assertInstanceOf($query, $this->persistenceModel->getQuery());
     }
 
-    public function testGetMap()
-    {
-        $this->markTestSkipped('To test in real environment, edit this test');
-
-        //query class, e.g. UsersQuery
-        $query = \Propel\Runtime\ActiveQuery\ModelCriteria::class;
-
-        $this->persistenceModel->query = $this->createMock($query);
-
-        $map = \Propel\Runtime\Map\TableMap::class;
-
-        $this->assertInstanceOf($map, $this->persistenceModel->getMap());
-    }
-
-    public function testGetColumns()
-    {
-        $this->markTestSkipped('To test in real environment, edit this test');
-
-        //query class, e.g. UsersQuery
-        $query = \Propel\Runtime\ActiveQuery\ModelCriteria::class;
-
-        $this->persistenceModel->query = $this->createMock($query);
-
-        $map = \Propel\Runtime\Map\TableMap::class;
-
-        $this->persistenceModel->map = $this->createMock($map);
-
-        $columns = \Propel\Runtime\Map\ColumnMap::class;
-
-        $this->assertInstanceOf($columns, $this->persistenceModel->getColumns());
-    }
-
-    public function testGetKeys()
-    {
-        $this->markTestSkipped('To test in real environment, edit this test');
-
-        //query class, e.g. UsersQuery
-        $query = \Propel\Runtime\ActiveQuery\ModelCriteria::class;
-
-        $this->persistenceModel->query = $this->createMock($query);
-
-        $keys = [];
-
-        $this->assertInstanceOf($keys, $this->persistenceModel->getKeys());
-    }
-
     public function testGetModel()
     {
         $this->markTestSkipped('To test in real environment, edit this test');

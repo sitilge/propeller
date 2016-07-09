@@ -4,11 +4,6 @@ use PHPUnit\Framework\TestCase;
 
 class BootstrapTest extends TestCase
 {
-    /**
-     * @var \org\bovigo\vfs\vfsStreamDirectory
-     */
-    private $root;
-
     public function setUp()
     {
         if (!empty($uri = getenv('REQUEST_URI'))) {

@@ -16,6 +16,10 @@ class BehaviorModelTest extends TestCase
 
     public function testQueryAttributes()
     {
+        $table = new \Propel\Generator\Model\Table('foo');
+
+        $this->behaviorModel->setTable($table);
+
         $this->assertInternalType('string', $this->behaviorModel->queryAttributes());
     }
 
