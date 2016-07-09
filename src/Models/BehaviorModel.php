@@ -123,6 +123,7 @@ private $propellerTableOrder = [];
         $columns = $this->getTable()->getColumns();
 
         foreach ($columns as $column) {
+            //initally show only primary keys
             if ($column->isPrimaryKey()) {
                 $data[] = '\''.$column->getName().'\' => true';
             }
@@ -145,13 +146,24 @@ private $propellerTableColumnShow = ['.implode(',', $data).'];
      */
     private function generateQueryAttributesPropellerRowColumnAttributes()
     {
+        $data = [];
+
+        $columns = $this->getTable()->getColumns();
+
+        foreach ($columns as $column) {
+            //initally set dissabled attribute to autoincrement columns
+            if ($column->isAutoIncrement()) {
+                $data[] = '\''.$column->getName().'\' => [\'disabled\' => \'disabled\']';
+            }
+        }
+
         return '
 /**
  * Set row column attributes.
  *
  * @var array
  */
-private $propellerRowColumnAttributes = [];
+private $propellerRowColumnAttributes = ['.implode(',', $data).'];
 ';
     }
 
