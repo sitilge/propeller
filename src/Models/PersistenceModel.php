@@ -155,9 +155,11 @@ class PersistenceModel
 
         $query = $this->getBehavior($query);
 
-        $key = is_array($this->key) ? explode('-', $this->key) : $this->key;
+        if (strpos($this->key, '-') !== false) {
+            $this->key = explode('-', $this->key);
+        }
 
-        return $query->findPk($key);
+        return $query->findPk($this->key);
     }
 
     /**

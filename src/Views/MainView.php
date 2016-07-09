@@ -128,14 +128,6 @@ class MainView
             ->set('row', $this->persistenceModel->readRow())
             ->file($this->rowTemplate);
 
-        $method = $_SERVER['REQUEST_METHOD'];
-
-        if ($method === 'POST') {
-            $template = $template
-                ->set('key', empty($_POST) ? null : $this->key)
-                ->set('row', empty($_POST) ? null : $this->persistenceModel->readRow());
-        }
-
         return $template->render();
     }
 
