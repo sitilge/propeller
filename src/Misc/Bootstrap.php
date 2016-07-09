@@ -55,7 +55,8 @@ class Bootstrap
         if (empty($config['development'])) {
             $handler = $config['callable'];
         } else {
-            if (Misc::isAjaxRequest()) {
+            if (!empty($_SERVER['HTTP_X_REQUESTED_WITH'])
+                && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest') {
                 $handler = new JsonResponseHandler();
             } else {
                 $handler = new PrettyPageHandler();

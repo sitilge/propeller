@@ -76,7 +76,7 @@ class UrlModel
     /**
      * Get the current url.
      *
-     * @return mixed
+     * @return string
      */
     public function getUrl()
     {
@@ -85,7 +85,5 @@ class UrlModel
         } elseif (!empty($_SERVER['REQUEST_URI'])) {
             return rawurldecode(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH));
         }
-
-        return;
     }
 }
