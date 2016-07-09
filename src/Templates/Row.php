@@ -1,23 +1,24 @@
 <link rel="stylesheet" href="<?php echo $url->main(); ?>css/dist/row.css">
 <script src="<?php echo $url->main(); ?>js/dist/row.js"></script>
 <h1 class="page-header">
-    <span><?php echo $map->getPhpName(); ?></span>
+    <span><?php echo $query->getTableMap()->getPhpName(); ?></span>
     <?php if ($_SERVER['REQUEST_METHOD'] === 'POST') : ?>
         <div class="pull-right">
-            <a class="create-row-button btn btn-success" data-url="<?php echo $url->main($map->getName(), $key); ?>" data-id="<?php echo $key; ?>">Create</a>
+            <a class="create-row-button btn btn-success" data-url="<?php echo $url->main($query->getTableMap()->getName(), $key); ?>" data-id="<?php echo $key; ?>">Create</a>
         </div>
     <?php elseif ($_SERVER['REQUEST_METHOD'] === 'GET') : ?>
         <div class="pull-right">
             <?php if (!empty($query->getPropellerTableDelete())) : ?>
-                <a class="delete-row-button btn btn-danger" data-url="<?php echo $url->main($map->getName(), $key); ?>" data-id="<?php echo $key; ?>">Delete</a>
+                <a class="delete-row-button btn btn-danger" data-url="<?php echo $url->main($query->getTableMap()->getName(), $key); ?>" data-id="<?php echo $key; ?>">Delete</a>
             <?php endif; ?>
             <?php if (!empty($query->getPropellerTableUpdate())) : ?>
-                <a class="update-row-button btn btn-primary" data-url="<?php echo $url->main($map->getName(), $key); ?>" data-id="<?php echo $key; ?>">Update</a>
+                <a class="update-row-button btn btn-primary" data-url="<?php echo $url->main($query->getTableMap()->getName(), $key); ?>" data-id="<?php echo $key; ?>">Update</a>
             <?php endif; ?>
         </div>
     <?php endif; ?>
 </h1>
 <form id="form" action="" method="post" enctype="multipart/form-data">
+    <?php $columns = $query->getTableMap()->getColumns(); ?>
     <?php foreach ($columns as $column) : ?>
         <?php $attributes = ''; ?>
         <?php if (!empty($properties = $query->getPropellerRowColumnAttributes($column->getName()))) : ?>

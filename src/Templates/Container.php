@@ -25,6 +25,7 @@
                 </div>
                 <div id="navbar" class="navbar-collapse collapse">
                     <ul class="nav navbar-nav">
+                        <?php $segment = $url->getSegment(); ?>
                         <?php foreach ($tables as $name => $phpName) : ?>
                             <li class="<?php echo $segment === $name ? 'active' : ''; ?>"><a href="<?php echo $url->main($name); ?>"><?php echo $phpName; ?></a></li>
                         <?php endforeach; ?>
