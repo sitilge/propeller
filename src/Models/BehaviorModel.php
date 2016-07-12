@@ -15,13 +15,13 @@ class BehaviorModel extends Behavior
     {
         //save the funny syntax
         return implode(' ', [
-            $this->generateQueryAttributesPropellerTableCreate(),
-            $this->generateQueryAttributesPropellerTableRead(),
-            $this->generateQueryAttributesPropellerTableUpdate(),
-            $this->generateQueryAttributesPropellerTableDelete(),
-            $this->generateQueryAttributesPropellerTableOrder(),
-            $this->generateQueryAttributesPropellerTableColumnShow(),
-            $this->generateQueryAttributesPropellerRowColumnAttributes(),
+            $this->setQueryAttributesPropellerTableCreate(),
+            $this->setQueryAttributesPropellerTableRead(),
+            $this->setQueryAttributesPropellerTableUpdate(),
+            $this->setQueryAttributesPropellerTableDelete(),
+            $this->setQueryAttributesPropellerTableOrder(),
+            $this->setQueryAttributesPropellerTableColumnShow(),
+            $this->setQueryAttributesPropellerRowColumnAttributes(),
         ]).'
  ';
     }
@@ -31,7 +31,7 @@ class BehaviorModel extends Behavior
      *
      * @return string
      */
-    private function generateQueryAttributesPropellerTableCreate()
+    private function setQueryAttributesPropellerTableCreate()
     {
         return '
 /**
@@ -48,7 +48,7 @@ private $propellerTableCreate = true;
      *
      * @return string
      */
-    private function generateQueryAttributesPropellerTableRead()
+    private function setQueryAttributesPropellerTableRead()
     {
         return '
 /**
@@ -65,7 +65,7 @@ private $propellerTableRead = true;
      *
      * @return string
      */
-    private function generateQueryAttributesPropellerTableUpdate()
+    private function setQueryAttributesPropellerTableUpdate()
     {
         return '
 /**
@@ -82,7 +82,7 @@ private $propellerTableUpdate = true;
      *
      * @return string
      */
-    private function generateQueryAttributesPropellerTableDelete()
+    private function setQueryAttributesPropellerTableDelete()
     {
         return '
 /**
@@ -99,7 +99,7 @@ private $propellerTableDelete = true;
      *
      * @return string
      */
-    private function generateQueryAttributesPropellerTableOrder()
+    private function setQueryAttributesPropellerTableOrder()
     {
         return '
 /**
@@ -116,7 +116,7 @@ private $propellerTableOrder = [];
      *
      * @return string
      */
-    private function generateQueryAttributesPropellerTableColumnShow()
+    private function setQueryAttributesPropellerTableColumnShow()
     {
         $data = [];
 
@@ -144,7 +144,7 @@ private $propellerTableColumnShow = ['.implode(',', $data).'];
      *
      * @return string
      */
-    private function generateQueryAttributesPropellerRowColumnAttributes()
+    private function setQueryAttributesPropellerRowColumnAttributes()
     {
         $data = [];
 
@@ -176,20 +176,20 @@ private $propellerRowColumnAttributes = ['.implode(',', $data).'];
     {
         //save the funny syntax
         return implode(' ', [
-            $this->generateQueryMethodsSetPropellerTableCreate(),
-            $this->generateQueryMethodsGetPropellerTableCreate(),
-            $this->generateQueryMethodsSetPropellerTableRead(),
-            $this->generateQueryMethodsGetPropellerTableRead(),
-            $this->generateQueryMethodsSetPropellerTableUpdate(),
-            $this->generateQueryMethodsGetPropellerTableUpdate(),
-            $this->generateQueryMethodsSetPropellerTableDelete(),
-            $this->generateQueryMethodsGetPropellerTableDelete(),
-            $this->generateQueryMethodsSetPropellerTableOrder(),
-            $this->generateQueryMethodsGetPropellerTableOrder(),
-            $this->generateQueryMethodsSetPropellerTableColumnShow(),
-            $this->generateQueryMethodsGetPropellerTableColumnShow(),
-            $this->generateQueryMethodsSetPropellerRowColumnAttributes(),
-            $this->generateQueryMethodsGetPropellerRowColumnAttributes(),
+            $this->setQueryMethodsSetPropellerTableCreate(),
+            $this->setQueryMethodsGetPropellerTableCreate(),
+            $this->setQueryMethodsSetPropellerTableRead(),
+            $this->setQueryMethodsGetPropellerTableRead(),
+            $this->setQueryMethodsSetPropellerTableUpdate(),
+            $this->setQueryMethodsGetPropellerTableUpdate(),
+            $this->setQueryMethodsSetPropellerTableDelete(),
+            $this->setQueryMethodsGetPropellerTableDelete(),
+            $this->setQueryMethodsSetPropellerTableOrder(),
+            $this->setQueryMethodsGetPropellerTableOrder(),
+            $this->setQueryMethodsSetPropellerTableColumnShow(),
+            $this->setQueryMethodsGetPropellerTableColumnShow(),
+            $this->setQueryMethodsSetPropellerRowColumnAttributes(),
+            $this->setQueryMethodsGetPropellerRowColumnAttributes(),
         ]).'
  ';
     }
@@ -199,7 +199,7 @@ private $propellerRowColumnAttributes = ['.implode(',', $data).'];
      *
      * @return string
      */
-    private function generateQueryMethodsSetPropellerTableCreate()
+    private function setQueryMethodsSetPropellerTableCreate()
     {
         return '
 /**
@@ -221,7 +221,7 @@ public function setPropellerTableCreate($key = true)
      *
      * @return string
      */
-    private function generateQueryMethodsGetPropellerTableCreate()
+    private function setQueryMethodsGetPropellerTableCreate()
     {
         return '
 /**
@@ -241,7 +241,7 @@ public function getPropellerTableCreate()
      *
      * @return string
      */
-    private function generateQueryMethodsSetPropellerTableRead()
+    private function setQueryMethodsSetPropellerTableRead()
     {
         return '
 /**
@@ -263,7 +263,7 @@ public function setPropellerTableRead($key = true)
      *
      * @return string
      */
-    private function generateQueryMethodsGetPropellerTableRead()
+    private function setQueryMethodsGetPropellerTableRead()
     {
         return '
 /**
@@ -283,7 +283,7 @@ public function getPropellerTableRead()
      *
      * @return string
      */
-    private function generateQueryMethodsSetPropellerTableUpdate()
+    private function setQueryMethodsSetPropellerTableUpdate()
     {
         return '
 /**
@@ -305,7 +305,7 @@ public function setPropellerTableUpdate($key = true)
      *
      * @return string
      */
-    private function generateQueryMethodsGetPropellerTableUpdate()
+    private function setQueryMethodsGetPropellerTableUpdate()
     {
         return '
 /**
@@ -325,7 +325,7 @@ public function getPropellerTableUpdate()
      *
      * @return string
      */
-    private function generateQueryMethodsSetPropellerTableDelete()
+    private function setQueryMethodsSetPropellerTableDelete()
     {
         return '
 /**
@@ -347,7 +347,7 @@ public function setPropellerTableDelete($key = true)
      *
      * @return string
      */
-    private function generateQueryMethodsGetPropellerTableDelete()
+    private function setQueryMethodsGetPropellerTableDelete()
     {
         return '
 /**
@@ -367,7 +367,7 @@ public function getPropellerTableDelete()
      *
      * @return string
      */
-    private function generateQueryMethodsSetPropellerTableOrder()
+    private function setQueryMethodsSetPropellerTableOrder()
     {
         return '
 /**
@@ -390,7 +390,7 @@ public function setPropellerTableOrder($key, $value)
      *
      * @return string
      */
-    private function generateQueryMethodsGetPropellerTableOrder()
+    private function setQueryMethodsGetPropellerTableOrder()
     {
         return '
 /**
@@ -412,7 +412,7 @@ public function getPropellerTableOrder($key)
      *
      * @return string
      */
-    private function generateQueryMethodsSetPropellerTableColumnShow()
+    private function setQueryMethodsSetPropellerTableColumnShow()
     {
         return '
 /**
@@ -435,7 +435,7 @@ public function setPropellerTableColumnShow($key, $value = true)
      *
      * @return string
      */
-    private function generateQueryMethodsGetPropellerTableColumnShow()
+    private function setQueryMethodsGetPropellerTableColumnShow()
     {
         return '
 /**
@@ -457,7 +457,7 @@ public function getPropellerTableColumnShow($key)
      *
      * @return string
      */
-    private function generateQueryMethodsSetPropellerRowColumnAttributes()
+    private function setQueryMethodsSetPropellerRowColumnAttributes()
     {
         return '
 /**
@@ -481,7 +481,7 @@ public function setPropellerRowColumnAttributes($key, $attribute, $value = \'\')
      *
      * @return string
      */
-    private function generateQueryMethodsGetPropellerRowColumnAttributes()
+    private function setQueryMethodsGetPropellerRowColumnAttributes()
     {
         return '
 /**
