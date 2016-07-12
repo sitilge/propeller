@@ -2,11 +2,12 @@
 <script src="<?php echo $url->main(); ?>js/dist/row.js"></script>
 <h1 class="page-header">
     <span><?php echo $query->getTableMap()->getPhpName(); ?></span>
-    <?php if ($_SERVER['REQUEST_METHOD'] === 'POST') : ?>
+    <?php $method = filter_input(INPUT_SERVER, 'REQUEST_METHOD'); ?>
+    <?php if ($method === 'POST') : ?>
         <div class="pull-right">
             <a class="create-row-button btn btn-success" data-url="<?php echo $url->main($query->getTableMap()->getName(), $key); ?>" data-id="<?php echo $key; ?>">Create</a>
         </div>
-    <?php elseif ($_SERVER['REQUEST_METHOD'] === 'GET') : ?>
+    <?php elseif ($method === 'GET') : ?>
         <div class="pull-right">
             <?php if (!empty($query->getPropellerTableDelete())) : ?>
                 <a class="delete-row-button btn btn-danger" data-url="<?php echo $url->main($query->getTableMap()->getName(), $key); ?>" data-id="<?php echo $key; ?>">Delete</a>

@@ -136,7 +136,7 @@ class MainView
      */
     public function manageOutput()
     {
-        $method = $_SERVER['REQUEST_METHOD'];
+        $method = filter_input(INPUT_SERVER, 'REQUEST_METHOD');
 
         //TODO - violating DRY
         $input = $this->getInput();
@@ -193,10 +193,10 @@ class MainView
         parse_str(file_get_contents('php://input'), $input);
 
         if (!isset($input)) {
-            if (!empty($_POST)) {
-                $input = $_POST;
-            } else {
-                $input = $_GET;
+            $post = filter_input_array(INPUT_POST);
+
+            if (!empty($post)) {
+                $input = $post;
             }
         }
 
