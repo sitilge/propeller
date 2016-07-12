@@ -64,31 +64,4 @@ $(function () {
             element: 'tr'
         });
     }
-
-    //sort rows
-    var orderable = $('.orderable');
-
-    if (orderable.length) {
-        Sortable.create(orderable.get(0), {
-            handle: '.orderable-handle',
-            animation: 150,
-            onEnd: function () {
-                var order = [];
-
-                $('.orderable > tr').each(function() {
-                    var id = $(this).data('id');
-                    order.push(id);
-                });
-
-                $.ajax({
-                    type: 'POST',
-                    contentType: 'application/x-www-form-urlencoded; charset=utf-8',
-                    url: document.location.href,
-                    data: {
-                        order: order
-                    }
-                });
-            }
-        });
-    }
 });

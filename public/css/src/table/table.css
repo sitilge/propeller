@@ -1,11 +1,3 @@
-.orderable-handle {
-  color: #337ab7;
-  cursor: move !important;
-  cursor: -webkit-grabbing !important; }
-  .orderable-handle * {
-    cursor: move !important;
-    cursor: -webkit-grabbing !important; }
-
 table tbody tr {
   cursor: pointer; }
   table tbody tr:hover {
