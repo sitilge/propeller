@@ -45,9 +45,11 @@ class TemplateModel
             foreach ($key as $name => $value) {
                 $this->data[$name] = $value;
             }
-        } else {
-            $this->data[$key] = $value;
+
+            return $this;
         }
+
+        $this->data[$key] = $value;
 
         return $this;
     }
@@ -77,9 +79,11 @@ class TemplateModel
         extract($this->data, EXTR_SKIP);
         if (null !== $input) {
             echo $input;
-        } else {
-            require $this->file;
+
+            return ob_get_clean();
         }
+
+        require $this->file;
 
         return ob_get_clean();
     }

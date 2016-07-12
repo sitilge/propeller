@@ -3,10 +3,10 @@
 namespace Propeller\Misc;
 
 use FastRoute\RouteCollector;
+use Whoops\Handler\Handler;
 use Whoops\Handler\PrettyPageHandler;
 use Whoops\Handler\JsonResponseHandler;
 use Whoops\Run;
-use Whoops\Util\Misc;
 
 class Bootstrap
 {
@@ -43,25 +43,39 @@ class Bootstrap
     }
 
     /**
-     * Initialize the throwable handler.
+     * Initialize the throwable.
      */
     public function initThrowable()
     {
         //TODO - move to attribute of the class
         $config = require $this->configPath;
 
-        $run = new Run();
-
         if (empty($config['development'])) {
-            $handler = $config['callable'];
-        } else {
-            if (!empty($_SERVER['HTTP_X_REQUESTED_WITH'])
-                && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest') {
-                $handler = new JsonResponseHandler();
-            } else {
-                $handler = new PrettyPageHandler();
-            }
+            $this->initHandler($config['callable']);
+
+            return;
         }
+
+        $server = filter_input_array(INPUT_SERVER);
+
+        if (!empty($server['HTTP_X_REQUESTED_WITH'])
+            && strtolower($server['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest') {
+            $this->initHandler(new JsonResponseHandler());
+
+            return;
+        }
+
+        $this->initHandler(new PrettyPageHandler());
+    }
+
+    /**
+     * Initialize the throwable handler.
+     *
+     * @param Handler $handler
+     */
+    private function initHandler(Handler $handler)
+    {
+        $run = new Run();
 
         $run->pushHandler($handler);
 
@@ -83,8 +97,8 @@ class Bootstrap
             }
         });
 
-        $method = $_SERVER['REQUEST_METHOD'];
-        $uri = rawurldecode(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH));
+        $method = filter_input(INPUT_SERVER, 'REQUEST_METHOD');
+        $uri = rawurldecode(parse_url(filter_input(INPUT_SERVER, 'REQUEST_URI'), PHP_URL_PATH));
 
         $route = $dispatcher->dispatch($method, $uri);
 

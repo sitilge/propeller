@@ -80,10 +80,12 @@ class UrlModel
      */
     public function getUrl()
     {
-        if (!empty($_SERVER['PATH_INFO'])) {
-            return rawurldecode(parse_url($_SERVER['PATH_INFO'], PHP_URL_PATH));
-        } elseif (!empty($_SERVER['REQUEST_URI'])) {
-            return rawurldecode(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH));
+        $server = filter_input_array(INPUT_SERVER);
+
+        if (!empty($server['PATH_INFO'])) {
+            return rawurldecode(parse_url($server['PATH_INFO'], PHP_URL_PATH));
+        } elseif (!empty($server['REQUEST_URI'])) {
+            return rawurldecode(parse_url($server['REQUEST_URI'], PHP_URL_PATH));
         }
     }
 }

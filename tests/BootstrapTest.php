@@ -6,12 +6,14 @@ class BootstrapTest extends TestCase
 {
     public function setUp()
     {
+        $server = filter_input_array(INPUT_SERVER);
+
         if (!empty($uri = getenv('REQUEST_URI'))) {
-            $_SERVER['REQUEST_URI'] = $uri;
+            $server['REQUEST_URI'] = $uri;
         }
 
         if (!empty($method = getenv('REQUEST_METHOD'))) {
-            $_SERVER['REQUEST_METHOD'] = $method;
+            $server['REQUEST_METHOD'] = $method;
         }
     }
 
