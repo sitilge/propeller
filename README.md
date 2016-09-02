@@ -12,10 +12,10 @@ cd propeller && \
 composer install
 ````
 
-Then add `propel` command to the excecution path
+Then add `propel` command to the excecution path (adjust the `/path/to/propeller` respectively)
 
 ````
-ln -s vendor/bin/propel /usr/bin/propel
+export PATH=$PATH:/path/to/propeller/vendor/bin/
 ````
 
 ## Configuration
