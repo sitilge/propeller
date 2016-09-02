@@ -15,8 +15,7 @@
     }
   ],
   "require": {
-    "php": ">= 5.6.0",
-    "ext-intl": "*",
+    "php": ">= 7.0",
     "ext-pdo": "*",
     "nikic/fast-route": "^0.7.0",
     "propel/propel": "~2.0@dev",
