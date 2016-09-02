@@ -12,10 +12,10 @@ cd propeller && \
 composer install
 ````
 
-Then add `propel` command to the project root
+Then add `propel` command to the excecution path
 
 ````
-ln -s vendor/bin/propel propel
+ln -s vendor/bin/propel /usr/bin/propel
 ````
 
 ## Configuration
