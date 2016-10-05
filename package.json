@@ -1,0 +1,33 @@
+{
+  "name": "propeller",
+  "version": "0.41.0",
+  "description": "Propeller is a graphical DBMS tool based on Propel.",
+  "main": "gulpfile.js",
+  "directories": {
+    "test": "tests"
+  },
+  "devDependencies": {
+    "gulp": "^3.9.1",
+    "gulp-concat": "^2.6.0",
+    "gulp-concat-css": "^2.3.0",
+    "gulp-cssnano": "^2.1.2",
+    "gulp-imagemin": "^3.0.3",
+    "gulp-rename": "^1.2.2",
+    "gulp-sass": "^2.3.2",
+    "gulp-uglify": "^2.0.0",
+    "imagemin-pngquant": "^5.0.0"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sitilge/propeller.git"
+  },
+  "author": "Martins Eglitis",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/sitilge/propeller/issues"
+  },
+  "homepage": "https://github.com/sitilge/propeller#readme"
+}
